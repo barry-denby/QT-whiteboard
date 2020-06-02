@@ -6,12 +6,18 @@
 
 // includes
 #include <iostream>
+#include <QApplication>
 #include "whiteboard.hpp"
 
 // entry point to our program
 int main(int argc, char** argv) {
+    // create a QApplication that will manage everything for the QT toolkit
+    QApplication app(argc, argv);
 
+    // create a whiteboard and show it
+    Whiteboard board;
+    board.showFullScreen();
 
-    // return zero if all went well
-    return 0;
+    // return the status of the application
+    return app.exec();
 }
