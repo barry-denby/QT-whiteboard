@@ -9,6 +9,7 @@
 #include <QColor>
 #include <QImage>
 #include <QMouseEvent>
+#include <QPen>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QWidget>
@@ -58,8 +59,9 @@ private:
     unsigned int next_draw_op;
     // indicates if we are doing a point or a line op
     bool line_draw;
-    // painter for this widget
-    //QPainter painter;
+    // pen for drawing a point, and pen draw drawing lines
+    QPen point_pen;
+    QPen line_pen;
 };
 
 #endif // _WHITEBOARD_HPP

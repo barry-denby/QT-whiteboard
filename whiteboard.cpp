@@ -16,7 +16,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), current_screen(1920, 1080, QImage::Format_RGB32), next_draw_op(0), line_draw(false)
+: QWidget(parent), current_colour(0, 0, 0), current_screen(1920, 1080, QImage::Format_RGB32), next_draw_op(0), line_draw(false), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0))
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -39,6 +39,9 @@ Whiteboard::Whiteboard(QWidget* parent)
         draw_x[i] = 0;
         draw_y[i] = 0;
     }
+
+    // set the point pen to have a wider width
+    point_pen.setWidth(2);
 }
 
 // destructor for the class
@@ -83,6 +86,7 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
 void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // if this is a point then finish the op
     if(!line_draw) {
+        repaint();
         return;
     } else if(line_draw) {
         draw_x[next_draw_op] = event->x();
@@ -115,9 +119,11 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
         // go through each of the draw ops and draw the necessary action
         if(draw_operation[i] == 1) {
             // we have a single point so draw that
+            painter.setPen(point_pen);
             painter.drawPoint(draw_x[i], draw_y[i]);
         } else if(draw_operation[i] == 3 || draw_operation[i] == 4) {
             // draw this line segment
+            painter.setPen(line_pen);
             painter.drawLine(draw_x[i - 1], draw_y[i - 1], draw_x[i], draw_y[i]);
         }
     }
