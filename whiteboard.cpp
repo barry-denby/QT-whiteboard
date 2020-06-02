@@ -14,7 +14,7 @@ Whiteboard::Whiteboard(QWidget* parent)
 : QWidget(parent)
 {
     // add in a shortcut that will allow us to quit the application
-    QShortcut* quit_shortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
 }
 
 // destructor for the class
