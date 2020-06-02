@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
 
     // create a whiteboard and show it
     Whiteboard board;
-    board.showFullScreen();
+    //board.showFullScreen();
+    board.show();
 
     // return the status of the application
     return app.exec();
