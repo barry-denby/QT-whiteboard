@@ -6,9 +6,12 @@
 
 // includes
 #include <iostream>
+#include "whiteboard.hpp"
 
 // entry point to our program
 int main(int argc, char** argv) {
+
+
     // return zero if all went well
     return 0;
 }
