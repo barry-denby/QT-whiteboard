@@ -38,6 +38,8 @@ protected:
 private slots:
     // slot for quitting the application
     void quitApplication();
+    // slot that will undo the last drawing operation
+    void undoLastDrawOp();
 // private fields of the class
 private:
     // the current drawing colour

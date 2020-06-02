@@ -21,6 +21,9 @@ Whiteboard::Whiteboard(QWidget* parent)
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
 
+    // add a shortcut that will allow us to undo operations
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z), this, SLOT(undoLastDrawOp()));
+
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
@@ -132,4 +135,35 @@ void Whiteboard::quitApplication() {
 
     // call the quit function
     QApplication::quit();
+}
+
+// function that will undo the last draw operation
+void Whiteboard::undoLastDrawOp() {
+    // if the current index is already zero then do nothing
+    if(next_draw_op == 0)
+        return;
+
+    // look one back from the current operation and see what operation is there
+    if(draw_operation[next_draw_op - 1] == 1) {
+        // we have a point so just remove that draw op
+        next_draw_op--;
+        draw_operation[next_draw_op] = 0;
+        draw_x[next_draw_op] = 0;
+        draw_y[next_draw_op] = 0;
+    } else if(draw_operation[next_draw_op - 1] == 4) {
+        // we have a line so keep scanning back and deleting until we hit a 2
+        next_draw_op--;
+        while(draw_operation[next_draw_op] != 2) {
+            draw_operation[next_draw_op] = 0;
+            draw_x[next_draw_op] = 0;
+            draw_y[next_draw_op] = 0;
+            next_draw_op--;
+        }
+        draw_operation[next_draw_op] = 0;
+        draw_x[next_draw_op] = 0;
+        draw_y[next_draw_op] = 0;
+    }
+
+    // update the widget when done
+    repaint();
 }
