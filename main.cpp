@@ -7,7 +7,7 @@
 // includes
 #include <iostream>
 #include <QApplication>
-#include "whiteboard.hpp"
+#include "mainwindow.hpp"
 
 // entry point to our program
 int main(int argc, char** argv) {
@@ -15,9 +15,10 @@ int main(int argc, char** argv) {
     QApplication app(argc, argv);
 
     // create a whiteboard and show it
-    Whiteboard board;
-    //board.showFullScreen();
-    board.show();
+    //Whiteboard board;
+    MainWindow board;
+    board.showFullScreen();
+    //board.show();
 
     // return the status of the application
     return app.exec();
