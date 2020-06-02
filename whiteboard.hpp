@@ -19,8 +19,10 @@ public:
     Whiteboard(QWidget* parent = 0);
     // destructor for the class
     virtual ~Whiteboard();
-// private section of the class
-//private:
+// private slots section of the class
+private slots:
+    // slot for quitting the application
+    void quitApplication();
 };
 
 #endif // _WHITEBOARD_HPP
