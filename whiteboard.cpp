@@ -34,10 +34,16 @@ Whiteboard::Whiteboard(QWidget* parent)
     draw_operation = (unsigned int*) new unsigned int[65536];
     draw_x = (unsigned int*) new unsigned int[65536];
     draw_y = (unsigned int*) new unsigned int[65536];
+    draw_red = (int *) new int[65536];
+    draw_green = (int *) new int[65536];
+    draw_blue = (int *) new int[65536];
     for(unsigned int i = 0; i < 65536; i++) {
         draw_operation[i] = 0;
         draw_x[i] = 0;
         draw_y[i] = 0;
+        draw_red[i] = 0;
+        draw_green[i] = 0;
+        draw_blue[i] = 0;
     }
 
     // set the point pen to have a wider width
@@ -50,6 +56,13 @@ Whiteboard::~Whiteboard() {
     delete draw_operation;
     delete draw_x;
     delete draw_y;
+}
+
+// public slot that will change the current draw colour
+void Whiteboard::changeColour(int red, int green, int blue) {
+    current_colour.setRed(red);
+    current_colour.setGreen(green);
+    current_colour.setBlue(blue);
 }
 
 // overridden mousePressEvent function that will start a user's drawing
@@ -75,6 +88,9 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     // add in the current point as a line segment
     draw_x[next_draw_op] = event->x();
     draw_y[next_draw_op] = event->y();
+    draw_red[next_draw_op] = current_colour.red();
+    draw_green[next_draw_op] = current_colour.green();
+    draw_blue[next_draw_op] = current_colour.blue();
     draw_operation[next_draw_op] = 3;
     next_draw_op++;
 
@@ -91,6 +107,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     } else if(line_draw) {
         draw_x[next_draw_op] = event->x();
         draw_y[next_draw_op] = event->y();
+        draw_red[next_draw_op] = current_colour.red();
+        draw_green[next_draw_op] = current_colour.green();
+        draw_blue[next_draw_op] = current_colour.blue();
         draw_operation[next_draw_op] = 4;
         next_draw_op++;
     }
@@ -115,6 +134,11 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
 
     // go through all of the draw operations that are in the list
     for(unsigned int i = 0; i < next_draw_op; i++) {
+        // set the colour of the current position
+        current_colour.setRgb(draw_red[i], draw_green[i], draw_blue[i]);
+        point_pen.setColor(current_colour);
+        line_pen.setColor(current_colour);
+
         //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
         // go through each of the draw ops and draw the necessary action
         if(draw_operation[i] == 1) {

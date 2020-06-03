@@ -21,6 +21,17 @@ public:
     ColourSelector(int red, int green, int blue, QWidget *parent = 0);
     // destructor for the class
     ~ColourSelector();
+// signals of the class
+signals:
+    // signal that indicates that this colourselector was clicked
+    void clicked(int red, int green, int blue);
+// protected section of the class
+protected:
+    // overridden mouse release event
+    void mouseReleaseEvent(QMouseEvent* event);
+private:
+    // the red, green, and blue values of this colour selector
+    int red, green, blue;
 };
 
 #endif // _COLOURSELECTOR_HPP

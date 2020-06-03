@@ -25,6 +25,10 @@ public:
     Whiteboard(QWidget* parent = 0);
     // destructor for the class
     virtual ~Whiteboard();
+// public slots of the class
+public slots:
+    // slot that will change the current draw colour to the indicated colour
+    void changeColour(int red, int green, int blue);
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -55,6 +59,10 @@ private:
     unsigned int *draw_operation;
     unsigned int *draw_x;
     unsigned int *draw_y;
+    // arrays that contain the draw colours for each drawing op
+    int *draw_red;
+    int *draw_green;
+    int *draw_blue;
     // index to the next free draw op
     unsigned int next_draw_op;
     // indicates if we are doing a point or a line op

@@ -40,8 +40,10 @@ MainWindow::MainWindow(QWidget *parent)
     // add in colour selectors to the bottom bar
     ColourSelector *temp = new ColourSelector(0, 0, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(128, 0, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(255, 0, 0);
     bottom_bar_layout->addWidget(temp);
     temp = new ColourSelector(0, 128, 0);
