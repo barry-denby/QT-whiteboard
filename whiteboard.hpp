@@ -65,6 +65,8 @@ private:
     int *draw_red;
     int *draw_green;
     int *draw_blue;
+    // array that contains the size for each draw op
+    int *draw_sizes;
     // index to the next free draw op
     unsigned int next_draw_op;
     // indicates if we are doing a point or a line op
