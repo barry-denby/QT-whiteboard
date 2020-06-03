@@ -6,6 +6,7 @@
 // class that defines a fullscreen window that will have options for assisting with the whiteboard
 
 // includes
+#include <QHBoxLayout>
 #include <QWidget>
 #include "whiteboard.hpp"
 
@@ -19,6 +20,14 @@ public:
     MainWindow(QWidget *parent = 0);
     // destructor for the class
     ~MainWindow();
+// private section of the class
+private:
+    // function that will generate a hboxlayout with no contents margins in it
+    QHBoxLayout *generateHBoxNoMargins();
+    // function that will setup a basic toolbar. this is refactored out as we have two toolbars
+    QWidget *generateToolbar();
+    // whiteboard that everything will be drawn on
+    Whiteboard *whiteboard;
 };
 
 #endif // _MAINWINDOW_HPP
