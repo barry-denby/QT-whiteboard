@@ -4,8 +4,10 @@
 
 // includes
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QPalette>
 #include <QSizePolicy>
+#include <QSpinBox>
 #include <QVBoxLayout>
 #include "colourselector.hpp"
 #include "mainwindow.hpp"
@@ -80,6 +82,26 @@ MainWindow::MainWindow(QWidget *parent)
     temp = new ColourSelector(255, 255, 255);
     bottom_bar_layout->addWidget(temp);
     QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
+
+    // add in a label and spinbox for the point size
+    QLabel *point_size_label = new QLabel("Point Size:");
+    bottom_bar_layout->addWidget(point_size_label);
+    QSpinBox *point_size_spinbox = new QSpinBox();
+    point_size_spinbox->setRange(1, 100);
+    point_size_spinbox->setValue(2);
+    bottom_bar_layout->addWidget(point_size_spinbox);
+
+    // add in a label and spin box for the line thickness
+    QLabel *line_thickness_label = new QLabel("Line Thickness:");
+    bottom_bar_layout->addWidget(line_thickness_label);
+    QSpinBox *line_thickness_spinbox = new QSpinBox();
+    line_thickness_spinbox->setRange(1, 100);
+    line_thickness_spinbox->setValue(1);
+    bottom_bar_layout->addWidget(line_thickness_spinbox);
+
+    // add in a label for tools
+    QLabel *tools_label = new QLabel("Tools:");
+    bottom_bar_layout->addWidget(tools_label);
 
 }
 
