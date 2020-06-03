@@ -28,6 +28,9 @@ Whiteboard::Whiteboard(QWidget* parent)
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
+    // set a strong focus policy so we can get keyboard events
+    setFocusPolicy(Qt::StrongFocus);
+
     // fill the image with white to make sure we have our whiteboard
     //current_screen.fill(QColor(255, 255, 255));
 
@@ -48,9 +51,6 @@ Whiteboard::Whiteboard(QWidget* parent)
         draw_blue[i] = 0;
         draw_sizes[i] = 0;
     }
-
-    // set the point pen to have a wider width
-    point_pen.setWidth(3);
 }
 
 // destructor for the class
@@ -160,35 +160,18 @@ void Whiteboard::quitApplication() {
 
 // function that will undo the last draw operation
 void Whiteboard::undoLastDrawOp() {
-    // if the current index is already zero then do nothing
+    // if the next op is already zero then we cant remove anything
     if(next_draw_op == 0)
         return;
 
-    // look one back from the current operation and see what operation is there
-    if(draw_operation[next_draw_op - 1] == 1) {
-        // we have a point so just remove that draw op
-        next_draw_op--;
-        draw_operation[next_draw_op] = 0;
-        draw_x[next_draw_op] = 0;
-        draw_y[next_draw_op] = 0;
-    } else if(draw_operation[next_draw_op - 1] == 4) {
-        // we have a line so keep scanning back and deleting until we hit a 2
-        next_draw_op--;
-        while(draw_operation[next_draw_op] != 2) {
-            draw_operation[next_draw_op] = 0;
-            draw_x[next_draw_op] = 0;
-            draw_y[next_draw_op] = 0;
-            next_draw_op--;
-        }
-        draw_operation[next_draw_op] = 0;
-        draw_x[next_draw_op] = 0;
-        draw_y[next_draw_op] = 0;
+    // see what kind of draw op we have and take appropriate action
+    if(draw_operation[next_draw_op - 1] == POINT) {
+        // remove the point operation
+        removeLastDrawData();
     }
-
-    // update the widget when done
-    repaint();
 }
 
+// refactored function that will add in draw data to the necessary arrays
 void Whiteboard::addDrawData(unsigned int operation, int x, int y, int draw_size) {
     // add in the draw data
     draw_operation[next_draw_op] = operation;
@@ -199,4 +182,24 @@ void Whiteboard::addDrawData(unsigned int operation, int x, int y, int draw_size
     draw_blue[next_draw_op] = current_colour.blue();
     draw_sizes[next_draw_op] = draw_size;
     next_draw_op++;
+}
+
+// refactored function that will remove the last set of draw data from the arrays
+void Whiteboard::removeLastDrawData() {
+    // if the next op is already zero then we cant remove anything
+    if(next_draw_op == 0)
+        return;
+
+    // reduce next_draw_op by one and remove the data that is there
+    next_draw_op--;
+    draw_operation[next_draw_op] = NO_DRAW;
+    draw_x[next_draw_op] = 0;
+    draw_y[next_draw_op] = 0;
+    draw_red[next_draw_op] = 0;
+    draw_green[next_draw_op] = 0;
+    draw_blue[next_draw_op] = 0;
+    draw_sizes[next_draw_op] = 0;
+
+    // redraw the screen
+    repaint();
 }

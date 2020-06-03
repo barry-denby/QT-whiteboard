@@ -51,6 +51,8 @@ private slots:
 private:
     // function that will add the following draw data to the draw ops
     void addDrawData(unsigned int operation, int x, int y, int draw_size);
+    // function that will remove the last draw op from the data
+    void removeLastDrawData();
     // the current drawing colour
     QColor current_colour;
     // the image that will contain all of our data and will be rendered to screen
