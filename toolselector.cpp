@@ -21,6 +21,12 @@ ToolSelector::~ToolSelector() {
 
 }
 
+// function that will emit the clicked signal when the mouse button is released
+void ToolSelector::mouseReleaseEvent(QMouseEvent *event) {
+    emit clicked(tool);
+}
+
+// function that will paint the widget
 void ToolSelector::paintEvent(QPaintEvent *event) {
     // get a painter object and begin painting
     QPainter painter;

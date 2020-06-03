@@ -9,6 +9,7 @@
 // includes
 #include <QBrush>
 #include <QColor>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPen>
 #include <QWidget>
@@ -24,8 +25,14 @@ public:
     ToolSelector(const unsigned int tool, QWidget *parent = 0);
     // destructor for the class
     ~ToolSelector();
+// signals that can be emitted by the class
+signals:
+    // when selected the tool will emit which operation it is
+    void clicked(const unsigned int operation);
 // protected section of the class
 protected:
+    // overridden mouse release event that will emit the clicked signal for the operation
+    void mouseReleaseEvent(QMouseEvent *event);
     // overridden version of the paint event that will draw something different depending
     // on the tool constant
     void paintEvent(QPaintEvent *event);
