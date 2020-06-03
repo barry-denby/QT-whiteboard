@@ -75,35 +75,21 @@ void Whiteboard::changeTool(unsigned int tool) {
 
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
-    // create a draw op for the pointer and advance the index and state that are
-    // currently doing a point op
-    // draw_x[next_draw_op] = event->x();
-    // draw_y[next_draw_op] = event->y();
-    // draw_operation[next_draw_op] = 1;
-    // next_draw_op++;
-    // line_draw = false;
-
+    // see what operation we are doing
+    if (tool == OP_LINE_FIXED_THICKNESS) {
+        // we have the starting point of a line so store this in the draw operations
+        addDrawData(LINE_START, event->x(), event->y(), 1);
+    }
 }
 
 // overridden mouseMoveEvent function that will continue a user's drawing
 void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
-    // if there is movement change this to a line op and change the previous point to a line start
-    // if(!line_draw) {
-    //     line_draw = true;
-    //     draw_operation[next_draw_op - 1] = 2;
-    // }
-    //
-    // // add in the current point as a line segment
-    // draw_x[next_draw_op] = event->x();
-    // draw_y[next_draw_op] = event->y();
-    // draw_red[next_draw_op] = current_colour.red();
-    // draw_green[next_draw_op] = current_colour.green();
-    // draw_blue[next_draw_op] = current_colour.blue();
-    // draw_operation[next_draw_op] = 3;
-    // next_draw_op++;
-
-    // update the window
-    repaint();
+    // see what operation we are doing
+    if (tool == OP_LINE_FIXED_THICKNESS) {
+        // we have the continiouing point of a line so store this in the draw operations and repaint
+        addDrawData(LINE_POINT, event->x(), event->y(), 1);
+        repaint();
+    }
 }
 
 // overridden mouse release event that will finish drawing events
@@ -111,32 +97,14 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // do a different action depending on the event type
     if(tool == OP_POINT_FIXED_SIZE) {
         // we have a fixed point then just save it and update the draw ops
-        draw_operation[next_draw_op] = POINT;
-        draw_x[next_draw_op] = event->x();
-        draw_y[next_draw_op] = event->y();
-        draw_red[next_draw_op] = current_colour.red();
-        draw_green[next_draw_op] = current_colour.green();
-        draw_blue[next_draw_op] = current_colour.blue();
-        draw_sizes[next_draw_op] = 3;
-        next_draw_op++;
+        addDrawData(POINT, event->x(), event->y(), 3);
+        repaint();
+    } else if(tool == OP_LINE_FIXED_THICKNESS) {
+        // we have the end point of a line so store this in the draw operations and repaint
+        addDrawData(LINE_END, event->x(), event->y(), 1);
+        repaint();
     }
 
-    // if this is a point then finish the op
-    // if(!line_draw) {
-    //     repaint();
-    //     return;
-    // } else if(line_draw) {
-    //     draw_x[next_draw_op] = event->x();
-    //     draw_y[next_draw_op] = event->y();
-    //     draw_red[next_draw_op] = current_colour.red();
-    //     draw_green[next_draw_op] = current_colour.green();
-    //     draw_blue[next_draw_op] = current_colour.blue();
-    //     draw_operation[next_draw_op] = 4;
-    //     next_draw_op++;
-    // }
-
-    // update the window
-    repaint();
 }
 
 // overridden paint event class that will paint the screen
@@ -167,8 +135,9 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
             point_pen.setWidth(draw_sizes[i]);
             painter.setPen(point_pen);
             painter.drawPoint(draw_x[i], draw_y[i]);
-        } else if(draw_operation[i] == 3 || draw_operation[i] == 4) {
+        } else if(draw_operation[i] == LINE_POINT || draw_operation[i] == LINE_END) {
             // draw this line segment
+            line_pen.setWidth(draw_sizes[i]);
             painter.setPen(line_pen);
             painter.drawLine(draw_x[i - 1], draw_y[i - 1], draw_x[i], draw_y[i]);
         }
@@ -218,4 +187,16 @@ void Whiteboard::undoLastDrawOp() {
 
     // update the widget when done
     repaint();
+}
+
+void Whiteboard::addDrawData(unsigned int operation, int x, int y, int draw_size) {
+    // add in the draw data
+    draw_operation[next_draw_op] = operation;
+    draw_x[next_draw_op] = x;
+    draw_y[next_draw_op] = y;
+    draw_red[next_draw_op] = current_colour.red();
+    draw_green[next_draw_op] = current_colour.green();
+    draw_blue[next_draw_op] = current_colour.blue();
+    draw_sizes[next_draw_op] = draw_size;
+    next_draw_op++;
 }
