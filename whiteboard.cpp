@@ -47,7 +47,7 @@ Whiteboard::Whiteboard(QWidget* parent)
     }
 
     // set the point pen to have a wider width
-    point_pen.setWidth(2);
+    point_pen.setWidth(3);
 }
 
 // destructor for the class

@@ -9,8 +9,10 @@
 #include <QSizePolicy>
 #include <QSpinBox>
 #include <QVBoxLayout>
+#include "constants.hpp"
 #include "colourselector.hpp"
 #include "mainwindow.hpp"
+#include "toolselector.hpp"
 
 // constructor for the class
 MainWindow::MainWindow(QWidget *parent)
@@ -102,6 +104,10 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label for tools
     QLabel *tools_label = new QLabel("Tools:");
     bottom_bar_layout->addWidget(tools_label);
+
+    // add in our normal point tool
+    ToolSelector *tool_selector = new ToolSelector(OP_POINT);
+    bottom_bar_layout->addWidget(tool_selector); 
 
 }
 
