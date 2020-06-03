@@ -168,7 +168,15 @@ void Whiteboard::undoLastDrawOp() {
     if(draw_operation[next_draw_op - 1] == POINT) {
         // remove the point operation
         removeLastDrawData();
+    } else if(draw_operation[next_draw_op - 1] == LINE_END) {
+        // keep going back until we hit the line start, then remove the line start
+        while(draw_operation[next_draw_op - 1] != LINE_START)
+            removeLastDrawData();
+        removeLastDrawData();
     }
+
+    // redraw the screen
+    repaint();
 }
 
 // refactored function that will add in draw data to the necessary arrays
@@ -199,7 +207,4 @@ void Whiteboard::removeLastDrawData() {
     draw_green[next_draw_op] = 0;
     draw_blue[next_draw_op] = 0;
     draw_sizes[next_draw_op] = 0;
-
-    // redraw the screen
-    repaint();
 }
