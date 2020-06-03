@@ -7,6 +7,7 @@
 #include <QPalette>
 #include <QSizePolicy>
 #include <QVBoxLayout>
+#include "colourselector.hpp"
 #include "mainwindow.hpp"
 
 // constructor for the class
@@ -32,8 +33,39 @@ MainWindow::MainWindow(QWidget *parent)
     bottom_bar->setPalette(pal);
     bottom_bar->setMaximumHeight(32);
     QHBoxLayout *bottom_bar_layout = new QHBoxLayout();
+    bottom_bar_layout->setContentsMargins(0, 0, 0, 0);
     bottom_bar->setLayout(bottom_bar_layout);
     whiteboard_container_layout->addWidget(bottom_bar);
+
+    // add in colour selectors to the bottom bar
+    ColourSelector *temp = new ColourSelector(0, 0, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(128, 0, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(255, 0, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 128, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 255, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 0, 128);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 0, 255);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(128, 128, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(255, 255, 0);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(128, 0, 128);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(255, 0, 255);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 128, 128);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(0, 255, 255);
+    bottom_bar_layout->addWidget(temp);
+    temp = new ColourSelector(255, 255, 255);
+    bottom_bar_layout->addWidget(temp);
 
 }
 
