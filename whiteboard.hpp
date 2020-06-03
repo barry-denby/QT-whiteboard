@@ -29,6 +29,8 @@ public:
 public slots:
     // slot that will change the current draw colour to the indicated colour
     void changeColour(int red, int green, int blue);
+    // slot that will change the tool to the indicated tool
+    void changeTool(unsigned int tool);
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -70,6 +72,8 @@ private:
     // pen for drawing a point, and pen draw drawing lines
     QPen point_pen;
     QPen line_pen;
+    // the current tool that is being used
+    unsigned int tool;
 };
 
 #endif // _WHITEBOARD_HPP

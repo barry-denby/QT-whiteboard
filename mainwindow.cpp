@@ -121,4 +121,5 @@ void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int op
     // generate the tool and add it to the layout
     ToolSelector *tool_selector = new ToolSelector(operation);
     layout->addWidget(tool_selector);
+    QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), whiteboard, SLOT(changeTool(unsigned int)));
 }

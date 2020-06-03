@@ -65,6 +65,11 @@ void Whiteboard::changeColour(int red, int green, int blue) {
     current_colour.setBlue(blue);
 }
 
+// public slot taht will change the current draw tool
+void Whiteboard::changeTool(unsigned int tool) {
+    this->tool = tool;
+}
+
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
     // create a draw op for the pointer and advance the index and state that are
