@@ -69,21 +69,11 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *tools_label = new QLabel("Tools:");
     toolbar_layout->addWidget(tools_label);
 
-    // add in our normal point tool
-    ToolSelector *tool_selector = new ToolSelector(OP_POINT_FIXED_SIZE);
-    toolbar_layout->addWidget(tool_selector);
-
-    // add in our line tool
-    tool_selector = new ToolSelector(OP_LINE_FIXED_THICKNESS);
-    toolbar_layout->addWidget(tool_selector);
-
-    // add in our variable point tool
-    tool_selector = new ToolSelector(OP_POINT_VARIABLE_SIZE);
-    toolbar_layout->addWidget(tool_selector);
-
-    // add in our variable line tool
-    tool_selector = new ToolSelector(OP_LINE_VARIABLE_THICKNESS);
-    toolbar_layout->addWidget(tool_selector);
+    // add in all of our tools
+    generateToolSelector(toolbar_layout, OP_POINT_FIXED_SIZE);
+    generateToolSelector(toolbar_layout, OP_POINT_VARIABLE_SIZE);
+    generateToolSelector(toolbar_layout, OP_LINE_FIXED_THICKNESS);
+    generateToolSelector(toolbar_layout, OP_LINE_VARIABLE_THICKNESS);
 
 }
 
@@ -123,4 +113,12 @@ QWidget *MainWindow::generateToolbar() {
 
     // return the toolbar when finished
     return toolbar;
+}
+
+// refactored method that will generate the given tool selector, add it to the layout, and setup the
+// appropriate signals
+void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int operation) {
+    // generate the tool and add it to the layout
+    ToolSelector *tool_selector = new ToolSelector(operation);
+    layout->addWidget(tool_selector);
 }

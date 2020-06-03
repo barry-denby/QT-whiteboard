@@ -29,6 +29,8 @@ private:
     QHBoxLayout *generateHBoxNoMargins();
     // function that will setup a basic toolbar. this is refactored out as we have two toolbars
     QWidget *generateToolbar();
+    // function that will generate and attach the given tool selector to the given layout
+    void generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
     // whiteboard that everything will be drawn on
     Whiteboard *whiteboard;
 };
