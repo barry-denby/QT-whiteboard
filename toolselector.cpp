@@ -32,10 +32,12 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
     painter.drawRect(0, 0, 32, 32);
 
     // draw a tool depending on what tool constant we have
-    if(tool == OP_POINT)
+    if(tool == OP_POINT_FIXED_SIZE)
         drawPointTool(painter);
-    else if(tool == OP_LINE)
+    else if(tool == OP_LINE_FIXED_THICKNESS)
         drawLineTool(painter);
+    else if(tool == OP_POINT_VARIABLE_SIZE)
+        drawPointVariableTool(painter);
 
     // finish the painting when done
     painter.end();
@@ -53,4 +55,12 @@ void ToolSelector::drawPointTool(QPainter &painter) {
     pen.setWidth(3);
     painter.setPen(pen);
     painter.drawPoint(16, 16);
+}
+
+void ToolSelector::drawPointVariableTool(QPainter &painter) {
+    // set the pen width to one and draw a larger circle for this point
+    pen.setWidth(1);
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.drawEllipse(13, 13, 6, 6);
 }

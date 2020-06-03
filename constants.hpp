@@ -6,9 +6,9 @@
 // defines all of the constants for our application
 
 // constants for all of our operations
-const unsigned int OP_POINT = 0;
-const unsigned int OP_LINE = 1;
-const unsigned int OP_POINT_LARGER = 2;
-const unsigned int OP_LINE_THICKER = 3;
+const unsigned int OP_POINT_FIXED_SIZE = 0;
+const unsigned int OP_LINE_FIXED_THICKNESS = 1;
+const unsigned int OP_POINT_VARIABLE_SIZE = 2;
+const unsigned int OP_LINE_VARIABLE_THICKNESS = 3;
 
 #endif // __CONSTANTS_HPP

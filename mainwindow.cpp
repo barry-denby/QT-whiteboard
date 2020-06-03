@@ -106,12 +106,20 @@ MainWindow::MainWindow(QWidget *parent)
     bottom_bar_layout->addWidget(tools_label);
 
     // add in our normal point tool
-    ToolSelector *tool_selector = new ToolSelector(OP_POINT);
+    ToolSelector *tool_selector = new ToolSelector(OP_POINT_FIXED_SIZE);
     bottom_bar_layout->addWidget(tool_selector);
 
     // add in our line tool
-    tool_selector = new ToolSelector(OP_LINE);
-    bottom_bar_layout->addWidget(tool_selector); 
+    tool_selector = new ToolSelector(OP_LINE_FIXED_THICKNESS);
+    bottom_bar_layout->addWidget(tool_selector);
+
+    // add in our variable point tool
+    tool_selector = new ToolSelector(OP_POINT_VARIABLE_SIZE);
+    bottom_bar_layout->addWidget(tool_selector);
+
+    // add in our variable line tool
+    tool_selector = new ToolSelector(OP_LINE_VARIABLE_THICKNESS);
+    bottom_bar_layout->addWidget(tool_selector);
 
 }
 
