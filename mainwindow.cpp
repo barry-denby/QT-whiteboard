@@ -46,28 +46,40 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(255, 0, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 128, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 255, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 0, 128);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 0, 255);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(128, 128, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(255, 255, 0);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(128, 0, 128);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(255, 0, 255);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 128, 128);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(0, 255, 255);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
     temp = new ColourSelector(255, 255, 255);
     bottom_bar_layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
 
 }
 
