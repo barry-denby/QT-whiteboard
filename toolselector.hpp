@@ -31,6 +31,8 @@ protected:
     void paintEvent(QPaintEvent *event);
 // private section of the class
 private:
+    // function that will draw the simple line tool
+    void drawLineTool(QPainter &painter);
     // function that will draw the simple point tool
     void drawPointTool(QPainter &painter);
     // the tool that this selector represents

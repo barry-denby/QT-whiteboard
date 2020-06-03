@@ -107,6 +107,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // add in our normal point tool
     ToolSelector *tool_selector = new ToolSelector(OP_POINT);
+    bottom_bar_layout->addWidget(tool_selector);
+
+    // add in our line tool
+    tool_selector = new ToolSelector(OP_LINE);
     bottom_bar_layout->addWidget(tool_selector); 
 
 }

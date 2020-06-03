@@ -32,12 +32,20 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
     painter.drawRect(0, 0, 32, 32);
 
     // draw a tool depending on what tool constant we have
-    if(tool == OP_POINT) {
+    if(tool == OP_POINT)
         drawPointTool(painter);
-    }
+    else if(tool == OP_LINE)
+        drawLineTool(painter);
 
     // finish the painting when done
     painter.end();
+}
+
+void ToolSelector::drawLineTool(QPainter &painter) {
+    // set the point size to three and draw a line in the middle
+    pen.setWidth(1);
+    painter.setPen(pen);
+    painter.drawLine(0, 32, 32, 0);
 }
 
 void ToolSelector::drawPointTool(QPainter &painter) {
