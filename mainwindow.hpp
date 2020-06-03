@@ -8,6 +8,7 @@
 // includes
 #include <QHBoxLayout>
 #include <QWidget>
+#include "colourselector.hpp"
 #include "whiteboard.hpp"
 
 // class definition
@@ -22,6 +23,8 @@ public:
     ~MainWindow();
 // private section of the class
 private:
+    // function that will generate and attach a colour picker to the given layout
+    void generateColourSelector(QHBoxLayout *layout, int red, int green, int blue);
     // function that will generate a hboxlayout with no contents margins in it
     QHBoxLayout *generateHBoxNoMargins();
     // function that will setup a basic toolbar. this is refactored out as we have two toolbars

@@ -22,71 +22,32 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout *whiteboard_container_layout = new QVBoxLayout();
     this->setLayout(whiteboard_container_layout);
 
-    // set a palette that we will use to paint the background to grey
-    //QPalette pal = palette();
-    //pal.setColor(QPalette::Background, QColor(128, 128, 128));
-
     // add a whiteboard to the layout and drop all of the margins
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
 
     // create a widget with a hbox layout and add it to the main view
-    //QWidget *bottom_bar = new QWidget();
-    //bottom_bar->setAutoFillBackground(true);
-    //bottom_bar->setPalette(pal);
-    //bottom_bar->setMaximumHeight(32);
-    //QHBoxLayout *bottom_bar_layout = new QHBoxLayout();
-    //bottom_bar_layout->setContentsMargins(0, 0, 0, 0);
-    //bottom_bar->setLayout(bottom_bar_layout);
     QWidget *toolbar = generateToolbar();
     QHBoxLayout *toolbar_layout = generateHBoxNoMargins();
     toolbar->setLayout(toolbar_layout);
     whiteboard_container_layout->addWidget(toolbar);
 
     // add in colour selectors to the bottom bar
-    ColourSelector *temp = new ColourSelector(0, 0, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(128, 0, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(255, 0, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 128, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 255, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 0, 128);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 0, 255);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(128, 128, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(255, 255, 0);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(128, 0, 128);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(255, 0, 255);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 128, 128);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(0, 255, 255);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
-    temp = new ColourSelector(255, 255, 255);
-    toolbar_layout->addWidget(temp);
-    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
+    generateColourSelector(toolbar_layout, 0, 0, 0);
+    generateColourSelector(toolbar_layout, 128, 0, 0);
+    generateColourSelector(toolbar_layout, 255, 0, 0);
+    generateColourSelector(toolbar_layout, 0, 128, 0);
+    generateColourSelector(toolbar_layout, 0, 255, 0);
+    generateColourSelector(toolbar_layout, 0, 0, 128);
+    generateColourSelector(toolbar_layout, 0, 0, 255);
+    generateColourSelector(toolbar_layout, 128, 128, 0);
+    generateColourSelector(toolbar_layout, 255, 255, 0);
+    generateColourSelector(toolbar_layout, 128, 0, 128);
+    generateColourSelector(toolbar_layout, 255, 0, 255);
+    generateColourSelector(toolbar_layout, 0, 128, 128);
+    generateColourSelector(toolbar_layout, 0, 255, 255);
+    generateColourSelector(toolbar_layout, 255, 255, 255);
 
     // add in a label and spinbox for the point size
     QLabel *point_size_label = new QLabel("Point Size:");
@@ -129,6 +90,14 @@ MainWindow::MainWindow(QWidget *parent)
 // destructor for the class
 MainWindow::~MainWindow() {
 
+}
+
+// refactored function that will generate and return a colour sleector with the given colour
+// this will also set up the appropriate signals
+void MainWindow::generateColourSelector(QHBoxLayout *layout, int red, int green, int blue) {
+    ColourSelector *temp = new ColourSelector(red, green, blue);
+    layout->addWidget(temp);
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
 }
 
 // refactored function that will generate and return a hbox with no contents margins
