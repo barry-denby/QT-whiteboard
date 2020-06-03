@@ -33,6 +33,8 @@ protected:
 private:
     // function that will draw the simple line tool
     void drawLineTool(QPainter &painter);
+    // function that will draw the variable line tool
+    void drawLineVariableTool(QPainter &painter);
     // function that will draw the simple point tool
     void drawPointTool(QPainter &painter);
     // function that will draw the variable point tool
