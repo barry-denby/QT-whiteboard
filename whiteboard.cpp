@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), current_screen(1920, 1080, QImage::Format_RGB32), next_draw_op(0), line_draw(false), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_FIXED_SIZE)
+: QWidget(parent), current_colour(0, 0, 0), current_screen(1920, 1080, QImage::Format_RGB32), next_draw_op(0), line_draw(false), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -76,7 +76,7 @@ void Whiteboard::changeTool(unsigned int tool) {
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
     // see what operation we are doing
-    if (tool == OP_LINE_FIXED_THICKNESS) {
+    if (tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the starting point of a line so store this in the draw operations
         addDrawData(LINE_START, event->x(), event->y(), 1);
     }
@@ -85,7 +85,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
 // overridden mouseMoveEvent function that will continue a user's drawing
 void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     // see what operation we are doing
-    if (tool == OP_LINE_FIXED_THICKNESS) {
+    if (tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         addDrawData(LINE_POINT, event->x(), event->y(), 1);
         repaint();
@@ -95,11 +95,11 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
 // overridden mouse release event that will finish drawing events
 void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // do a different action depending on the event type
-    if(tool == OP_POINT_FIXED_SIZE) {
+    if(tool == OP_POINT_VARIABLE_SIZE) {
         // we have a fixed point then just save it and update the draw ops
         addDrawData(POINT, event->x(), event->y(), 3);
         repaint();
-    } else if(tool == OP_LINE_FIXED_THICKNESS) {
+    } else if(tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the end point of a line so store this in the draw operations and repaint
         addDrawData(LINE_END, event->x(), event->y(), 1);
         repaint();

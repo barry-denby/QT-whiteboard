@@ -70,9 +70,9 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(tools_label);
 
     // add in all of our tools
-    generateToolSelector(toolbar_layout, OP_POINT_FIXED_SIZE);
+    //generateToolSelector(toolbar_layout, OP_POINT_FIXED_SIZE);
     generateToolSelector(toolbar_layout, OP_POINT_VARIABLE_SIZE);
-    generateToolSelector(toolbar_layout, OP_LINE_FIXED_THICKNESS);
+    //generateToolSelector(toolbar_layout, OP_LINE_FIXED_THICKNESS);
     generateToolSelector(toolbar_layout, OP_LINE_VARIABLE_THICKNESS);
 
 }
