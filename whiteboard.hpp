@@ -31,6 +31,10 @@ public slots:
     void changeColour(int red, int green, int blue);
     // slot that will change the tool to the indicated tool
     void changeTool(unsigned int tool);
+    // slot that will change the point size
+    void changePointSize(int point_size);
+    // slot that will change the line thickness
+    void changeLineThickness(int line_thickness);
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -80,6 +84,9 @@ private:
     QPen line_pen;
     // the current tool that is being used
     unsigned int tool;
+    // the current line thickness and point sizes
+    int current_line_thickness, current_point_size;
+
 };
 
 #endif // _WHITEBOARD_HPP

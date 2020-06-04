@@ -49,16 +49,19 @@ MainWindow::MainWindow(QWidget *parent)
     generateColourSelector(toolbar_layout, 0, 255, 255);
     generateColourSelector(toolbar_layout, 255, 255, 255);
 
-    // add in a label and spinbox for the point size
+    // add in a label and spinbox for the point size. connect tthe spinbox to the
+    // appropriate method in the whiteboard
     QLabel *point_size_label = new QLabel("Point Size:");
     toolbar_layout->addWidget(point_size_label);
     point_size_spinbox = new QSpinBox();
     point_size_spinbox->setRange(1, 100);
     point_size_spinbox->setValue(3);
     toolbar_layout->addWidget(point_size_spinbox);
+    QObject::connect(point_size_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changePointSize(int)));
 
     // add in a label and spin box for the line thickness. disable this to begin
-    // with as we will default to a point operation
+    // with as we will default to a point operation. connect the spinbox to the
+    // appropriate method in the whiteboard
     QLabel *line_thickness_label = new QLabel("Line Thickness:");
     toolbar_layout->addWidget(line_thickness_label);
     line_thickness_spinbox = new QSpinBox();
@@ -66,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     line_thickness_spinbox->setValue(1);
     line_thickness_spinbox->setEnabled(false);
     toolbar_layout->addWidget(line_thickness_spinbox);
+    QObject::connect(line_thickness_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeLineThickness(int)));
 
     // add in a label for tools
     QLabel *tools_label = new QLabel("Tools:");
