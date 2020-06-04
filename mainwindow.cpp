@@ -22,6 +22,13 @@ MainWindow::MainWindow(QWidget *parent)
     QVBoxLayout *whiteboard_container_layout = new QVBoxLayout();
     this->setLayout(whiteboard_container_layout);
 
+    // create a widget with a hbox layout and add it to the main view. this will serve as our
+    // bar for naming and saving.
+    QWidget *main_toolbar = generateToolbar();
+    QHBoxLayout *main_toolbar_layout = generateHBoxNoMargins();
+    main_toolbar->setLayout(main_toolbar_layout);
+    whiteboard_container_layout->addWidget(main_toolbar);
+
     // add a whiteboard to the layout and drop all of the margins
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
