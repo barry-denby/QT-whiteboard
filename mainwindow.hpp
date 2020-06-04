@@ -7,6 +7,7 @@
 
 // includes
 #include <QHBoxLayout>
+#include <QSpinBox>
 #include <QWidget>
 #include "colourselector.hpp"
 #include "whiteboard.hpp"
@@ -21,6 +22,10 @@ public:
     MainWindow(QWidget *parent = 0);
     // destructor for the class
     ~MainWindow();
+// private slots of the class
+private slots:
+    // slot that readjust the spinners depending on the operation we have
+    void enableSpinBoxes(const unsigned int op);
 // private section of the class
 private:
     // function that will generate and attach a colour picker to the given layout
@@ -33,6 +38,8 @@ private:
     void generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
     // whiteboard that everything will be drawn on
     Whiteboard *whiteboard;
+    // spinboxes for determining the point size and line thickness
+    QSpinBox *point_size_spinbox, *line_thickness_spinbox;
 };
 
 #endif // _MAINWINDOW_HPP

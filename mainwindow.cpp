@@ -52,17 +52,19 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label and spinbox for the point size
     QLabel *point_size_label = new QLabel("Point Size:");
     toolbar_layout->addWidget(point_size_label);
-    QSpinBox *point_size_spinbox = new QSpinBox();
+    point_size_spinbox = new QSpinBox();
     point_size_spinbox->setRange(1, 100);
-    point_size_spinbox->setValue(2);
+    point_size_spinbox->setValue(3);
     toolbar_layout->addWidget(point_size_spinbox);
 
-    // add in a label and spin box for the line thickness
+    // add in a label and spin box for the line thickness. disable this to begin
+    // with as we will default to a point operation
     QLabel *line_thickness_label = new QLabel("Line Thickness:");
     toolbar_layout->addWidget(line_thickness_label);
-    QSpinBox *line_thickness_spinbox = new QSpinBox();
+    line_thickness_spinbox = new QSpinBox();
     line_thickness_spinbox->setRange(1, 100);
     line_thickness_spinbox->setValue(1);
+    line_thickness_spinbox->setEnabled(false);
     toolbar_layout->addWidget(line_thickness_spinbox);
 
     // add in a label for tools
@@ -80,6 +82,20 @@ MainWindow::MainWindow(QWidget *parent)
 // destructor for the class
 MainWindow::~MainWindow() {
 
+}
+
+// slot that readjust the spinners depending on the operation we have
+void MainWindow::enableSpinBoxes(const unsigned int op) {
+    // adjust the spinboxed based on the operation
+    if(op == OP_POINT_VARIABLE_SIZE) {
+        // enable the point and disable the line
+        point_size_spinbox->setEnabled(true);
+        line_thickness_spinbox->setEnabled(false);
+    } else if(op == OP_LINE_VARIABLE_THICKNESS) {
+        // enable the point and disable the line
+        point_size_spinbox->setEnabled(false);
+        line_thickness_spinbox->setEnabled(true);
+    }
 }
 
 // refactored function that will generate and return a colour sleector with the given colour
@@ -118,8 +134,10 @@ QWidget *MainWindow::generateToolbar() {
 // refactored method that will generate the given tool selector, add it to the layout, and setup the
 // appropriate signals
 void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int operation) {
-    // generate the tool and add it to the layout
+    // generate the tool and add it to the layout and connet the clicked signal to the whiteboard
+    // and to the spinbox adjuster here
     ToolSelector *tool_selector = new ToolSelector(operation);
     layout->addWidget(tool_selector);
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), whiteboard, SLOT(changeTool(unsigned int)));
+    QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), this, SLOT(enableSpinBoxes(unsigned int)));
 }
