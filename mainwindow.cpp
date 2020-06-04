@@ -5,7 +5,9 @@
 // includes
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPalette>
+#include <QPushButton>
 #include <QSizePolicy>
 #include <QSpinBox>
 #include <QVBoxLayout>
@@ -28,6 +30,44 @@ MainWindow::MainWindow(QWidget *parent)
     QHBoxLayout *main_toolbar_layout = generateHBoxNoMargins();
     main_toolbar->setLayout(main_toolbar_layout);
     whiteboard_container_layout->addWidget(main_toolbar);
+
+    // add in a button for a new set of images to draw
+    QPushButton *new_button = new QPushButton("New");
+    main_toolbar_layout->addWidget(new_button);
+
+    // add in a button for opening a set of draw operations
+    QPushButton *open_button = new QPushButton("Open");
+    main_toolbar_layout->addWidget(open_button);
+
+    // add in a save button for the set of images
+    QPushButton *save_button = new QPushButton("Save");
+    main_toolbar_layout->addWidget(save_button);
+
+    // add in an export to PNG button
+    QPushButton *export_png_button = new QPushButton("Export PNG");
+    main_toolbar_layout->addWidget(export_png_button);
+
+    // add in a button for adding an image
+    QPushButton *add_button = new QPushButton("Add image");
+    main_toolbar_layout->addWidget(add_button);
+
+    // add in a button for deleting an image
+    QPushButton *delete_button = new QPushButton("Delete image");
+    main_toolbar_layout->addWidget(delete_button);
+
+    // add in a spinbox for choosing the image number along with labels for this
+    QLabel *image_number_label = new QLabel("Viewing image:");
+    main_toolbar_layout->addWidget(image_number_label);
+    QSpinBox *image_selector_spinbox = new QSpinBox();
+    main_toolbar_layout->addWidget(image_selector_spinbox);
+    QLabel *total_images_label = new QLabel("/ 1");
+    main_toolbar_layout->addWidget(total_images_label);
+
+    // add in a label for the image title and a line edit for changing that image title
+    QLabel *image_title_label = new QLabel("image Title:");
+    main_toolbar_layout->addWidget(image_title_label);
+    QLineEdit *image_title_edit = new QLineEdit();
+    main_toolbar_layout->addWidget(image_title_edit);
 
     // add a whiteboard to the layout and drop all of the margins
     whiteboard = new Whiteboard();

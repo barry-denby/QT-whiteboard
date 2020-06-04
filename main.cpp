@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     //Whiteboard board;
     MainWindow board;
     //board.showFullScreen();
-    board.show();
+    board.showMaximized();
 
     // return the status of the application
     return app.exec();
