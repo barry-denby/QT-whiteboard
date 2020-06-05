@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *image_number_label = new QLabel("Viewing image:");
     main_toolbar_layout->addWidget(image_number_label);
     image_selector_spinbox = new QSpinBox();
-    image_selector_spinbox->setValue(1);
+    image_selector_spinbox->setRange(1, 1);
     main_toolbar_layout->addWidget(image_selector_spinbox);
     total_images_label = new QLabel("/ 1");
     main_toolbar_layout->addWidget(total_images_label);
@@ -169,7 +169,7 @@ void MainWindow::startNewWhiteboard() {
 
     // ask the whiteboard to reset itself. then reset the UI to reflect this
     whiteboard->resetWhiteBoard();
-    image_selector_spinbox->setValue(1);
+    image_selector_spinbox->setRange(1, 1);
     total_images_label->setText("/ 1");
 }
 
