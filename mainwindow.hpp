@@ -7,6 +7,7 @@
 
 // includes
 #include <QHBoxLayout>
+#include <QLabel>
 #include <QSpinBox>
 #include <QWidget>
 #include "colourselector.hpp"
@@ -44,6 +45,8 @@ private:
     QSpinBox *point_size_spinbox, *line_thickness_spinbox;
     // spinbox for our image selector
     QSpinBox *image_selector_spinbox;
+    // label stating how many images we have
+    QLabel *total_images_label;
 };
 
 #endif // _MAINWINDOW_HPP

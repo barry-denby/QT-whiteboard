@@ -63,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
     image_selector_spinbox = new QSpinBox();
     image_selector_spinbox->setValue(1);
     main_toolbar_layout->addWidget(image_selector_spinbox);
-    QLabel *total_images_label = new QLabel("/ 1");
+    total_images_label = new QLabel("/ 1");
     main_toolbar_layout->addWidget(total_images_label);
 
     // add in a label for the image title and a line edit for changing that image title
@@ -170,6 +170,7 @@ void MainWindow::startNewWhiteboard() {
     // ask the whiteboard to reset itself. then reset the UI to reflect this
     whiteboard->resetWhiteBoard();
     image_selector_spinbox->setValue(1);
+    total_images_label->setText("/ 1");
 }
 
 // refactored function that will generate and return a colour sleector with the given colour

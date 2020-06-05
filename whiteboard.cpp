@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16)
+: QWidget(parent), current_colour(0, 0, 0), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16), image_total(1)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -48,6 +48,7 @@ void Whiteboard::resetWhiteBoard() {
     images = (DrawOperations *) new DrawOperations[16];
     image_current = 0;
     image_max = 16;
+    image_total = 1;
 }
 
 // public slot that will change the current draw colour

@@ -70,6 +70,8 @@ private:
     // the current image we are looking at and the maximum number of images we have
     unsigned int image_current;
     unsigned int image_max;
+    // how many images does this whiteboard have in total
+    unsigned int image_total;
 };
 
 #endif // _WHITEBOARD_HPP
