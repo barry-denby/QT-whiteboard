@@ -49,18 +49,32 @@ Whiteboard::~Whiteboard() {
 void Whiteboard::addNewImage() {
     // if we have used up our full set of images so we will need to allocate memory for more by doubling it
     if(image_total == image_max) {
-        std::cout << "need to double memory here" << std::endl;
-        return;
+        // we will need to double up the memory before going any further. start off by allocating a new
+        // array of draw operations that is twice as large
+        unsigned int larger_size = image_max * 2;
+        DrawOperations **larger_array = (DrawOperations **) new DrawOperations*[larger_size];
+
+        // move all of the previous draw operations into the new array
+        for(unsigned int i = 0; i < image_max; i++)
+            larger_array[i] = images[i];
+
+        // allocate new draw operations in the remaining space
+        for(unsigned int i = image_max; i < larger_size; i++)
+            larger_array[i] = new DrawOperations();
+
+        // replace the old array with the new one
+        delete images;
+        images = larger_array;
+        image_max = larger_size;
+
     }
 
     // see what situation we have now
     if (image_total == image_current + 1) {
-        std::cout << "adding to end" << std::endl;
         // we are adding a new image to the end of the list so just increment the current by 1
         image_current++;
         image_total++;
     } else {
-        std::cout << "adding in middle" << std::endl;
         // we are adding a new image in between another image so we will need to take an unused one off the end
         // and insert it before after the current image we will start by getting a reference to the end image
         DrawOperations *temp = images[image_max - 1];
