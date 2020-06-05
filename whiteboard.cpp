@@ -43,7 +43,11 @@ Whiteboard::~Whiteboard() {
 
 // function that will reset the state of the whiteboard to its original state
 void Whiteboard::resetWhiteBoard() {
-
+    // delete the current array of objects and put a new one in its place
+    delete[] images;
+    images = (DrawOperations *) new DrawOperations[16];
+    image_current = 0;
+    image_max = 16;
 }
 
 // public slot that will change the current draw colour

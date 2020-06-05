@@ -42,6 +42,8 @@ private:
     Whiteboard *whiteboard;
     // spinboxes for determining the point size and line thickness
     QSpinBox *point_size_spinbox, *line_thickness_spinbox;
+    // spinbox for our image selector
+    QSpinBox *image_selector_spinbox;
 };
 
 #endif // _MAINWINDOW_HPP

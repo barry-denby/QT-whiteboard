@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a spinbox for choosing the image number along with labels for this
     QLabel *image_number_label = new QLabel("Viewing image:");
     main_toolbar_layout->addWidget(image_number_label);
-    QSpinBox *image_selector_spinbox = new QSpinBox();
+    image_selector_spinbox = new QSpinBox();
     image_selector_spinbox->setValue(1);
     main_toolbar_layout->addWidget(image_selector_spinbox);
     QLabel *total_images_label = new QLabel("/ 1");
@@ -167,8 +167,9 @@ void MainWindow::startNewWhiteboard() {
     if(result == QMessageBox::No)
         return;
 
-    // ask the whiteboard to reset itself.
+    // ask the whiteboard to reset itself. then reset the UI to reflect this
     whiteboard->resetWhiteBoard();
+    image_selector_spinbox->setValue(1);
 }
 
 // refactored function that will generate and return a colour sleector with the given colour
