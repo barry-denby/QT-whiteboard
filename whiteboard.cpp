@@ -38,7 +38,7 @@ Whiteboard::Whiteboard(QWidget* parent)
 // destructor for the class
 Whiteboard::~Whiteboard() {
     // delete the memory for the draw operations. this core dumps so will need to fix this
-    //delete images;
+    delete[] images;
 }
 
 // function that will reset the state of the whiteboard to its original state
