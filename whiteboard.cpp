@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), current_screen(1920, 1080, QImage::Format_RGB32), next_draw_op(0), line_draw(false), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16)
+: QWidget(parent), current_colour(0, 0, 0), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -31,37 +31,19 @@ Whiteboard::Whiteboard(QWidget* parent)
     // set a strong focus policy so we can get keyboard events
     setFocusPolicy(Qt::StrongFocus);
 
-    // fill the image with white to make sure we have our whiteboard
-    //current_screen.fill(QColor(255, 255, 255));
-
-    // initialise support for 64K drawing ops
-    draw_operation = (unsigned int*) new unsigned int[65536];
-    draw_x = (unsigned int*) new unsigned int[65536];
-    draw_y = (unsigned int*) new unsigned int[65536];
-    draw_red = (int *) new int[65536];
-    draw_green = (int *) new int[65536];
-    draw_blue = (int *) new int[65536];
-    draw_sizes = (int *) new int[65536];
-    for(unsigned int i = 0; i < 65536; i++) {
-        draw_operation[i] = 0;
-        draw_x[i] = 0;
-        draw_y[i] = 0;
-        draw_red[i] = 0;
-        draw_green[i] = 0;
-        draw_blue[i] = 0;
-        draw_sizes[i] = 0;
-    }
-
     // allocate space for 16 images
     images = (DrawOperations *) new DrawOperations[16];
 }
 
 // destructor for the class
 Whiteboard::~Whiteboard() {
-    // delete the memory for the draw operations
-    delete draw_operation;
-    delete draw_x;
-    delete draw_y;
+    // delete the memory for the draw operations. this core dumps so will need to fix this
+    //delete images;
+}
+
+// function that will reset the state of the whiteboard to its original state
+void Whiteboard::resetWhiteBoard() {
+
 }
 
 // public slot that will change the current draw colour
@@ -194,34 +176,4 @@ void Whiteboard::undoLastDrawOp() {
 
     // redraw the screen
     repaint();
-}
-
-// refactored function that will add in draw data to the necessary arrays
-void Whiteboard::addDrawData(unsigned int operation, int x, int y, int draw_size) {
-    // add in the draw data
-    draw_operation[next_draw_op] = operation;
-    draw_x[next_draw_op] = x;
-    draw_y[next_draw_op] = y;
-    draw_red[next_draw_op] = current_colour.red();
-    draw_green[next_draw_op] = current_colour.green();
-    draw_blue[next_draw_op] = current_colour.blue();
-    draw_sizes[next_draw_op] = draw_size;
-    next_draw_op++;
-}
-
-// refactored function that will remove the last set of draw data from the arrays
-void Whiteboard::removeLastDrawData() {
-    // if the next op is already zero then we cant remove anything
-    if(next_draw_op == 0)
-        return;
-
-    // reduce next_draw_op by one and remove the data that is there
-    next_draw_op--;
-    draw_operation[next_draw_op] = NO_DRAW;
-    draw_x[next_draw_op] = 0;
-    draw_y[next_draw_op] = 0;
-    draw_red[next_draw_op] = 0;
-    draw_green[next_draw_op] = 0;
-    draw_blue[next_draw_op] = 0;
-    draw_sizes[next_draw_op] = 0;
 }

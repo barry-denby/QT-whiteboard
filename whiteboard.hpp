@@ -26,6 +26,8 @@ public:
     Whiteboard(QWidget* parent = 0);
     // destructor for the class
     virtual ~Whiteboard();
+    // function that will reset the whiteboard to its starting conditions
+    void resetWhiteBoard();
 // public slots of the class
 public slots:
     // slot that will change the current draw colour to the indicated colour
@@ -54,32 +56,8 @@ private slots:
     void undoLastDrawOp();
 // private fields of the class
 private:
-    // function that will add the following draw data to the draw ops
-    void addDrawData(unsigned int operation, int x, int y, int draw_size);
-    // function that will remove the last draw op from the data
-    void removeLastDrawData();
     // the current drawing colour
     QColor current_colour;
-    // the image that will contain all of our data and will be rendered to screen
-    QImage current_screen;
-    // values for the old x and old y
-    int old_x, old_y;
-    // array that contains ids for each item in the list of the draw history. we need this
-    // to recreate the drawing each time so we can do an undo or dump it to file if needs be
-    // and the x and y coordinates associated with each op
-    unsigned int *draw_operation;
-    unsigned int *draw_x;
-    unsigned int *draw_y;
-    // arrays that contain the draw colours for each drawing op
-    int *draw_red;
-    int *draw_green;
-    int *draw_blue;
-    // array that contains the size for each draw op
-    int *draw_sizes;
-    // index to the next free draw op
-    unsigned int next_draw_op;
-    // indicates if we are doing a point or a line op
-    bool line_draw;
     // pen for drawing a point, and pen draw drawing lines
     QPen point_pen;
     QPen line_pen;

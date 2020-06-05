@@ -26,6 +26,8 @@ public:
 private slots:
     // slot that readjust the spinners depending on the operation we have
     void enableSpinBoxes(const unsigned int op);
+    // slot that will start a new whiteboard but will warn the user beforehand
+    void startNewWhiteboard();
 // private section of the class
 private:
     // function that will generate and attach a colour picker to the given layout

@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QMessageBox>
 #include <QPalette>
 #include <QPushButton>
 #include <QSizePolicy>
@@ -31,9 +32,10 @@ MainWindow::MainWindow(QWidget *parent)
     main_toolbar->setLayout(main_toolbar_layout);
     whiteboard_container_layout->addWidget(main_toolbar);
 
-    // add in a button for a new set of images to draw
+    // add in a button for a new set of images to draw and connect it to the appropriate slot
     QPushButton *new_button = new QPushButton("New");
     main_toolbar_layout->addWidget(new_button);
+    QObject::connect(new_button, SIGNAL(clicked()), this, SLOT(startNewWhiteboard()));
 
     // add in a button for opening a set of draw operations
     QPushButton *open_button = new QPushButton("Open");
@@ -59,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *image_number_label = new QLabel("Viewing image:");
     main_toolbar_layout->addWidget(image_number_label);
     QSpinBox *image_selector_spinbox = new QSpinBox();
+    image_selector_spinbox->setValue(1);
     main_toolbar_layout->addWidget(image_selector_spinbox);
     QLabel *total_images_label = new QLabel("/ 1");
     main_toolbar_layout->addWidget(total_images_label);
@@ -147,6 +150,25 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
         point_size_spinbox->setEnabled(false);
         line_thickness_spinbox->setEnabled(true);
     }
+}
+
+// slot that will start a new whiteboard and reset everything
+void MainWindow::startNewWhiteboard() {
+    // first we will need to put up a dialog asking if this is what the user wants to do
+    // we are not going to check in advance if this is empty or new
+    // first prompt the user to see if this is what they really want to do
+    QMessageBox start_messagebox;
+    start_messagebox.setText("Are you sure you want to start a new whiteboard? Previous whiteboard will be lost");
+    start_messagebox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    start_messagebox.setDefaultButton(QMessageBox::No);
+    int result = start_messagebox.exec();
+
+    // if the user declined then exit immediately.
+    if(result == QMessageBox::No)
+        return;
+
+    // ask the whiteboard to reset itself.
+    whiteboard->resetWhiteBoard();
 }
 
 // refactored function that will generate and return a colour sleector with the given colour
