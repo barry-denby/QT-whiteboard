@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QString>
 #include <QWidget>
 #include "colourselector.hpp"
 #include "whiteboard.hpp"
@@ -29,6 +30,8 @@ private slots:
     void enableSpinBoxes(const unsigned int op);
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
+    // slot that will run through the process of saving an image
+    void saveImages();
     // slot that will start a new whiteboard but will warn the user beforehand
     void startNewWhiteboard();
 // private section of the class
@@ -49,6 +52,8 @@ private:
     QSpinBox *image_selector_spinbox;
     // label stating how many images we have
     QLabel *total_images_label;
+    // the name of the file that we are saving. if this is empty then a user has not chosen a name yet
+    QString filename;
 };
 
 #endif // _MAINWINDOW_HPP

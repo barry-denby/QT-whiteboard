@@ -28,6 +28,8 @@ public:
     virtual ~Whiteboard();
     // function that will add a new image in place of the current one
     void addNewImage();
+    // function that will return the full list of draw images
+    DrawOperations **drawOperations();
     // function that will reset the whiteboard to its starting conditions
     void resetWhiteBoard();
     // function that states how many images in total this whiteboard has thus far

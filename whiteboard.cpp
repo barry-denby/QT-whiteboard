@@ -93,6 +93,11 @@ void Whiteboard::addNewImage() {
     repaint();
 }
 
+// function that will return the full list of draw images
+DrawOperations **Whiteboard::drawOperations() {
+    return images;
+}
+
 // function that will reset the state of the whiteboard to its original state
 void Whiteboard::resetWhiteBoard() {
     // delete the current array of objects and put a new one in its place

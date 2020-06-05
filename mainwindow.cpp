@@ -3,6 +3,9 @@
 // implements the class defined in mainwindow.hpp
 
 // includes
+#include <cstdlib>
+#include <iostream>
+#include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
@@ -20,7 +23,7 @@
 
 // constructor for the class
 MainWindow::MainWindow(QWidget *parent)
-: QWidget(parent)
+: QWidget(parent), filename("")
 {
     // create a vbox layout for this widget
     QVBoxLayout *whiteboard_container_layout = new QVBoxLayout();
@@ -45,6 +48,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a save button for the set of images
     QPushButton *save_button = new QPushButton("Save");
     main_toolbar_layout->addWidget(save_button);
+    QObject::connect(save_button, SIGNAL(clicked()), this, SLOT(saveImages()));
 
     // add in an export to PNG button
     QPushButton *export_png_button = new QPushButton("Export PNG");
@@ -166,6 +170,51 @@ void MainWindow::addNewImage() {
     image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
     // update the label with the total number of images too
     total_images_label->setText(QString("/ %1").arg(total_images));
+}
+
+// slot that will go through the process of saving a whiteboard to disk
+void MainWindow::saveImages() {
+    // if we don't have a filename then throw up a save dialog looking for one
+    if(filename.compare(QString("")) == 0) {
+        // throw up a file dialog to get the filename to save. if the filename is nothing then
+        // the user has cancelled and we can exit early
+        QString temp = QFileDialog::getSaveFileName(this, "Save Whiteboard", "", "Whiteboard Files (*.wbd)");
+        if(temp.compare(QString("")) == 0)
+            return;
+
+        // we have a filename so take a copy of it
+        filename = temp;
+    }
+
+    // open up the file for writing in binary mode
+    FILE *to_write = fopen(filename.toStdString().c_str(), "wb");
+
+    // get the number of images and the pointers so we can write the images
+    DrawOperations **images = whiteboard->drawOperations();
+    const unsigned int total_images = whiteboard->totalImages();
+
+    // save the total number of images to file
+    fwrite(&total_images, sizeof(unsigned int), 1, to_write);
+
+    // go through each of the images in turn
+    for(unsigned int i = 0; i < total_images; i++) {
+        // write the total ops and the max ops to file first
+        fwrite(&images[i]->total_ops, sizeof(unsigned int), 1, to_write);
+        fwrite(&images[i]->max_ops, sizeof(unsigned int), 1, to_write);
+
+        // write all of the arrays to disk
+        fwrite(images[i]->draw_operation, sizeof(unsigned int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_x, sizeof(unsigned int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_y, sizeof(unsigned int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_red, sizeof(int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_green, sizeof(int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_blue, sizeof(int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_sizes, sizeof(int), images[i]->max_ops, to_write);
+    }
+
+    // close the file when we are finished
+    fclose(to_write);
+
 }
 
 // slot that will start a new whiteboard and reset everything
