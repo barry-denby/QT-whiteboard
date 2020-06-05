@@ -34,6 +34,8 @@ public:
     const unsigned int totalImages();
 // public slots of the class
 public slots:
+    // slot that will change the current image to the given number
+    void changeImage(int number);
     // slot that will change the current draw colour to the indicated colour
     void changeColour(int red, int green, int blue);
     // slot that will change the tool to the indicated tool

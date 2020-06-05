@@ -78,6 +78,7 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
+    QObject::connect(image_selector_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeImage(int)));
 
     // create a widget with a hbox layout and add it to the main view
     QWidget *toolbar = generateToolbar();

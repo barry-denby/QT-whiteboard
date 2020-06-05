@@ -74,6 +74,9 @@ void Whiteboard::addNewImage() {
         images[image_current] = temp;
         image_total++;
     }
+
+    // force a repaint after a new image has been added
+    repaint();
 }
 
 // function that will reset the state of the whiteboard to its original state
@@ -94,6 +97,14 @@ void Whiteboard::resetWhiteBoard() {
 // function that states how many images in total this whiteboard has thus far
 const unsigned int Whiteboard::totalImages() {
     return image_total;
+}
+
+// public slot that will change the current image. note that we decrement the value provided here
+// by one to account for indices starting at zero
+void Whiteboard::changeImage(int number) {
+    // change the image index and force a repaint
+    image_current = (unsigned int)(number) - 1;
+    repaint();
 }
 
 // public slot that will change the current draw colour
