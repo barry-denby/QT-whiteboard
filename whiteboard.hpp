@@ -26,8 +26,12 @@ public:
     Whiteboard(QWidget* parent = 0);
     // destructor for the class
     virtual ~Whiteboard();
+    // function that will add a new image in place of the current one
+    void addNewImage();
     // function that will reset the whiteboard to its starting conditions
     void resetWhiteBoard();
+    // function that states how many images in total this whiteboard has thus far
+    const unsigned int totalImages();
 // public slots of the class
 public slots:
     // slot that will change the current draw colour to the indicated colour
@@ -65,8 +69,9 @@ private:
     unsigned int tool;
     // the current line thickness and point sizes
     int current_line_thickness, current_point_size;
-    // draw operations array that will hold all of the images for this whiteboard
-    DrawOperations *images;
+    // draw operations array that will hold all of the images for this whiteboard. note we set these
+    // all up as pointers as we will need to shift them around
+    DrawOperations **images;
     // the current image we are looking at and the maximum number of images we have
     unsigned int image_current;
     unsigned int image_max;

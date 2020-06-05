@@ -27,6 +27,8 @@ public:
 private slots:
     // slot that readjust the spinners depending on the operation we have
     void enableSpinBoxes(const unsigned int op);
+    // slot that will add a new image to the whiteboard immediately after the current image
+    void addNewImage();
     // slot that will start a new whiteboard but will warn the user beforehand
     void startNewWhiteboard();
 // private section of the class

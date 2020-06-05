@@ -32,23 +32,68 @@ Whiteboard::Whiteboard(QWidget* parent)
     setFocusPolicy(Qt::StrongFocus);
 
     // allocate space for 16 images
-    images = (DrawOperations *) new DrawOperations[16];
+    images = (DrawOperations **) new DrawOperations *[16];
+    for(unsigned int i = 0; i < 16; i++)
+        images[i] = new DrawOperations();
 }
 
 // destructor for the class
 Whiteboard::~Whiteboard() {
     // delete the memory for the draw operations. this core dumps so will need to fix this
-    delete[] images;
+    for(unsigned int i = 0; i < image_max; i++)
+        delete images[i];
+    delete images;
+}
+
+// function that will add a new image in the current place
+void Whiteboard::addNewImage() {
+    // if we have used up our full set of images so we will need to allocate memory for more by doubling it
+    if(image_total == image_max) {
+        std::cout << "need to double memory here" << std::endl;
+        return;
+    }
+
+    // see what situation we have now
+    if (image_total == image_current + 1) {
+        std::cout << "adding to end" << std::endl;
+        // we are adding a new image to the end of the list so just increment the current by 1
+        image_current++;
+        image_total++;
+    } else {
+        std::cout << "adding in middle" << std::endl;
+        // we are adding a new image in between another image so we will need to take an unused one off the end
+        // and insert it before after the current image we will start by getting a reference to the end image
+        DrawOperations *temp = images[image_max - 1];
+
+        // shift everything up one place from the current image
+        for(unsigned int i = image_max - 2; i > image_current; i--)
+            images[i + 1] = images[i];
+
+        // put the temp image in the current place and increment the current counter
+        image_current++;
+        images[image_current] = temp;
+        image_total++;
+    }
 }
 
 // function that will reset the state of the whiteboard to its original state
 void Whiteboard::resetWhiteBoard() {
     // delete the current array of objects and put a new one in its place
-    delete[] images;
-    images = (DrawOperations *) new DrawOperations[16];
+    for(unsigned int i = 0; i < image_max; i++)
+        delete images[i];
+    delete images;
+
+    images = (DrawOperations **) new DrawOperations *[16];
+    for(unsigned int i = 0; i < 16; i++)
+        images[i] = new DrawOperations();
     image_current = 0;
     image_max = 16;
     image_total = 1;
+}
+
+// function that states how many images in total this whiteboard has thus far
+const unsigned int Whiteboard::totalImages() {
+    return image_total;
 }
 
 // public slot that will change the current draw colour
@@ -79,7 +124,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     if (tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the starting point of a line so store this in the draw operations
         //addDrawData(LINE_START, event->x(), event->y(), current_line_thickness);
-        images[image_current].addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
     }
 }
 
@@ -89,7 +134,7 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     if (tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         //addDrawData(LINE_POINT, event->x(), event->y(), current_line_thickness);
-        images[image_current].addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();
     }
 }
@@ -100,12 +145,12 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     if(tool == OP_POINT_VARIABLE_SIZE) {
         // we have a fixed point then just save it and update the draw ops
         //addDrawData(POINT, event->x(), event->y(), current_point_size);
-        images[image_current].addDrawData(POINT, event->x(), event->y(), current_colour, current_point_size);
+        images[image_current]->addDrawData(POINT, event->x(), event->y(), current_colour, current_point_size);
         repaint();
     } else if(tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the end point of a line so store this in the draw operations and repaint
         //addDrawData(LINE_END, event->x(), event->y(), current_line_thickness);
-        images[image_current].addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();
     }
 
@@ -126,24 +171,24 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
     painter.setBrush(current_colour);
 
     // go through all of the draw operations that are in the list
-    for(unsigned int i = 0; i < images[image_current].total_ops; i++) {
+    for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
         // set the colour of the current position
-        current_colour.setRgb(images[image_current].draw_red[i], images[image_current].draw_green[i], images[image_current].draw_blue[i]);
+        current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
         point_pen.setColor(current_colour);
         line_pen.setColor(current_colour);
 
         //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
         // go through each of the draw ops and draw the necessary action
-        if(images[image_current].draw_operation[i] == POINT) {
+        if(images[image_current]->draw_operation[i] == POINT) {
             // we have a single point so draw that
-            point_pen.setWidth(images[image_current].draw_sizes[i]);
+            point_pen.setWidth(images[image_current]->draw_sizes[i]);
             painter.setPen(point_pen);
-            painter.drawPoint(images[image_current].draw_x[i], images[image_current].draw_y[i]);
-        } else if(images[image_current].draw_operation[i] == LINE_POINT || images[image_current].draw_operation[i] == LINE_END) {
+            painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
-            line_pen.setWidth(images[image_current].draw_sizes[i]);
+            line_pen.setWidth(images[image_current]->draw_sizes[i]);
             painter.setPen(line_pen);
-            painter.drawLine(images[image_current].draw_x[i - 1], images[image_current].draw_y[i - 1], images[image_current].draw_x[i], images[image_current].draw_y[i]);
+            painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         }
     }
 
@@ -165,18 +210,18 @@ void Whiteboard::quitApplication() {
 // function that will undo the last draw operation
 void Whiteboard::undoLastDrawOp() {
     // if the next op is already zero then we cant remove anything
-    if(images[image_current].total_ops == 0)
+    if(images[image_current]->total_ops == 0)
         return;
 
     // see what kind of draw op we have and take appropriate action
-    if(images[image_current].draw_operation[images[image_current].total_ops - 1] == POINT) {
+    if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT) {
         // remove the point operation
-        images[image_current].removeLastDrawData();
-    } else if(images[image_current].draw_operation[images[image_current].total_ops - 1] == LINE_END) {
+        images[image_current]->removeLastDrawData();
+    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == LINE_END) {
         // keep going back until we hit the line start, then remove the line start
-        while(images[image_current].draw_operation[images[image_current].total_ops - 1] != LINE_START)
-            images[image_current].removeLastDrawData();
-        images[image_current].removeLastDrawData();
+        while(images[image_current]->draw_operation[images[image_current]->total_ops - 1] != LINE_START)
+            images[image_current]->removeLastDrawData();
+        images[image_current]->removeLastDrawData();
     }
 
     // redraw the screen

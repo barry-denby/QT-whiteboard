@@ -11,6 +11,7 @@
 #include <QPushButton>
 #include <QSizePolicy>
 #include <QSpinBox>
+#include <QString>
 #include <QVBoxLayout>
 #include "constants.hpp"
 #include "colourselector.hpp"
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a button for adding an image
     QPushButton *add_button = new QPushButton("Add image");
     main_toolbar_layout->addWidget(add_button);
+    QObject::connect(add_button, SIGNAL(clicked()), this, SLOT(addNewImage()));
 
     // add in a button for deleting an image
     QPushButton *delete_button = new QPushButton("Delete image");
@@ -150,6 +152,19 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
         point_size_spinbox->setEnabled(false);
         line_thickness_spinbox->setEnabled(true);
     }
+}
+
+// slot that will add a new image in the current place
+void MainWindow::addNewImage() {
+    // get the whiteboard to add an image
+    whiteboard->addNewImage();
+
+    // get the total number of images in the whiteboard and increase the range on the spinner. increment the spinner by 1
+    const unsigned int total_images = whiteboard->totalImages();
+    image_selector_spinbox->setRange(1, total_images);
+    image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
+    // update the label with the total number of images too
+    total_images_label->setText(QString("/ %1").arg(total_images));
 }
 
 // slot that will start a new whiteboard and reset everything
