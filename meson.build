@@ -17,7 +17,7 @@ to_moc_sources = ['whiteboard.cpp', 'mainwindow.cpp', 'colourselector.cpp', 'too
 moc_sources = qt5_module.preprocess(moc_sources : to_moc_sources, moc_headers : to_moc_headers, dependencies: qt5_components)
 
 # the list of source files that will make up the application
-source_files = ['main.cpp', 'whiteboard.cpp', 'mainwindow.cpp', 'colourselector.cpp', 'toolselector.cpp']
+source_files = ['main.cpp', 'whiteboard.cpp', 'mainwindow.cpp', 'colourselector.cpp', 'toolselector.cpp', 'drawoperations.cpp']
 
 # the marking tool executable that will be produced after building is complete
 executable('qt_whiteboard', source_files, moc_sources, include_directories: include_dir, dependencies: qt5_components,  cpp_args: '-fPIC')

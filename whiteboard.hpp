@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QWidget>
+#include "drawoperations.hpp"
 
 // class defintion
 class Whiteboard : public QWidget {
@@ -86,7 +87,11 @@ private:
     unsigned int tool;
     // the current line thickness and point sizes
     int current_line_thickness, current_point_size;
-
+    // draw operations array that will hold all of the images for this whiteboard
+    DrawOperations *images;
+    // the current image we are looking at and the maximum number of images we have
+    unsigned int image_current;
+    unsigned int image_max;
 };
 
 #endif // _WHITEBOARD_HPP
