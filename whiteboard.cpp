@@ -178,18 +178,18 @@ void Whiteboard::quitApplication() {
 // function that will undo the last draw operation
 void Whiteboard::undoLastDrawOp() {
     // if the next op is already zero then we cant remove anything
-    if(next_draw_op == 0)
+    if(images[image_current].total_ops == 0)
         return;
 
     // see what kind of draw op we have and take appropriate action
-    if(draw_operation[next_draw_op - 1] == POINT) {
+    if(images[image_current].draw_operation[images[image_current].total_ops - 1] == POINT) {
         // remove the point operation
-        removeLastDrawData();
-    } else if(draw_operation[next_draw_op - 1] == LINE_END) {
+        images[image_current].removeLastDrawData();
+    } else if(images[image_current].draw_operation[images[image_current].total_ops - 1] == LINE_END) {
         // keep going back until we hit the line start, then remove the line start
-        while(draw_operation[next_draw_op - 1] != LINE_START)
-            removeLastDrawData();
-        removeLastDrawData();
+        while(images[image_current].draw_operation[images[image_current].total_ops - 1] != LINE_START)
+            images[image_current].removeLastDrawData();
+        images[image_current].removeLastDrawData();
     }
 
     // redraw the screen
