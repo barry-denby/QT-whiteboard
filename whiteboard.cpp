@@ -98,6 +98,31 @@ DrawOperations **Whiteboard::drawOperations() {
     return images;
 }
 
+// function that will run the draw commands on a QImage and will return it
+// this is for exporting purposes
+QImage *Whiteboard::exportBoard(const unsigned int board) {
+    // the QImage that we will return
+    QImage *image = new QImage(1920, 1080, QImage::Format_RGB32);
+
+    // take a copy of the current image value and replace it with board
+    unsigned int temp = image_current;
+    image_current = board;
+
+    // begin the painter object and set the current paint colour
+    QPainter painter;
+    painter.begin(image);
+
+    // draw the board
+    drawBoard(painter);
+
+    // end the current painting
+    painter.end();
+
+    // reset the current image and return the image when finished
+    image_current = temp;
+    return image;
+}
+
 // function that will return the maximum number of images in this whiteboard
 const unsigned int Whiteboard::maxImages() {
     return image_max;
@@ -214,32 +239,8 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
     QPainter painter;
     painter.begin(this);
 
-    // draw a white background on the view
-    painter.setPen(QColor(255, 255, 255));
-    painter.setBrush(QColor(255, 255, 255));
-    painter.drawRect(0, 0, 1920, 1080);
-
-    painter.setPen(current_colour);
-    painter.setBrush(current_colour);
-
-    // go through all of the draw operations that are in the list
-    for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
-        // set the colour of the current position
-        current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
-        pen.setColor(current_colour);
-        pen.setWidth(images[image_current]->draw_sizes[i]);
-        painter.setPen(pen);
-
-        //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
-        // go through each of the draw ops and draw the necessary action
-        if(images[image_current]->draw_operation[i] == POINT) {
-            // we have a single point so draw that
-            painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
-        } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
-            // draw this line segment
-            painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
-        }
-    }
+    // draw the board
+    drawBoard(painter);
 
     // end the current painting
     painter.end();
@@ -275,4 +276,35 @@ void Whiteboard::undoLastDrawOp() {
 
     // redraw the screen
     repaint();
+}
+
+// refactored private function that will draw the board with the provided painter object. function
+// will assume that painter has been started before calling and will be ended after calling
+void Whiteboard::drawBoard(QPainter &painter) {
+    // draw a white background on the view
+    painter.setPen(QColor(255, 255, 255));
+    painter.setBrush(QColor(255, 255, 255));
+    painter.drawRect(0, 0, 1920, 1080);
+
+    painter.setPen(current_colour);
+    painter.setBrush(current_colour);
+
+    // go through all of the draw operations that are in the list
+    for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
+        // set the colour of the current position
+        current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
+        pen.setColor(current_colour);
+        pen.setWidth(images[image_current]->draw_sizes[i]);
+        painter.setPen(pen);
+
+        //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
+        // go through each of the draw ops and draw the necessary action
+        if(images[image_current]->draw_operation[i] == POINT) {
+            // we have a single point so draw that
+            painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
+            // draw this line segment
+            painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        }
+    }
 }

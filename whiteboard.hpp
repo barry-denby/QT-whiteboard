@@ -30,6 +30,9 @@ public:
     void addNewImage();
     // function that will return the full list of draw images
     DrawOperations **drawOperations();
+    // function that will run the draw commands on a QImage and will return it
+    // this is for exporting purposes
+    QImage *exportBoard(const unsigned int board);
     // function that will return the maximum number of images in this whiteboard
     const unsigned int maxImages();
     // function that will replace the current set of images with this set of images
@@ -68,6 +71,9 @@ private slots:
     void undoLastDrawOp();
 // private fields of the class
 private:
+    // private function that will draw the board with the provided painter object. function
+    // will assume that painter has been started before calling and will be ended after calling
+    void drawBoard(QPainter &painter);
     // the current drawing colour
     QColor current_colour;
     // pen for drawing a point, and pen draw drawing lines
