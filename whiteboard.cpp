@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), point_pen(QColor(0, 0, 0)), line_pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16), image_total(1)
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16), image_total(1)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -226,20 +226,17 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
     for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
         // set the colour of the current position
         current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
-        point_pen.setColor(current_colour);
-        line_pen.setColor(current_colour);
+        pen.setColor(current_colour);
+        pen.setWidth(images[image_current]->draw_sizes[i]);
+        painter.setPen(pen);
 
         //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
         // go through each of the draw ops and draw the necessary action
         if(images[image_current]->draw_operation[i] == POINT) {
             // we have a single point so draw that
-            point_pen.setWidth(images[image_current]->draw_sizes[i]);
-            painter.setPen(point_pen);
             painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
-            line_pen.setWidth(images[image_current]->draw_sizes[i]);
-            painter.setPen(line_pen);
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         }
     }

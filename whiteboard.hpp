@@ -71,8 +71,7 @@ private:
     // the current drawing colour
     QColor current_colour;
     // pen for drawing a point, and pen draw drawing lines
-    QPen point_pen;
-    QPen line_pen;
+    QPen pen;
     // the current tool that is being used
     unsigned int tool;
     // the current line thickness and point sizes
