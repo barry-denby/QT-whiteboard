@@ -113,6 +113,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(tools_label);
 
     // add in all of our tools
+    generateToolSelector(toolbar_layout, OP_POINT_CIRCLE);
     generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
     generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
 
@@ -122,7 +123,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(point_size_label);
     point_size_spinbox = new QSpinBox();
     point_size_spinbox->setRange(1, 100);
-    point_size_spinbox->setValue(3);
+    point_size_spinbox->setValue(6);
     toolbar_layout->addWidget(point_size_spinbox);
     QObject::connect(point_size_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changePointSize(int)));
 

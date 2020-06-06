@@ -43,7 +43,7 @@ private:
     // function that will draw the variable line tool
     void drawLineFreeformTool(QPainter &painter);
     // function that will draw the simple point tool
-    void drawPointTool(QPainter &painter);
+    void drawPointCircleTool(QPainter &painter);
     // function that will draw the variable point tool
     void drawPointSquareTool(QPainter &painter);
     // the tool that this selector represents

@@ -38,8 +38,8 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
     painter.drawRect(0, 0, 32, 32);
 
     // draw a tool depending on what tool constant we have
-    if(tool == OP_POINT_FIXED_SIZE)
-        drawPointTool(painter);
+    if(tool == OP_POINT_CIRCLE)
+        drawPointCircleTool(painter);
     else if(tool == OP_LINE_FIXED_THICKNESS)
         drawLineTool(painter);
     else if(tool == OP_POINT_SQUARE)
@@ -60,18 +60,19 @@ void ToolSelector::drawLineTool(QPainter &painter) {
 
 void ToolSelector::drawLineFreeformTool(QPainter &painter) {
     // set the point size to three and draw a line in the middle
-    pen.setWidth(4);
+    pen.setWidth(2);
     painter.setPen(pen);
     painter.drawLine(0, 32, 8, 16);
     painter.drawLine(8, 16, 24, 16);
     painter.drawLine(24, 16, 32, 0);
 }
 
-void ToolSelector::drawPointTool(QPainter &painter) {
+void ToolSelector::drawPointCircleTool(QPainter &painter) {
     // set the point size to three and draw a point in the middle
-    pen.setWidth(3);
+    pen.setWidth(1);
     painter.setPen(pen);
-    painter.drawPoint(16, 16);
+    painter.setBrush(brush);
+    painter.drawEllipse(13, 13, 6, 6);
 }
 
 void ToolSelector::drawPointSquareTool(QPainter &painter) {
