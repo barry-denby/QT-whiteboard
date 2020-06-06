@@ -62,7 +62,9 @@ void ToolSelector::drawLineFreeformTool(QPainter &painter) {
     // set the point size to three and draw a line in the middle
     pen.setWidth(4);
     painter.setPen(pen);
-    painter.drawLine(0, 32, 32, 0);
+    painter.drawLine(0, 32, 8, 16);
+    painter.drawLine(8, 16, 24, 16);
+    painter.drawLine(24, 16, 32, 0);
 }
 
 void ToolSelector::drawPointTool(QPainter &painter) {
