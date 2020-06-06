@@ -302,7 +302,6 @@ void Whiteboard::drawBoard(QPainter &painter) {
         painter.setPen(pen);
         painter.setBrush(current_colour);
 
-        //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
         // go through each of the draw ops and draw the necessary action
         if(images[image_current]->draw_operation[i] == POINT_SQUARE) {
             // we have a single point so draw that
