@@ -198,7 +198,7 @@ void Whiteboard::changeLineThickness(int line_thickness) {
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
     // see what operation we are doing
-    if (tool == OP_LINE_VARIABLE_THICKNESS) {
+    if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
         //addDrawData(LINE_START, event->x(), event->y(), current_line_thickness);
         images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
@@ -208,7 +208,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
 // overridden mouseMoveEvent function that will continue a user's drawing
 void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     // see what operation we are doing
-    if (tool == OP_LINE_VARIABLE_THICKNESS) {
+    if (tool == OP_LINE_FREEFORM) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();
@@ -222,7 +222,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
         // we have a fixed point then just save it and update the draw ops
         images[image_current]->addDrawData(POINT, event->x(), event->y(), current_colour, current_point_size);
         repaint();
-    } else if(tool == OP_LINE_VARIABLE_THICKNESS) {
+    } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();

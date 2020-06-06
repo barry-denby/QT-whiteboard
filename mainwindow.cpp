@@ -114,7 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // add in all of our tools
     generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
-    generateToolSelector(toolbar_layout, OP_LINE_VARIABLE_THICKNESS);
+    generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
 
     // add in a label and spinbox for the point size. connect tthe spinbox to the
     // appropriate method in the whiteboard
@@ -152,7 +152,7 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
         // enable the point and disable the line
         point_size_spinbox->setEnabled(true);
         line_thickness_spinbox->setEnabled(false);
-    } else if(op == OP_LINE_VARIABLE_THICKNESS) {
+    } else if(op == OP_LINE_FREEFORM) {
         // enable the point and disable the line
         point_size_spinbox->setEnabled(false);
         line_thickness_spinbox->setEnabled(true);

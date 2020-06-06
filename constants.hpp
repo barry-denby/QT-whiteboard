@@ -9,7 +9,7 @@
 const unsigned int OP_POINT_FIXED_SIZE = 0;
 const unsigned int OP_LINE_FIXED_THICKNESS = 1;
 const unsigned int OP_POINT_SQUARE = 2;
-const unsigned int OP_LINE_VARIABLE_THICKNESS = 3;
+const unsigned int OP_LINE_FREEFORM = 3;
 
 // constants for drawing in our whiteboard
 const unsigned int NO_DRAW = 0;
