@@ -90,6 +90,10 @@ private:
     unsigned int image_max;
     // how many images does this whiteboard have in total
     unsigned int image_total;
+    // coordinates for the preview before we commit to a drawing
+    unsigned int preview_start_x, preview_start_y;
+    unsigned int preview_end_x, preview_end_y;
+
 };
 
 #endif // _WHITEBOARD_HPP

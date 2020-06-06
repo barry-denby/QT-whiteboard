@@ -202,6 +202,8 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
         // we have the starting point of a line so store this in the draw operations
         //addDrawData(LINE_START, event->x(), event->y(), current_line_thickness);
         images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
+    } else if(tool == OP_POINT_SQUARE) {
+        //
     }
 }
 
@@ -299,17 +301,17 @@ void Whiteboard::drawBoard(QPainter &painter) {
         current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
         pen.setColor(current_colour);
         pen.setWidth(images[image_current]->draw_sizes[i]);
-        painter.setPen(pen);
+        painter.setPen(current_colour);
         painter.setBrush(current_colour);
 
         // go through each of the draw ops and draw the necessary action
         if(images[image_current]->draw_operation[i] == POINT_SQUARE) {
             // we have a single point so draw that
-            painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+            int point_size = images[image_current]->draw_sizes[i];
+            painter.drawRect(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
         } else if(images[image_current]->draw_operation[i] == POINT_CIRCLE) {
             // draw the circle point
             int point_size = images[image_current]->draw_sizes[i];
-            painter.setPen(current_colour);
             painter.drawEllipse(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
