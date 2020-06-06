@@ -227,13 +227,13 @@ void MainWindow::loadImages() {
         // allocate a draw operations of the required size and then read in all of the data
         loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops);
         loaded_images[i]->total_ops = total_ops;
-        fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_y, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_red, sizeof(int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->max_ops, to_read);
-        fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_y, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_red, sizeof(int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->total_ops, to_read);
     }
 
     // close the file for reading
@@ -283,13 +283,13 @@ void MainWindow::saveImages() {
         fwrite(&images[i]->max_ops, sizeof(unsigned int), 1, to_write);
 
         // write all of the arrays to disk
-        fwrite(images[i]->draw_operation, sizeof(unsigned int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_x, sizeof(unsigned int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_y, sizeof(unsigned int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_red, sizeof(int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_green, sizeof(int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_blue, sizeof(int), images[i]->max_ops, to_write);
-        fwrite(images[i]->draw_sizes, sizeof(int), images[i]->max_ops, to_write);
+        fwrite(images[i]->draw_operation, sizeof(unsigned int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_x, sizeof(unsigned int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_y, sizeof(unsigned int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_red, sizeof(int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_green, sizeof(int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_blue, sizeof(int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_sizes, sizeof(int), images[i]->total_ops, to_write);
     }
 
     // close the file when we are finished
