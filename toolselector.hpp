@@ -45,7 +45,7 @@ private:
     // function that will draw the simple point tool
     void drawPointTool(QPainter &painter);
     // function that will draw the variable point tool
-    void drawPointVariableTool(QPainter &painter);
+    void drawPointSquareTool(QPainter &painter);
     // the tool that this selector represents
     const unsigned int tool;
     // colours that we will use for painting

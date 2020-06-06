@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_VARIABLE_SIZE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16), image_total(1)
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(1), current_point_size(3), image_current(0), image_max(16), image_total(1)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -210,7 +210,6 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     // see what operation we are doing
     if (tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
-        //addDrawData(LINE_POINT, event->x(), event->y(), current_line_thickness);
         images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();
     }
@@ -219,14 +218,12 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
 // overridden mouse release event that will finish drawing events
 void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // do a different action depending on the event type
-    if(tool == OP_POINT_VARIABLE_SIZE) {
+    if(tool == OP_POINT_SQUARE) {
         // we have a fixed point then just save it and update the draw ops
-        //addDrawData(POINT, event->x(), event->y(), current_point_size);
         images[image_current]->addDrawData(POINT, event->x(), event->y(), current_colour, current_point_size);
         repaint();
     } else if(tool == OP_LINE_VARIABLE_THICKNESS) {
         // we have the end point of a line so store this in the draw operations and repaint
-        //addDrawData(LINE_END, event->x(), event->y(), current_line_thickness);
         images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
         repaint();
     }

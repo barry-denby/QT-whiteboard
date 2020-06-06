@@ -42,8 +42,8 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
         drawPointTool(painter);
     else if(tool == OP_LINE_FIXED_THICKNESS)
         drawLineTool(painter);
-    else if(tool == OP_POINT_VARIABLE_SIZE)
-        drawPointVariableTool(painter);
+    else if(tool == OP_POINT_SQUARE)
+        drawPointSquareTool(painter);
     else if(tool == OP_LINE_VARIABLE_THICKNESS)
         drawLineVariableTool(painter);
 
@@ -72,10 +72,10 @@ void ToolSelector::drawPointTool(QPainter &painter) {
     painter.drawPoint(16, 16);
 }
 
-void ToolSelector::drawPointVariableTool(QPainter &painter) {
+void ToolSelector::drawPointSquareTool(QPainter &painter) {
     // set the pen width to one and draw a larger circle for this point
     pen.setWidth(1);
     painter.setPen(pen);
     painter.setBrush(brush);
-    painter.drawEllipse(13, 13, 6, 6);
+    painter.drawRect(13, 13, 6, 6);
 }

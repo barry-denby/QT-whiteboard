@@ -108,6 +108,14 @@ MainWindow::MainWindow(QWidget *parent)
     generateColourSelector(toolbar_layout, 0, 255, 255);
     generateColourSelector(toolbar_layout, 255, 255, 255);
 
+    // add in a label for tools
+    QLabel *tools_label = new QLabel("Tools:");
+    toolbar_layout->addWidget(tools_label);
+
+    // add in all of our tools
+    generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
+    generateToolSelector(toolbar_layout, OP_LINE_VARIABLE_THICKNESS);
+
     // add in a label and spinbox for the point size. connect tthe spinbox to the
     // appropriate method in the whiteboard
     QLabel *point_size_label = new QLabel("Point Size:");
@@ -130,16 +138,6 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(line_thickness_spinbox);
     QObject::connect(line_thickness_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeLineThickness(int)));
 
-    // add in a label for tools
-    QLabel *tools_label = new QLabel("Tools:");
-    toolbar_layout->addWidget(tools_label);
-
-    // add in all of our tools
-    //generateToolSelector(toolbar_layout, OP_POINT_FIXED_SIZE);
-    generateToolSelector(toolbar_layout, OP_POINT_VARIABLE_SIZE);
-    //generateToolSelector(toolbar_layout, OP_LINE_FIXED_THICKNESS);
-    generateToolSelector(toolbar_layout, OP_LINE_VARIABLE_THICKNESS);
-
 }
 
 // destructor for the class
@@ -150,7 +148,7 @@ MainWindow::~MainWindow() {
 // slot that readjust the spinners depending on the operation we have
 void MainWindow::enableSpinBoxes(const unsigned int op) {
     // adjust the spinboxed based on the operation
-    if(op == OP_POINT_VARIABLE_SIZE) {
+    if(op == OP_POINT_SQUARE) {
         // enable the point and disable the line
         point_size_spinbox->setEnabled(true);
         line_thickness_spinbox->setEnabled(false);
