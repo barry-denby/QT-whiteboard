@@ -149,7 +149,7 @@ MainWindow::~MainWindow() {
 // slot that readjust the spinners depending on the operation we have
 void MainWindow::enableSpinBoxes(const unsigned int op) {
     // adjust the spinboxed based on the operation
-    if(op == OP_POINT_SQUARE) {
+    if(op == OP_POINT_SQUARE || op == OP_POINT_CIRCLE) {
         // enable the point and disable the line
         point_size_spinbox->setEnabled(true);
         line_thickness_spinbox->setEnabled(false);

@@ -13,9 +13,10 @@ const unsigned int OP_LINE_FREEFORM = 3;
 
 // constants for drawing in our whiteboard
 const unsigned int NO_DRAW = 0;
-const unsigned int POINT = 1;
+const unsigned int POINT_SQUARE = 1;
 const unsigned int LINE_START = 2;
 const unsigned int LINE_POINT = 3;
 const unsigned int LINE_END = 4;
+const unsigned int POINT_CIRCLE = 5;
 
 #endif // __CONSTANTS_HPP

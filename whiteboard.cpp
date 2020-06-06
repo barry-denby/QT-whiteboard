@@ -219,8 +219,12 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
 void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // do a different action depending on the event type
     if(tool == OP_POINT_SQUARE) {
-        // we have a fixed point then just save it and update the draw ops
-        images[image_current]->addDrawData(POINT, event->x(), event->y(), current_colour, current_point_size);
+        // we have a square point then just save it and update the draw ops
+        images[image_current]->addDrawData(POINT_SQUARE, event->x(), event->y(), current_colour, current_point_size);
+        repaint();
+    } else if(tool == OP_POINT_CIRCLE) {
+        // we have a circle point then so store it and repaint it
+        images[image_current]->addDrawData(POINT_CIRCLE, event->x(), event->y(), current_colour, current_point_size);
         repaint();
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
@@ -261,7 +265,10 @@ void Whiteboard::undoLastDrawOp() {
         return;
 
     // see what kind of draw op we have and take appropriate action
-    if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT) {
+    if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_SQUARE) {
+        // remove the point operation
+        images[image_current]->removeLastDrawData();
+    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_CIRCLE) {
         // remove the point operation
         images[image_current]->removeLastDrawData();
     } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == LINE_END) {
@@ -293,12 +300,18 @@ void Whiteboard::drawBoard(QPainter &painter) {
         pen.setColor(current_colour);
         pen.setWidth(images[image_current]->draw_sizes[i]);
         painter.setPen(pen);
+        painter.setBrush(current_colour);
 
         //std::cout << "i, op, x, y: " << i << ", "  << draw_operation[i] << ", "  << draw_x[i] << ", "  << draw_y[i] << std::endl;
         // go through each of the draw ops and draw the necessary action
-        if(images[image_current]->draw_operation[i] == POINT) {
+        if(images[image_current]->draw_operation[i] == POINT_SQUARE) {
             // we have a single point so draw that
             painter.drawPoint(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        } else if(images[image_current]->draw_operation[i] == POINT_CIRCLE) {
+            // draw the circle point
+            int point_size = images[image_current]->draw_sizes[i];
+            painter.setPen(current_colour);
+            painter.drawEllipse(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
