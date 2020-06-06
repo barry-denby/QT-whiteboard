@@ -182,6 +182,21 @@ void MainWindow::exportPNG() {
     // get the total number of images in the whiteboard and then start cycling through the images for export
     const unsigned int total_images = whiteboard->totalImages();
     for(unsigned int i = 0; i < total_images; i++) {
+        // get the image for the current board
+        QImage *image = whiteboard->exportBoard(i);
+
+        // generate a filename for this board. we pad this out to three digits to
+        // ensure the filenames all appear in the coorect order.
+        QString filename;
+        if(i + 1 < 10)
+            filename = QString("/00%1.png").arg(i + 1);
+        else if(i + 1 < 100)
+            filename = QString("/0%1.png").arg(i + 1);
+        else
+            filename = QString("/%1.png").arg(i + 1);
+
+        // generate the full path and save the file and delete the image
+        image->save(directory + filename, "PNG");
 
     }
 }
