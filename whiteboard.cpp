@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1)
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -197,6 +197,13 @@ void Whiteboard::changeLineThickness(int line_thickness) {
 
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
+    // start preview mode and take the current pixel values
+    on_preview = true;
+    preview_start_x = event->x();
+    preview_start_y = event->y();
+    preview_end_x = event->x();
+    preview_end_y = event->y();
+
     // see what operation we are doing
     if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
@@ -205,34 +212,46 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     } else if(tool == OP_POINT_SQUARE) {
         //
     }
+
+    // repaint the view
+    repaint();
 }
 
 // overridden mouseMoveEvent function that will continue a user's drawing
 void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
+    // take a copy of the x and y values
+    preview_end_x = event->x();
+    preview_end_y = event->y();
+
     // see what operation we are doing
     if (tool == OP_LINE_FREEFORM) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
-        repaint();
     }
+
+    // repaint the view
+    repaint();
 }
 
 // overridden mouse release event that will finish drawing events
 void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
+    // end preview mode
+    on_preview = false;
+
     // do a different action depending on the event type
     if(tool == OP_POINT_SQUARE) {
         // we have a square point then just save it and update the draw ops
         images[image_current]->addDrawData(POINT_SQUARE, event->x(), event->y(), current_colour, current_point_size);
-        repaint();
     } else if(tool == OP_POINT_CIRCLE) {
         // we have a circle point then so store it and repaint it
         images[image_current]->addDrawData(POINT_CIRCLE, event->x(), event->y(), current_colour, current_point_size);
-        repaint();
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
-        repaint();
     }
+
+    // repaint the view
+    repaint();
 
 }
 
@@ -292,15 +311,10 @@ void Whiteboard::drawBoard(QPainter &painter) {
     painter.setBrush(QColor(255, 255, 255));
     painter.drawRect(0, 0, 1920, 1080);
 
-    painter.setPen(current_colour);
-    painter.setBrush(current_colour);
-
     // go through all of the draw operations that are in the list
     for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
         // set the colour of the current position
         current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
-        pen.setColor(current_colour);
-        pen.setWidth(images[image_current]->draw_sizes[i]);
         painter.setPen(current_colour);
         painter.setBrush(current_colour);
 
@@ -316,6 +330,19 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        }
+    }
+
+    // draw the preview in a cyan colour for all operations bar the free form line
+    painter.setPen(QColor(0, 255, 255));
+    painter.setBrush(QColor(0, 255, 255));
+    if(on_preview) {
+        if(tool == OP_POINT_SQUARE) {
+            // draw a preview square at the last known location
+            painter.drawRect(preview_end_x - current_point_size / 2, preview_end_y - current_point_size / 2, current_point_size, current_point_size);
+        } else if(tool == OP_POINT_CIRCLE) {
+            // draw a preview circle at the last known location
+            painter.drawEllipse(preview_end_x - current_point_size / 2, preview_end_y - current_point_size / 2, current_point_size, current_point_size);
         }
     }
 }

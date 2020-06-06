@@ -93,7 +93,8 @@ private:
     // coordinates for the preview before we commit to a drawing
     unsigned int preview_start_x, preview_start_y;
     unsigned int preview_end_x, preview_end_y;
-
+    // are we in the middle of a preview draw (i.e. currently on pressed or move not released)
+    bool on_preview;
 };
 
 #endif // _WHITEBOARD_HPP
