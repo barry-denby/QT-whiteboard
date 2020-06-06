@@ -16,6 +16,8 @@ class DrawOperations {
 public:
     // default constructor of the class that will make a 4K size draw ops avaialable
     DrawOperations();
+    // constructor that will make a draw operations object with the given number of objects
+    DrawOperations(const unsigned int max_ops);
     // destructor for the class
     ~DrawOperations();
     // adds draw data to the draw operations

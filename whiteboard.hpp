@@ -30,6 +30,10 @@ public:
     void addNewImage();
     // function that will return the full list of draw images
     DrawOperations **drawOperations();
+    // function that will return the maximum number of images in this whiteboard
+    const unsigned int maxImages();
+    // function that will replace the current set of images with this set of images
+    void setDrawOperations(DrawOperations **operations, const unsigned int total, const unsigned int max);
     // function that will reset the whiteboard to its starting conditions
     void resetWhiteBoard();
     // function that states how many images in total this whiteboard has thus far

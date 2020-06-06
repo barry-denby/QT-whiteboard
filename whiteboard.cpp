@@ -98,6 +98,28 @@ DrawOperations **Whiteboard::drawOperations() {
     return images;
 }
 
+// function that will return the maximum number of images in this whiteboard
+const unsigned int Whiteboard::maxImages() {
+    return image_max;
+}
+
+// function that will replace the current set of images with this set of images
+void Whiteboard::setDrawOperations(DrawOperations **operations, const unsigned int total, const unsigned int max) {
+    // delete the current array of objects and put a new one in its place
+    for(unsigned int i = 0; i < image_max; i++)
+        delete images[i];
+    delete images;
+
+    // take a copy of the images update the total and set the current image to one
+    images = operations;
+    image_current = 0;
+    image_total = total;
+    image_max = max;
+
+    // force a repaint when the images have been replaced
+    repaint();
+}
+
 // function that will reset the state of the whiteboard to its original state
 void Whiteboard::resetWhiteBoard() {
     // delete the current array of objects and put a new one in its place

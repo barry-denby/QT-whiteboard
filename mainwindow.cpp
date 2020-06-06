@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a button for opening a set of draw operations
     QPushButton *open_button = new QPushButton("Open");
     main_toolbar_layout->addWidget(open_button);
+    QObject::connect(open_button, SIGNAL(clicked()), this, SLOT(loadImages()));
 
     // add in a save button for the set of images
     QPushButton *save_button = new QPushButton("Save");
@@ -172,6 +173,55 @@ void MainWindow::addNewImage() {
     total_images_label->setText(QString("/ %1").arg(total_images));
 }
 
+// slot that will go through the process of loading a whiteboard from disk
+void MainWindow::loadImages() {
+    // get the filename that we want to load. if no file is selected then don't do anything
+    QString filename = QFileDialog::getOpenFileName(this, "Open Whiteboard", "", "Whiteboard Files (*.wbd)");
+    if(filename.compare(QString("")) == 0)
+        return;
+
+    // open up the file for reading in binary mode
+    FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
+
+    // read the total number from the file and then allocate the necessary array of pointers for the images
+    unsigned int total_images = 0, max_images = 0;
+    fread(&total_images, sizeof(unsigned int), 1, to_read);
+    fread(&max_images, sizeof(unsigned int), 1, to_read);
+    DrawOperations **loaded_images = (DrawOperations **) new DrawOperations *[max_images];
+
+    // go through each of the images in turn and read them in
+    for(unsigned int i = 0; i < total_images; i++) {
+        // first read in the total ops and the max ops for this image
+        unsigned int total_ops = 0, max_ops = 0;
+        fread(&total_ops, sizeof(unsigned int), 1, to_read);
+        fread(&max_ops, sizeof(unsigned int), 1, to_read);
+
+        // allocate a draw operations of the required size and then read in all of the data
+        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops);
+        loaded_images[i]->total_ops = total_ops;
+        fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_y, sizeof(unsigned int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_red, sizeof(int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->max_ops, to_read);
+        fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->max_ops, to_read);
+    }
+
+    // close the file for reading
+    fclose(to_read);
+
+    // fill out the spare images with empty draw operations as the whiteboard will expect them to be allocated already
+    for(unsigned int i = total_images; i < max_images; i++)
+        loaded_images[i] = (DrawOperations *) new DrawOperations();
+
+    // set the images on the whiteboard and reset its current image to one
+    whiteboard->setDrawOperations(loaded_images, total_images, max_images);
+    image_selector_spinbox->setRange(1, total_images);
+    image_selector_spinbox->setValue(1);
+    total_images_label->setText(QString("/ %1").arg(total_images));
+}
+
 // slot that will go through the process of saving a whiteboard to disk
 void MainWindow::saveImages() {
     // if we don't have a filename then throw up a save dialog looking for one
@@ -192,9 +242,11 @@ void MainWindow::saveImages() {
     // get the number of images and the pointers so we can write the images
     DrawOperations **images = whiteboard->drawOperations();
     const unsigned int total_images = whiteboard->totalImages();
+    const unsigned int max_images = whiteboard->maxImages();
 
     // save the total number of images to file
     fwrite(&total_images, sizeof(unsigned int), 1, to_write);
+    fwrite(&max_images, sizeof(unsigned int), 1, to_write);
 
     // go through each of the images in turn
     for(unsigned int i = 0; i < total_images; i++) {
