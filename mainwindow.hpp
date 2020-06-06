@@ -30,6 +30,8 @@ private slots:
     void enableSpinBoxes(const unsigned int op);
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
+    // slot that will export the current whiteboard to a set of PNG images
+    void exportPNG();
     // slot that will run through the process of loading a set of images for a whiteboard
     void loadImages();
     // slot that will run through the process of saving an image

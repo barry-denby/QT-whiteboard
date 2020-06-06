@@ -54,6 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in an export to PNG button
     QPushButton *export_png_button = new QPushButton("Export PNG");
     main_toolbar_layout->addWidget(export_png_button);
+    QObject::connect(export_png_button, SIGNAL(clicked()), this, SLOT(exportPNG()));
 
     // add in a button for adding an image
     QPushButton *add_button = new QPushButton("Add image");
@@ -171,6 +172,18 @@ void MainWindow::addNewImage() {
     image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
     // update the label with the total number of images too
     total_images_label->setText(QString("/ %1").arg(total_images));
+}
+
+// slot that will export the current whiteboard to a set of PNG images
+void MainWindow::exportPNG() {
+    // first get a directory from the user
+    QString directory = QFileDialog::getExistingDirectory(this, "Export directory", "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+    // get the total number of images in the whiteboard and then start cycling through the images for export
+    const unsigned int total_images = whiteboard->totalImages();
+    for(unsigned int i = 0; i < total_images; i++) {
+
+    }
 }
 
 // slot that will go through the process of loading a whiteboard from disk
