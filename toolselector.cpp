@@ -46,6 +46,8 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
         drawPointSquareTool(painter);
     else if(tool == OP_LINE_FREEFORM)
         drawLineFreeformTool(painter);
+    else if(tool == OP_LINE_STRAIGHT)
+        drawLineStraightTool(painter);
 
     // finish the painting when done
     painter.end();
@@ -66,6 +68,14 @@ void ToolSelector::drawLineFreeformTool(QPainter &painter) {
     painter.drawLine(0, 32, 8, 16);
     painter.drawLine(8, 16, 24, 16);
     painter.drawLine(24, 16, 32, 0);
+}
+
+// function that will draw the straight line tool
+void ToolSelector::drawLineStraightTool(QPainter &painter) {
+    // set the point size to 2 and draw the line
+    pen.setWidth(2);
+    painter.setPen(pen);
+    painter.drawLine(0, 32, 32, 0);
 }
 
 void ToolSelector::drawPointCircleTool(QPainter &painter) {

@@ -208,6 +208,9 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
         images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
+    } else if(tool == OP_LINE_STRAIGHT) {
+        // we have the starting point of a straight line so store this in the draw operations
+        images[image_current]->addDrawData(STRAIGHT_LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
     }
 
     // repaint the view
@@ -248,6 +251,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
+    }  else if(tool == OP_LINE_STRAIGHT) {
+        // we have the end point of a straight line so store this in the draw operations
+        images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
     }
 
     // repaint the view
@@ -345,6 +351,9 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        } else if(images[image_current]->draw_operation[i] == STRAIGHT_LINE_END) {
+            // draw this straight line
+            painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         }
     }
 
@@ -367,6 +376,14 @@ void Whiteboard::drawBoard(QPainter &painter) {
             // draw the x point
             painter.drawLine(preview_end_x - (current_point_size / 2), preview_end_y - (current_point_size / 2), preview_end_x + (current_point_size / 2), preview_end_y + (current_point_size / 2));
             painter.drawLine(preview_end_x - (current_point_size / 2), preview_end_y + (current_point_size / 2), preview_end_x + (current_point_size / 2), preview_end_y - (current_point_size / 2));
+        } else if(tool == OP_LINE_STRAIGHT) {
+            // set the pen size to 2
+            QPen pen(QColor(0, 255, 255));
+            pen.setWidth(current_line_thickness);
+            painter.setPen(pen);
+
+            // draw the line point
+            painter.drawLine(preview_start_x, preview_start_y, preview_end_x, preview_end_y);
         }
     }
 }
