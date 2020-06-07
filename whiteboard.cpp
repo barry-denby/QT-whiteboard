@@ -207,10 +207,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     // see what operation we are doing
     if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
-        //addDrawData(LINE_START, event->x(), event->y(), current_line_thickness);
         images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
-    } else if(tool == OP_POINT_SQUARE) {
-        //
     }
 
     // repaint the view
@@ -245,6 +242,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     } else if(tool == OP_POINT_CIRCLE) {
         // we have a circle point then so store it and repaint it
         images[image_current]->addDrawData(POINT_CIRCLE, event->x(), event->y(), current_colour, current_point_size);
+    } else if(tool == OP_POINT_X) {
+        // we have a circle point then so store it and repaint it
+        images[image_current]->addDrawData(POINT_X, event->x(), event->y(), current_colour, current_point_size);
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
@@ -292,6 +292,9 @@ void Whiteboard::undoLastDrawOp() {
     } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_CIRCLE) {
         // remove the point operation
         images[image_current]->removeLastDrawData();
+    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_X) {
+        // remove the point operation
+        images[image_current]->removeLastDrawData();
     } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == LINE_END) {
         // keep going back until we hit the line start, then remove the line start
         while(images[image_current]->draw_operation[images[image_current]->total_ops - 1] != LINE_START)
@@ -312,11 +315,12 @@ void Whiteboard::drawBoard(QPainter &painter) {
     painter.drawRect(0, 0, 1920, 1080);
 
     // go through all of the draw operations that are in the list
+    QColor draw_colour;
     for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
         // set the colour of the current position
-        current_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
-        painter.setPen(current_colour);
-        painter.setBrush(current_colour);
+        draw_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
+        painter.setPen(draw_colour);
+        painter.setBrush(draw_colour);
 
         // go through each of the draw ops and draw the necessary action
         if(images[image_current]->draw_operation[i] == POINT_SQUARE) {
@@ -327,6 +331,17 @@ void Whiteboard::drawBoard(QPainter &painter) {
             // draw the circle point
             int point_size = images[image_current]->draw_sizes[i];
             painter.drawEllipse(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
+        } else if(images[image_current]->draw_operation[i] == POINT_X) {
+            // set the pen size to 2
+            QPen pen(draw_colour);
+            pen.setWidth(2);
+            painter.setPen(pen);
+
+            // draw the x point
+            int point_size = images[image_current]->draw_sizes[i];
+            painter.drawLine(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), images[image_current]->draw_x[i] + (point_size / 2), images[image_current]->draw_y[i] + (point_size / 2));
+            painter.drawLine(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] + (point_size / 2), images[image_current]->draw_x[i] + (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2));
+
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
             // draw this line segment
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
@@ -343,6 +358,15 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(tool == OP_POINT_CIRCLE) {
             // draw a preview circle at the last known location
             painter.drawEllipse(preview_end_x - current_point_size / 2, preview_end_y - current_point_size / 2, current_point_size, current_point_size);
+        } else if(tool == OP_POINT_X) {
+            // set the pen size to 2
+            QPen pen(QColor(0, 255, 255));
+            pen.setWidth(2);
+            painter.setPen(pen);
+
+            // draw the x point
+            painter.drawLine(preview_end_x - (current_point_size / 2), preview_end_y - (current_point_size / 2), preview_end_x + (current_point_size / 2), preview_end_y + (current_point_size / 2));
+            painter.drawLine(preview_end_x - (current_point_size / 2), preview_end_y + (current_point_size / 2), preview_end_x + (current_point_size / 2), preview_end_y - (current_point_size / 2));
         }
     }
 }

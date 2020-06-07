@@ -39,7 +39,7 @@ protected:
 // private section of the class
 private:
     // function that will draw the simple line tool
-    void drawLineTool(QPainter &painter);
+    void drawPointXTool(QPainter &painter);
     // function that will draw the variable line tool
     void drawLineFreeformTool(QPainter &painter);
     // function that will draw the simple point tool

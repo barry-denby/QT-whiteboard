@@ -115,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in all of our tools
     generateToolSelector(toolbar_layout, OP_POINT_CIRCLE);
     generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
+    generateToolSelector(toolbar_layout, OP_POINT_X);
     generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
 
     // add in a label and spinbox for the point size. connect tthe spinbox to the
@@ -149,7 +150,7 @@ MainWindow::~MainWindow() {
 // slot that readjust the spinners depending on the operation we have
 void MainWindow::enableSpinBoxes(const unsigned int op) {
     // adjust the spinboxed based on the operation
-    if(op == OP_POINT_SQUARE || op == OP_POINT_CIRCLE) {
+    if(op == OP_POINT_SQUARE || op == OP_POINT_CIRCLE || op == OP_POINT_X) {
         // enable the point and disable the line
         point_size_spinbox->setEnabled(true);
         line_thickness_spinbox->setEnabled(false);

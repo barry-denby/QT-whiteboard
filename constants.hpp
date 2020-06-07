@@ -7,7 +7,7 @@
 
 // constants for all of our operations
 const unsigned int OP_POINT_CIRCLE = 0;
-const unsigned int OP_LINE_FIXED_THICKNESS = 1;
+const unsigned int OP_POINT_X = 1;
 const unsigned int OP_POINT_SQUARE = 2;
 const unsigned int OP_LINE_FREEFORM = 3;
 
@@ -18,5 +18,6 @@ const unsigned int LINE_START = 2;
 const unsigned int LINE_POINT = 3;
 const unsigned int LINE_END = 4;
 const unsigned int POINT_CIRCLE = 5;
+const unsigned int POINT_X = 6;
 
 #endif // __CONSTANTS_HPP
