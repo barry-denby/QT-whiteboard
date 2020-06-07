@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent)
     generateToolSelector(toolbar_layout, OP_POINT_X);
     generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
     generateToolSelector(toolbar_layout, OP_LINE_STRAIGHT);
+    generateToolSelector(toolbar_layout, OP_DRAW_TEXT);
 
     // add in a label and spinbox for the point size. connect tthe spinbox to the
     // appropriate method in the whiteboard

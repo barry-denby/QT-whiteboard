@@ -3,6 +3,9 @@
 // implements everything described in toolselector.hpp
 
 // includes
+#include <iostream>
+#include <QFont>
+#include <QFontMetrics>
 #include <QPainter>
 #include "constants.hpp"
 #include "toolselector.hpp"
@@ -48,6 +51,8 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
         drawLineFreeformTool(painter);
     else if(tool == OP_LINE_STRAIGHT)
         drawLineStraightTool(painter);
+    else if(tool == OP_DRAW_TEXT)
+        drawTextTool(painter);
 
     // finish the painting when done
     painter.end();
@@ -92,4 +97,20 @@ void ToolSelector::drawPointSquareTool(QPainter &painter) {
     painter.setPen(pen);
     painter.setBrush(brush);
     painter.drawRect(13, 13, 6, 6);
+}
+
+// function that will draw the text tool
+void ToolSelector::drawTextTool(QPainter &painter) {
+    // get a font and figure out the width and height of a T
+    QFont font(QString("Arial"), 20, QFont::Bold);
+    QFontMetrics metrics = painter.fontMetrics();
+    int width = metrics.horizontalAdvance(QString("T"));
+    int height = metrics.height();
+    std::cout << width << " " << height  << " " << font.pointSize() << std::endl;
+
+    // draw the text in the middle
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.setFont(font);
+    painter.drawText(16 - (width), 16 + (height / 2), QString("T"));
 }
