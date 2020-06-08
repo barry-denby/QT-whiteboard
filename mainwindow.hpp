@@ -8,6 +8,7 @@
 // includes
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QSpinBox>
 #include <QString>
 #include <QWidget>
@@ -58,6 +59,12 @@ private:
     QLabel *total_images_label;
     // the name of the file that we are saving. if this is empty then a user has not chosen a name yet
     QString filename;
+    // spinbox for selecting the size of our text
+    QSpinBox *text_size_spinbox;
+    // spinbox for selecting the rotation of our text
+    QSpinBox *text_rotation_spinbox;
+    // lineedit for chosing the text we want to write in
+    QLineEdit *text_lineedit;
 };
 
 #endif // _MAINWINDOW_HPP

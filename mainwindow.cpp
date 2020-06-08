@@ -145,7 +145,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label and a spinbox for the text size
     QLabel *text_size_label = new QLabel("Text Size:");
     toolbar_layout->addWidget(text_size_label);
-    QSpinBox *text_size_spinbox = new QSpinBox();
+    text_size_spinbox = new QSpinBox();
     text_size_spinbox->setRange(8, 56);
     text_size_spinbox->setValue(8);
     text_size_spinbox->setEnabled(false);
@@ -154,7 +154,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label and a spinbox for the text rotation
     QLabel *text_rotation_label = new QLabel("Text Rotation:");
     toolbar_layout->addWidget(text_rotation_label);
-    QSpinBox *text_rotation_spinbox = new QSpinBox();
+    text_rotation_spinbox = new QSpinBox();
     text_rotation_spinbox->setRange(0, 359);
     text_rotation_spinbox->setValue(0);
     text_rotation_spinbox->setEnabled(false);
@@ -163,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label and a line edit for the text itself
     QLabel *text_label = new QLabel("Text:");
     toolbar_layout->addWidget(text_label);
-    QLineEdit *text_lineedit = new QLineEdit();
+    text_lineedit = new QLineEdit();
     text_lineedit->setEnabled(false);
     toolbar_layout->addWidget(text_lineedit);
 
@@ -178,13 +178,26 @@ MainWindow::~MainWindow() {
 void MainWindow::enableSpinBoxes(const unsigned int op) {
     // adjust the spinboxed based on the operation
     if(op == OP_POINT_SQUARE || op == OP_POINT_CIRCLE || op == OP_POINT_X) {
-        // enable the point and disable the line
+        // enable the point size and disable everything else
         point_size_spinbox->setEnabled(true);
         line_thickness_spinbox->setEnabled(false);
+        text_size_spinbox->setEnabled(false);
+        text_rotation_spinbox->setEnabled(false);
+        text_lineedit->setEnabled(false);
     } else if(op == OP_LINE_FREEFORM || op == OP_LINE_STRAIGHT) {
-        // enable the point and disable the line
+        // enable the line thickness and disable everything else
         point_size_spinbox->setEnabled(false);
         line_thickness_spinbox->setEnabled(true);
+        text_size_spinbox->setEnabled(false);
+        text_rotation_spinbox->setEnabled(false);
+        text_lineedit->setEnabled(false);
+    } else if(op == OP_DRAW_TEXT) {
+        // enable the text size, rotation, and line edit, disable everything else
+        point_size_spinbox->setEnabled(false);
+        line_thickness_spinbox->setEnabled(false);
+        text_size_spinbox->setEnabled(true);
+        text_rotation_spinbox->setEnabled(true);
+        text_lineedit->setEnabled(true);
     }
 }
 
