@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20, QFont::Bold), text_size(20), text_rotation(0), text(QString(""))
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20), text_size(20), text_rotation(0), text(QString(""))
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -194,10 +194,12 @@ void Whiteboard::changePointSize(int point_size) {
 void Whiteboard::changeText(const QString &text) {
     this->text = text;
 }
+
 // slot that will change the rotation of the text
 void Whiteboard::changeTextRotation(int text_rotation) {
     this->text_rotation = text_rotation;
 }
+
 // slot that will change the size of the text
 void Whiteboard::changeTextSize(int text_size) {
     // take a copy of the text_size and upate the font
@@ -209,7 +211,6 @@ void Whiteboard::changeTextSize(int text_size) {
 void Whiteboard::changeTool(unsigned int tool) {
     this->tool = tool;
 }
-
 
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {
@@ -270,6 +271,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     }  else if(tool == OP_LINE_STRAIGHT) {
         // we have the end point of a straight line so store this in the draw operations
         images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
+    } else if(tool == OP_DRAW_TEXT) {
+        // we have the final point of a text string so add in its draw data
+        images[image_current]->addDrawText(text, event->x(), event->y(), current_colour, text_size, text_rotation);
     }
 
     // repaint the view
@@ -378,6 +382,27 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // draw this straight line
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+        } else if(images[image_current]->draw_operation[i] == DRAW_TEXT) {
+            // get the font metrics and determine the width of the string
+            unsigned int string_index = images[image_current]->draw_string_index[i];
+            QFontMetrics metrics = painter.fontMetrics();
+            int width = metrics.horizontalAdvance(images[image_current]->draw_text_strings[string_index]);
+            int height = metrics.height();
+
+            // we will need to save, translate to the position, and rotate by the given angle
+            painter.save();
+            painter.translate(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
+            painter.rotate(images[image_current]->draw_text_rotations[i]);
+
+            // draw the preview text on the board
+            QFont tempfont("Arial", images[image_current]->draw_sizes[i]);
+            painter.setFont(tempfont);
+            painter.drawText(-width, height / 2, images[image_current]->draw_text_strings[string_index]);
+
+            // restore our painter state
+            painter.restore();
+
+            std::cout << images[image_current]->draw_text_strings[string_index].toStdString() << std::endl;
         }
     }
 
