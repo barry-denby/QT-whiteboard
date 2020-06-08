@@ -106,7 +106,6 @@ void ToolSelector::drawTextTool(QPainter &painter) {
     QFontMetrics metrics = painter.fontMetrics();
     int width = metrics.horizontalAdvance(QString("T"));
     int height = metrics.height();
-    std::cout << width << " " << height  << " " << font.pointSize() << std::endl;
 
     // draw the text in the middle
     painter.setPen(pen);

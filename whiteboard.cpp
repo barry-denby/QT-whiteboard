@@ -349,9 +349,17 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.drawLine(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] + (point_size / 2), images[image_current]->draw_x[i] + (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2));
 
         } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
+            QPen pen(draw_colour);
+            pen.setWidth(images[image_current]->draw_sizes[i]);
+            painter.setPen(pen);
+
             // draw this line segment
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         } else if(images[image_current]->draw_operation[i] == STRAIGHT_LINE_END) {
+            QPen pen(draw_colour);
+            pen.setWidth(images[image_current]->draw_sizes[i]);
+            painter.setPen(pen);
+
             // draw this straight line
             painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
         }

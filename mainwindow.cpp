@@ -137,7 +137,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(line_thickness_label);
     line_thickness_spinbox = new QSpinBox();
     line_thickness_spinbox->setRange(1, 100);
-    line_thickness_spinbox->setValue(1);
+    line_thickness_spinbox->setValue(2);
     line_thickness_spinbox->setEnabled(false);
     toolbar_layout->addWidget(line_thickness_spinbox);
     QObject::connect(line_thickness_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeLineThickness(int)));
