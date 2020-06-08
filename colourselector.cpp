@@ -20,6 +20,8 @@ ColourSelector::ColourSelector(QWidget *parent)
     // force a max width and height
     this->setMaximumWidth(32);
     this->setMaximumHeight(32);
+    this->setMinimumWidth(32);
+    this->setMinimumHeight(32);
 }
 
 // constructor for the class that will take in an RGB value and will set it for this selector
@@ -35,6 +37,8 @@ ColourSelector::ColourSelector(int red, int green, int blue, QWidget *parent)
     // force a max width and height
     this->setMaximumWidth(32);
     this->setMaximumHeight(32);
+    this->setMinimumWidth(32);
+    this->setMinimumHeight(32);
 }
 
 // destructor for the class

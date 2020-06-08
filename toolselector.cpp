@@ -17,6 +17,9 @@ ToolSelector::ToolSelector(const unsigned int tool, QWidget *parent)
     // force a max width and height
     this->setMaximumWidth(32);
     this->setMaximumHeight(32);
+    this->setMinimumWidth(32);
+    this->setMinimumHeight(32);
+
 }
 
 // destructor for the class

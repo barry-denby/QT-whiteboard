@@ -142,6 +142,31 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(line_thickness_spinbox);
     QObject::connect(line_thickness_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeLineThickness(int)));
 
+    // add in a label and a spinbox for the text size
+    QLabel *text_size_label = new QLabel("Text Size:");
+    toolbar_layout->addWidget(text_size_label);
+    QSpinBox *text_size_spinbox = new QSpinBox();
+    text_size_spinbox->setRange(8, 56);
+    text_size_spinbox->setValue(8);
+    text_size_spinbox->setEnabled(false);
+    toolbar_layout->addWidget(text_size_spinbox);
+
+    // add in a label and a spinbox for the text rotation
+    QLabel *text_rotation_label = new QLabel("Text Rotation:");
+    toolbar_layout->addWidget(text_rotation_label);
+    QSpinBox *text_rotation_spinbox = new QSpinBox();
+    text_rotation_spinbox->setRange(0, 359);
+    text_rotation_spinbox->setValue(0);
+    text_rotation_spinbox->setEnabled(false);
+    toolbar_layout->addWidget(text_rotation_spinbox);
+
+    // add in a label and a line edit for the text itself
+    QLabel *text_label = new QLabel("Text:");
+    toolbar_layout->addWidget(text_label);
+    QLineEdit *text_lineedit = new QLineEdit();
+    text_lineedit->setEnabled(false);
+    toolbar_layout->addWidget(text_lineedit);
+
 }
 
 // destructor for the class

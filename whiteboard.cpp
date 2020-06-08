@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false)
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20, QFont::Bold)
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -392,6 +392,17 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // draw the line point
             painter.drawLine(preview_start_x, preview_start_y, preview_end_x, preview_end_y);
+        } else if(tool == OP_DRAW_TEXT) {
+            // get the font metrics and determine the width of the string
+            QFontMetrics metrics = painter.fontMetrics();
+            int width = metrics.horizontalAdvance(QString("Testing Text"));
+            int height = metrics.height();
+
+            // draw the preview text on the board
+            painter.setPen(QColor(0, 255, 255));
+            painter.setBrush(QColor(0, 255, 255));
+            painter.setFont(font);
+            painter.drawText(preview_end_x - width, preview_end_y + (height / 2), QString("Testing Text"));
         }
     }
 }

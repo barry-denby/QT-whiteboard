@@ -7,6 +7,8 @@
 
 // includes needed to make this work
 #include <QColor>
+#include <QFont>
+#include <QFontMetrics>
 #include <QImage>
 #include <QMouseEvent>
 #include <QPen>
@@ -95,6 +97,8 @@ private:
     unsigned int preview_end_x, preview_end_y;
     // are we in the middle of a preview draw (i.e. currently on pressed or move not released)
     bool on_preview;
+    // the font that will be used for writing text to the board
+    QFont font;
 };
 
 #endif // _WHITEBOARD_HPP
