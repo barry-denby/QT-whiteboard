@@ -45,16 +45,22 @@ public:
     const unsigned int totalImages();
 // public slots of the class
 public slots:
-    // slot that will change the current image to the given number
-    void changeImage(int number);
     // slot that will change the current draw colour to the indicated colour
     void changeColour(int red, int green, int blue);
-    // slot that will change the tool to the indicated tool
-    void changeTool(unsigned int tool);
-    // slot that will change the point size
-    void changePointSize(int point_size);
+    // slot that will change the current image to the given number
+    void changeImage(int number);
     // slot that will change the line thickness
     void changeLineThickness(int line_thickness);
+    // slot that will change the point size
+    void changePointSize(int point_size);
+    // slot that will change the text to be displayed
+    void changeText(QString &text);
+    // slot that will change the rotation of the text
+    void changeTextRotation(int text_rotation);
+    // slot that will change the size of the text
+    void changeTextSize(int text_size);
+    // slot that will change the tool to the indicated tool
+    void changeTool(unsigned int tool);
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -99,6 +105,10 @@ private:
     bool on_preview;
     // the font that will be used for writing text to the board
     QFont font;
+    // the text size, rotation and text to be displayed for the draw text operation
+    int text_size;
+    int text_rotation;
+    QString text;
 };
 
 #endif // _WHITEBOARD_HPP

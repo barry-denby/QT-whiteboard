@@ -165,6 +165,13 @@ const unsigned int Whiteboard::totalImages() {
     return image_total;
 }
 
+// public slot that will change the current draw colour
+void Whiteboard::changeColour(int red, int green, int blue) {
+    current_colour.setRed(red);
+    current_colour.setGreen(green);
+    current_colour.setBlue(blue);
+}
+
 // public slot that will change the current image. note that we decrement the value provided here
 // by one to account for indices starting at zero
 void Whiteboard::changeImage(int number) {
@@ -173,16 +180,9 @@ void Whiteboard::changeImage(int number) {
     repaint();
 }
 
-// public slot that will change the current draw colour
-void Whiteboard::changeColour(int red, int green, int blue) {
-    current_colour.setRed(red);
-    current_colour.setGreen(green);
-    current_colour.setBlue(blue);
-}
-
-// public slot taht will change the current draw tool
-void Whiteboard::changeTool(unsigned int tool) {
-    this->tool = tool;
+// slot that will change the line thickness
+void Whiteboard::changeLineThickness(int line_thickness) {
+    current_line_thickness = line_thickness;
 }
 
 // slot that will change the point size
@@ -190,10 +190,24 @@ void Whiteboard::changePointSize(int point_size) {
     current_point_size = point_size;
 }
 
-// slot that will change the line thickness
-void Whiteboard::changeLineThickness(int line_thickness) {
-    current_line_thickness = line_thickness;
+// slot that will change the text to be displayed
+void Whiteboard::changeText(QString &text) {
+    this->text = text;
 }
+// slot that will change the rotation of the text
+void Whiteboard::changeTextRotation(int text_rotation) {
+    this->text_rotation = text_rotation;
+}
+// slot that will change the size of the text
+void Whiteboard::changeTextSize(int text_size) {
+    this->text_size = text_size;
+}
+
+// public slot taht will change the current draw tool
+void Whiteboard::changeTool(unsigned int tool) {
+    this->tool = tool;
+}
+
 
 // overridden mousePressEvent function that will start a user's drawing
 void Whiteboard::mousePressEvent(QMouseEvent* event) {

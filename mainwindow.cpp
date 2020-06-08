@@ -150,6 +150,7 @@ MainWindow::MainWindow(QWidget *parent)
     text_size_spinbox->setValue(8);
     text_size_spinbox->setEnabled(false);
     toolbar_layout->addWidget(text_size_spinbox);
+    QObject::connect(text_size_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeTextSize(int)));
 
     // add in a label and a spinbox for the text rotation
     QLabel *text_rotation_label = new QLabel("Text Rotation:");
@@ -159,6 +160,7 @@ MainWindow::MainWindow(QWidget *parent)
     text_rotation_spinbox->setValue(0);
     text_rotation_spinbox->setEnabled(false);
     toolbar_layout->addWidget(text_rotation_spinbox);
+    QObject::connect(text_rotation_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeTextRotation(int)));
 
     // add in a label and a line edit for the text itself
     QLabel *text_label = new QLabel("Text:");
@@ -166,6 +168,7 @@ MainWindow::MainWindow(QWidget *parent)
     text_lineedit = new QLineEdit();
     text_lineedit->setEnabled(false);
     toolbar_layout->addWidget(text_lineedit);
+    QObject::connect(line_thickness_spinbox, SIGNAL(textEdited(QString &)), whiteboard, SLOT(changeText(QString &)));
 
 }
 
