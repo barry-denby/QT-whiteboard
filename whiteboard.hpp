@@ -54,7 +54,7 @@ public slots:
     // slot that will change the point size
     void changePointSize(int point_size);
     // slot that will change the text to be displayed
-    void changeText(QString &text);
+    void changeText(const QString &text);
     // slot that will change the rotation of the text
     void changeTextRotation(int text_rotation);
     // slot that will change the size of the text

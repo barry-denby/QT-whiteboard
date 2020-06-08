@@ -147,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(text_size_label);
     text_size_spinbox = new QSpinBox();
     text_size_spinbox->setRange(8, 56);
-    text_size_spinbox->setValue(8);
+    text_size_spinbox->setValue(20);
     text_size_spinbox->setEnabled(false);
     toolbar_layout->addWidget(text_size_spinbox);
     QObject::connect(text_size_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeTextSize(int)));
@@ -167,8 +167,9 @@ MainWindow::MainWindow(QWidget *parent)
     toolbar_layout->addWidget(text_label);
     text_lineedit = new QLineEdit();
     text_lineedit->setEnabled(false);
+    text_lineedit->setPlaceholderText(QString("Enter text to draw here."));
     toolbar_layout->addWidget(text_lineedit);
-    QObject::connect(line_thickness_spinbox, SIGNAL(textEdited(QString &)), whiteboard, SLOT(changeText(QString &)));
+    QObject::connect(text_lineedit, SIGNAL(textEdited(const QString &)), whiteboard, SLOT(changeText(const QString &)));
 
 }
 

@@ -191,7 +191,7 @@ void Whiteboard::changePointSize(int point_size) {
 }
 
 // slot that will change the text to be displayed
-void Whiteboard::changeText(QString &text) {
+void Whiteboard::changeText(const QString &text) {
     this->text = text;
 }
 // slot that will change the rotation of the text
@@ -200,7 +200,9 @@ void Whiteboard::changeTextRotation(int text_rotation) {
 }
 // slot that will change the size of the text
 void Whiteboard::changeTextSize(int text_size) {
+    // take a copy of the text_size and upate the font
     this->text_size = text_size;
+    font.setPointSize(text_size);
 }
 
 // public slot taht will change the current draw tool
@@ -409,14 +411,14 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(tool == OP_DRAW_TEXT) {
             // get the font metrics and determine the width of the string
             QFontMetrics metrics = painter.fontMetrics();
-            int width = metrics.horizontalAdvance(QString("Testing Text"));
+            int width = metrics.horizontalAdvance(text);
             int height = metrics.height();
 
             // draw the preview text on the board
             painter.setPen(QColor(0, 255, 255));
             painter.setBrush(QColor(0, 255, 255));
             painter.setFont(font);
-            painter.drawText(preview_end_x - width, preview_end_y + (height / 2), QString("Testing Text"));
+            painter.drawText(preview_end_x - width, preview_end_y + (height / 2), text);
         }
     }
 }
