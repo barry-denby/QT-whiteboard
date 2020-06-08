@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20, QFont::Bold)
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20, QFont::Bold), text_size(20), text_rotation(0), text(QString(""))
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -414,11 +414,19 @@ void Whiteboard::drawBoard(QPainter &painter) {
             int width = metrics.horizontalAdvance(text);
             int height = metrics.height();
 
+            // we will need to save, translate to the position, and rotate by the given angle
+            painter.save();
+            painter.translate(preview_end_x, preview_end_y);
+            painter.rotate(text_rotation);
+
             // draw the preview text on the board
             painter.setPen(QColor(0, 255, 255));
             painter.setBrush(QColor(0, 255, 255));
             painter.setFont(font);
-            painter.drawText(preview_end_x - width, preview_end_y + (height / 2), text);
+            painter.drawText(-width, height / 2, text);
+
+            // restore our painter state
+            painter.restore();
         }
     }
 }
