@@ -77,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label for the image title and a line edit for changing that image title
     QLabel *image_title_label = new QLabel("image Title:");
     main_toolbar_layout->addWidget(image_title_label);
-    QLineEdit *image_title_edit = new QLineEdit();
+    QLineEdit *image_title_edit = new QLineEdit("Placeholder title");
     main_toolbar_layout->addWidget(image_title_edit);
 
     // add a whiteboard to the layout and drop all of the margins
@@ -165,7 +165,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a label and a line edit for the text itself
     QLabel *text_label = new QLabel("Text:");
     toolbar_layout->addWidget(text_label);
-    text_lineedit = new QLineEdit();
+    text_lineedit = new QLineEdit("Placeholder text to draw");
     text_lineedit->setEnabled(false);
     text_lineedit->setPlaceholderText(QString("Enter text to draw here."));
     toolbar_layout->addWidget(text_lineedit);

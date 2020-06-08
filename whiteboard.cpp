@@ -17,7 +17,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20), text_size(20), text_rotation(0), text(QString(""))
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20), text_size(20), text_rotation(0), text(QString("Placeholder text to draw"))
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
