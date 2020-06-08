@@ -326,6 +326,9 @@ void Whiteboard::undoLastDrawOp() {
         while(images[image_current]->draw_operation[images[image_current]->total_ops - 1] != LINE_START)
             images[image_current]->removeLastDrawData();
         images[image_current]->removeLastDrawData();
+    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == DRAW_TEXT) {
+        // we have a text operation so just remove it
+        images[image_current]->removeLastDrawData();
     }
 
     // redraw the screen
@@ -401,8 +404,6 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // restore our painter state
             painter.restore();
-
-            std::cout << images[image_current]->draw_text_strings[string_index].toStdString() << std::endl;
         }
     }
 
