@@ -3,6 +3,7 @@
 // implenents everything described in drawoperations.hpp
 
 // includes
+#include <iostream>
 #include "constants.hpp"
 #include "drawoperations.hpp"
 
@@ -58,7 +59,7 @@ DrawOperations::DrawOperations(const unsigned int max_ops)
         draw_blue[i] = 0;
         draw_sizes[i] = 0;
         draw_string_index[i] = 0;
-        draw_text_rotations = 0;
+        draw_text_rotations[i] = 0;
     }
 
     // allocate an array of 32 QString objects
@@ -131,6 +132,11 @@ void DrawOperations::removeLastDrawData() {
 
     // reduce total_ops by one and remove the data that is there
     total_ops--;
+    if(draw_operation[total_ops] == DRAW_TEXT) {
+        unsigned int string_index = draw_string_index[total_ops];
+        draw_text_strings[string_index] = QString("");
+        total_strings--;
+    }
     draw_operation[total_ops] = NO_DRAW;
     draw_x[total_ops] = 0;
     draw_y[total_ops] = 0;
@@ -138,6 +144,8 @@ void DrawOperations::removeLastDrawData() {
     draw_green[total_ops] = 0;
     draw_blue[total_ops] = 0;
     draw_sizes[total_ops] = 0;
+    draw_text_rotations[total_ops] = 0;
+    draw_string_index[total_ops] = 0;
 }
 
 // function that will double up the size of the arrays
