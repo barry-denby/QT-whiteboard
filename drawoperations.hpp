@@ -16,8 +16,9 @@ class DrawOperations {
 public:
     // default constructor of the class that will make a 4K size draw ops avaialable
     DrawOperations();
-    // constructor that will make a draw operations object with the given number of objects
-    DrawOperations(const unsigned int max_ops);
+    // constructor that will make a draw operations object with the given number of objects and
+    // a maximum number of strings
+    DrawOperations(const unsigned int max_ops, const unsigned int max_strings);
     // destructor for the class
     ~DrawOperations();
     // function that will allocate and all arrays to size max_ops except the strings array

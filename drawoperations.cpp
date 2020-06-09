@@ -18,8 +18,8 @@ DrawOperations::DrawOperations()
     draw_text_strings = new QString[max_strings];
 }
 
-DrawOperations::DrawOperations(const unsigned int max_ops)
-: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(8)
+DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings)
+: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings)
 {
     // initialise all arrays
     allocateArrays();

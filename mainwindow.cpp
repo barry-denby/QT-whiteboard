@@ -308,7 +308,7 @@ void MainWindow::loadImages() {
         fread(&max_ops, sizeof(unsigned int), 1, to_read);
 
         // allocate a draw operations of the required size and then read in all of the data
-        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops);
+        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops, 8);
         loaded_images[i]->total_ops = total_ops;
         fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
