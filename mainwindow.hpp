@@ -33,6 +33,8 @@ private slots:
     void addNewImage();
     // slot that will change the current image
     void changeImage(int number);
+    // slot that will delete the current image
+    void deleteImage();
     // slot that will export the current whiteboard to a set of PNG images
     void exportPNG();
     // slot that will run through the process of loading a set of images for a whiteboard
@@ -51,6 +53,9 @@ private:
     QWidget *generateToolbar();
     // function that will generate and attach the given tool selector to the given layout
     void generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
+    // function that will ask if the user is sure that they want to delete an image. true means the image
+    // is to be deleted
+    bool warnDelete();
     // function that will throw up a dialog warning that the image cannot be changed unless a title is entered
     void warnNoTitle();
     // whiteboard that everything will be drawn on

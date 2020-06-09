@@ -98,6 +98,27 @@ DrawOperations **Whiteboard::drawOperations() {
     return images;
 }
 
+// function that will delete the currently selected image
+void Whiteboard::deleteImage() {
+    // see if we are at the last image or an earlier one
+    if(image_current == image_total - 1) {
+        // we are at the last image so reset it
+        images[image_current]->reset();
+    } else {
+        // we are earlier in the list meaning we will need to reset the image and move all images after back one
+        DrawOperations *temp = images[image_current];
+        temp->reset();
+
+        // shift all images back one and then put temp at the end
+        for(unsigned int i = image_current; i < image_total - 1; i++)
+            images[i] = images[i + 1];
+        images[image_total - 1] = temp;
+    }
+
+    // reduce the number of images
+    image_total--;
+}
+
 // function that will run the draw commands on a QImage and will return it
 // this is for exporting purposes
 QImage *Whiteboard::exportBoard(const unsigned int board) {

@@ -38,7 +38,7 @@ DrawOperations::DrawOperations()
 }
 
 DrawOperations::DrawOperations(const unsigned int max_ops)
-: total_ops(0), max_ops(max_ops)
+: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(8)
 {
     // initialise support for 4K drawing ops
     draw_operation = (unsigned int*) new unsigned int[max_ops];
@@ -211,4 +211,48 @@ void DrawOperations::doubleStringArray() {
         new_draw_text_strings[i] = draw_text_strings[i];
     delete[] draw_text_strings;
     draw_text_strings = new_draw_text_strings;
+}
+
+// function that will reset the entire drawoperations back to the starting state
+void DrawOperations::reset() {
+    // delete all of the arrays that are there
+    delete draw_operation;
+    delete draw_x;
+    delete draw_y;
+    delete draw_red;
+    delete draw_green;
+    delete draw_blue;
+    delete draw_sizes;
+    delete draw_text_rotations;
+    delete draw_string_index;
+    delete[] draw_text_strings;
+
+    // put new standard arrays in their place
+    total_ops = 0;
+    max_ops = 1024;
+    total_strings = 0;
+    max_strings = 8;
+    draw_operation = (unsigned int*) new unsigned int[max_ops];
+    draw_x = (unsigned int*) new unsigned int[max_ops];
+    draw_y = (unsigned int*) new unsigned int[max_ops];
+    draw_red = (int *) new int[max_ops];
+    draw_green = (int *) new int[max_ops];
+    draw_blue = (int *) new int[max_ops];
+    draw_sizes = (int *) new int[max_ops];
+    draw_string_index = new int[max_ops];
+    draw_text_rotations = new int[max_ops];
+    for(unsigned int i = 0; i < max_ops; i++) {
+        draw_operation[i] = 0;
+        draw_x[i] = 0;
+        draw_y[i] = 0;
+        draw_red[i] = 0;
+        draw_green[i] = 0;
+        draw_blue[i] = 0;
+        draw_sizes[i] = 0;
+        draw_string_index[i] = 0;
+        draw_text_rotations[i] = 0;
+    }
+
+    // allocate an array of 32 QString objects
+    draw_text_strings = new QString[max_strings];
 }

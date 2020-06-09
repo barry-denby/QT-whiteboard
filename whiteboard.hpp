@@ -32,6 +32,8 @@ public:
     void addNewImage();
     // function that will return the full list of draw images
     DrawOperations **drawOperations();
+    // function that will delete the currently selected image
+    void deleteImage();
     // function that will run the draw commands on a QImage and will return it
     // this is for exporting purposes
     QImage *exportBoard(const unsigned int board);

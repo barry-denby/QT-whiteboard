@@ -30,6 +30,8 @@ public:
     void doubleArrays();
     // private function that will increase the size of the string array
     void doubleStringArray();
+    // function that will reset the entire drawoperations back to the starting state
+    void reset();
     // array containing the list of draw operations
     unsigned int *draw_operation;
     // arrays containing the list of x and y coordinates

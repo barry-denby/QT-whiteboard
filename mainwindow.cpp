@@ -64,6 +64,7 @@ MainWindow::MainWindow(QWidget *parent)
     // add in a button for deleting an image
     QPushButton *delete_button = new QPushButton("Delete image");
     main_toolbar_layout->addWidget(delete_button);
+    QObject::connect(delete_button, SIGNAL(clicked()), this, SLOT(deleteImage()));
 
     // add in a spinbox for choosing the image number along with labels for this
     QLabel *image_number_label = new QLabel("Viewing image:");
@@ -235,6 +236,19 @@ void MainWindow::changeImage(int number) {
 
     // call the change image on the whiteboard itself.
     whiteboard->changeImage(number);
+}
+
+// slot that will delete the current image
+void MainWindow::deleteImage() {
+    // if we only have the one image then do nothing
+    if(whiteboard->totalImages() == 1 || !warnDelete())
+        return;
+
+    // get the whiteboard to delete the current image and update the UI to show we are an image down
+    whiteboard->deleteImage();
+    image_selector_spinbox->setValue(image_selector_spinbox->value() - 1);
+    image_selector_spinbox->setRange(1, whiteboard->totalImages());
+    total_images_label->setText(QString("/ %1").arg(whiteboard->totalImages()));
 }
 
 // slot that will export the current whiteboard to a set of PNG images
@@ -437,10 +451,25 @@ void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int op
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), this, SLOT(enableSpinBoxes(unsigned int)));
 }
 
+// function that will ask if the user is sure that they want to delete an image. true means the image
+// is to be deleted
+bool MainWindow::warnDelete() {
+    // throw up a message box asking if they want to delete this image
+    QMessageBox start_messagebox;
+    start_messagebox.setText("Are you sure you want to delete this image? image will be lost");
+    start_messagebox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    start_messagebox.setDefaultButton(QMessageBox::No);
+    int result = start_messagebox.exec();
+    if(result == QMessageBox::Yes)
+        return true;
+    else
+        return false;
+}
+
 // function that will throw up a dialog warning that the image cannot be changed unless a title is entered
 void MainWindow::warnNoTitle() {
     // emit a message stating that we cannot change unless a title is entered
     QMessageBox warning;
-    warning.setText("Image has no title. Will not save/change/add/delete/export until there is a title");
+    warning.setText("Image has no title. Will not save/change/add/export until there is a title");
     warning.exec();
 }
