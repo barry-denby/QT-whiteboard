@@ -37,6 +37,8 @@ public:
     // function that will run the draw commands on a QImage and will return it
     // this is for exporting purposes
     QImage *exportBoard(const unsigned int board);
+    // function that will return the title of the current image
+    const QString &imageTitleCurrent();
     // function that will return the maximum number of images in this whiteboard
     const unsigned int maxImages();
     // function that will replace the current set of images with this set of images

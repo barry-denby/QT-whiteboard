@@ -241,8 +241,10 @@ void MainWindow::changeImage(int number) {
         return;
     }
 
-    // call the change image on the whiteboard itself.
+    // call the change image on the whiteboard itself and update the title to reflect the change
     whiteboard->changeImage(number);
+    image_title_edit->setText(whiteboard->imageTitleCurrent());
+
 }
 
 // slot that will delete the current image

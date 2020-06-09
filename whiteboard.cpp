@@ -144,6 +144,11 @@ QImage *Whiteboard::exportBoard(const unsigned int board) {
     return image;
 }
 
+// function that will return the title of the current image
+const QString &Whiteboard::imageTitleCurrent() {
+    return images[image_current]->title;
+}
+
 // function that will return the maximum number of images in this whiteboard
 const unsigned int Whiteboard::maxImages() {
     return image_max;
