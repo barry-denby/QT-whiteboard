@@ -219,6 +219,9 @@ void MainWindow::addNewImage() {
         return;
     }
 
+    // take a copy of the current title
+    QString title = image_title_edit->text();
+
     // get the whiteboard to add an image
     whiteboard->addNewImage();
 
@@ -230,7 +233,8 @@ void MainWindow::addNewImage() {
     total_images_label->setText(QString("/ %1").arg(total_images));
 
     // set the title on the new image
-    whiteboard->changeImageTitle(image_title_edit->text());
+    whiteboard->changeImageTitle(title);
+    image_title_edit->setText(title);
 }
 
 // slot that will change the current image
