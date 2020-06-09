@@ -73,18 +73,19 @@ MainWindow::MainWindow(QWidget *parent)
     main_toolbar_layout->addWidget(image_selector_spinbox);
     total_images_label = new QLabel("/ 1");
     main_toolbar_layout->addWidget(total_images_label);
+    QObject::connect(image_selector_spinbox, SIGNAL(valueChanged(int)), this, SLOT(changeImage(int)));
 
     // add in a label for the image title and a line edit for changing that image title
     QLabel *image_title_label = new QLabel("image Title:");
     main_toolbar_layout->addWidget(image_title_label);
-    QLineEdit *image_title_edit = new QLineEdit("Placeholder title");
+    image_title_edit = new QLineEdit("Placeholder title");
     main_toolbar_layout->addWidget(image_title_edit);
 
     // add a whiteboard to the layout and drop all of the margins
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
-    QObject::connect(image_selector_spinbox, SIGNAL(valueChanged(int)), whiteboard, SLOT(changeImage(int)));
+
 
     // create a widget with a hbox layout and add it to the main view
     QWidget *toolbar = generateToolbar();
@@ -207,6 +208,12 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
 
 // slot that will add a new image in the current place
 void MainWindow::addNewImage() {
+    // if the current image has no title then do nothing
+    if(QString::compare(image_title_edit->text(), QString(""))== 0) {
+        warnNoTitle();
+        return;
+    }
+
     // get the whiteboard to add an image
     whiteboard->addNewImage();
 
@@ -218,8 +225,26 @@ void MainWindow::addNewImage() {
     total_images_label->setText(QString("/ %1").arg(total_images));
 }
 
+// slot that will change the current image
+void MainWindow::changeImage(int number) {
+    // if the current image has no title then do nothing
+    if(QString::compare(image_title_edit->text(), QString(""))== 0) {
+        warnNoTitle();
+        return;
+    }
+
+    // call the change image on the whiteboard itself.
+    whiteboard->changeImage(number);
+}
+
 // slot that will export the current whiteboard to a set of PNG images
 void MainWindow::exportPNG() {
+    // if the current image has no title then do nothing
+    if(QString::compare(image_title_edit->text(), QString(""))== 0) {
+        warnNoTitle();
+        return;
+    }
+
     // first get a directory from the user
     QString directory = QFileDialog::getExistingDirectory(this, "Export directory", "",  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
@@ -296,6 +321,12 @@ void MainWindow::loadImages() {
 
 // slot that will go through the process of saving a whiteboard to disk
 void MainWindow::saveImages() {
+    // if the current image has no title then do nothing
+    if(QString::compare(image_title_edit->text(), QString(""))== 0) {
+        warnNoTitle();
+        return;
+    }
+
     // if we don't have a filename then throw up a save dialog looking for one
     if(filename.compare(QString("")) == 0) {
         // throw up a file dialog to get the filename to save. if the filename is nothing then
@@ -404,4 +435,12 @@ void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int op
     layout->addWidget(tool_selector);
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), whiteboard, SLOT(changeTool(unsigned int)));
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), this, SLOT(enableSpinBoxes(unsigned int)));
+}
+
+// function that will throw up a dialog warning that the image cannot be changed unless a title is entered
+void MainWindow::warnNoTitle() {
+    // emit a message stating that we cannot change unless a title is entered
+    QMessageBox warning;
+    warning.setText("Image has no title. Will not save/change/add/delete/export until there is a title");
+    warning.exec();
 }

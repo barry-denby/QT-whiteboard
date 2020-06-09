@@ -31,6 +31,8 @@ private slots:
     void enableSpinBoxes(const unsigned int op);
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
+    // slot that will change the current image
+    void changeImage(int number);
     // slot that will export the current whiteboard to a set of PNG images
     void exportPNG();
     // slot that will run through the process of loading a set of images for a whiteboard
@@ -49,6 +51,8 @@ private:
     QWidget *generateToolbar();
     // function that will generate and attach the given tool selector to the given layout
     void generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
+    // function that will throw up a dialog warning that the image cannot be changed unless a title is entered
+    void warnNoTitle();
     // whiteboard that everything will be drawn on
     Whiteboard *whiteboard;
     // spinboxes for determining the point size and line thickness
@@ -65,6 +69,8 @@ private:
     QSpinBox *text_rotation_spinbox;
     // lineedit for chosing the text we want to write in
     QLineEdit *text_lineedit;
+    // lineedit for setting the title of the image
+    QLineEdit *image_title_edit;
 };
 
 #endif // _MAINWINDOW_HPP

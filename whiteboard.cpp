@@ -272,6 +272,10 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
         // we have the end point of a straight line so store this in the draw operations
         images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
     } else if(tool == OP_DRAW_TEXT) {
+        // if there is no text entered then do nothing
+        if(QString::compare(text, QString("")) == 0)
+            return;
+
         // we have the final point of a text string so add in its draw data
         images[image_current]->addDrawText(text, event->x(), event->y(), current_colour, text_size, text_rotation);
     }
