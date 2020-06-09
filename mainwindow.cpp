@@ -87,6 +87,10 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
 
+    // as the whiteboard is now defined set the title on the first image and connect a signal from the line
+    // edit to change the text on the current image
+    whiteboard->changeImageTitle(QString("Placeholder title"));
+    QObject::connect(image_title_edit, SIGNAL(textEdited(const QString&)), whiteboard, SLOT(changeImageTitle(const QString&)));
 
     // create a widget with a hbox layout and add it to the main view
     QWidget *toolbar = generateToolbar();

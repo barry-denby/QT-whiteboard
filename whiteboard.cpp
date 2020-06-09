@@ -201,6 +201,12 @@ void Whiteboard::changeImage(int number) {
     repaint();
 }
 
+// slot that will change the title of the current image
+void Whiteboard::changeImageTitle(const QString& title) {
+    // as we dont store the title here we will need to pass it through to the draw operations
+    images[image_current]->setTitle(title);
+}
+
 // slot that will change the line thickness
 void Whiteboard::changeLineThickness(int line_thickness) {
     current_line_thickness = line_thickness;

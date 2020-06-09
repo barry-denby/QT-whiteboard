@@ -9,7 +9,7 @@
 
 // default constructor for the class that will initialise a 4K sized draw operations object
 DrawOperations::DrawOperations()
-: total_ops(0), max_ops(1024), total_strings(0), max_strings(8)
+: total_ops(0), max_ops(1024), total_strings(0), max_strings(8), title(QString(""))
 {
     // initialise support for 1K drawing ops
     allocateArrays();
@@ -19,7 +19,7 @@ DrawOperations::DrawOperations()
 }
 
 DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings)
-: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings)
+: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings), title(QString(""))
 {
     // initialise all arrays
     allocateArrays();
@@ -213,4 +213,9 @@ void DrawOperations::reset() {
 
     // allocate an array of 32 QString objects
     draw_text_strings = new QString[max_strings];
+}
+
+// function that will set the title of this image
+void DrawOperations::setTitle(const QString& new_title) {
+    title = new_title;
 }

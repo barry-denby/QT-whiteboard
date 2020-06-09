@@ -6,6 +6,10 @@
 // defines a container class that contains all the draw operations to recreate an image.
 // these will be used to simplify drawing on screen and also for export purposes.
 // initally these will start off at 4K draw ops but it will double in size if necessary
+//
+// note that most of the fields have been made public here as from a performance point of
+// view with the amount of times the arrays are potentially accessed for data it will save
+// a lot of time to drop getter function calls on a redraw.
 
 // includes
 #include <QColor>
@@ -37,6 +41,8 @@ public:
     void doubleStringArray();
     // function that will reset the entire drawoperations back to the starting state
     void reset();
+    // function that will set the title of this image
+    void setTitle(const QString& new_title);
     // array containing the list of draw operations
     unsigned int *draw_operation;
     // arrays containing the list of x and y coordinates
@@ -61,6 +67,8 @@ public:
     // how many strings and the max number of strings we have
     unsigned int total_strings;
     unsigned int max_strings;
+    // the title of the current image
+    QString title;
 };
 
 #endif // _DRAWOPERATIONS_HPP

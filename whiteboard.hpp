@@ -51,6 +51,8 @@ public slots:
     void changeColour(int red, int green, int blue);
     // slot that will change the current image to the given number
     void changeImage(int number);
+    // slot that will change the title of the current image
+    void changeImageTitle(const QString& title);
     // slot that will change the line thickness
     void changeLineThickness(int line_thickness);
     // slot that will change the point size
