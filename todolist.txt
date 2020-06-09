@@ -1,0 +1,16 @@
+Features to add:
+    - modify the file save to take account of the image title
+    - modify the file save to take account of the image strings
+    - modify the file read to take account of the image title
+    - modify the file read to take account of the image title
+    - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
+    - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)
+
+features to add in the long future:
+    - figure out how to draw a tool wheel for selecting tools in place
+    - figure out how to draw a colour wheel for selecting colours in place
+
+refactoring to do:
+
+stuff to fix:
+    - figure out why when drawing a really really long line it doesn't double the array and starts eating it from the beginning.

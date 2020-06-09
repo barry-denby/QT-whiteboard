@@ -27,6 +27,8 @@ public:
     void addDrawData(unsigned int operation, int x, int y, QColor &colour, int draw_size);
     // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
     void addDrawText(const QString &text, int x, int y, QColor &colour, int draw_size, int draw_rotation);
+    // function that will deallocate all of the arrays of this draw operations
+    void deallocateArrays();
     // removes the last set of draw data from this draw operations
     void removeLastDrawData();
     // private function that will increase the size of the draw ops arrays by doubling them

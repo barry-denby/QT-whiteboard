@@ -14,7 +14,7 @@ DrawOperations::DrawOperations()
     // initialise support for 1K drawing ops
     allocateArrays();
 
-    // allocate an array of 32 QString objects
+    // allocate an array of QString objects
     draw_text_strings = new QString[max_strings];
 }
 
@@ -24,22 +24,14 @@ DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int ma
     // initialise all arrays
     allocateArrays();
 
-    // allocate an array of 32 QString objects
+    // allocate an array of QString objects
     draw_text_strings = new QString[max_strings];
 }
 
 // destructor for the class
 DrawOperations::~DrawOperations() {
     // delete all of our arrays
-    delete draw_operation;
-    delete draw_x;
-    delete draw_y;
-    delete draw_red;
-    delete draw_green;
-    delete draw_blue;
-    delete draw_sizes;
-    delete draw_text_rotations;
-    delete draw_string_index;
+    deallocateArrays();
     delete[] draw_text_strings;
 }
 
@@ -111,6 +103,20 @@ void DrawOperations::addDrawText(const QString &text, int x, int y, QColor &colo
         doubleStringArray();
 }
 
+// function that will deallocate all of the arrays of this draw operations
+void DrawOperations::deallocateArrays() {
+    // delete all of our arrays
+    delete draw_operation;
+    delete draw_x;
+    delete draw_y;
+    delete draw_red;
+    delete draw_green;
+    delete draw_blue;
+    delete draw_sizes;
+    delete draw_text_rotations;
+    delete draw_string_index;
+}
+
 // refactored function that will remove the last set of draw data from the arrays
 void DrawOperations::removeLastDrawData() {
     // if the next op is already zero then we cant remove anything
@@ -165,15 +171,7 @@ void DrawOperations::doubleArrays() {
     }
 
     // delete the old arrays
-    delete draw_operation;
-    delete draw_x;
-    delete draw_y;
-    delete draw_red;
-    delete draw_green;
-    delete draw_blue;
-    delete draw_sizes;
-    delete draw_text_rotations;
-    delete draw_string_index;
+    deallocateArrays();
 
     // assign the new arrays to the new names
     draw_operation = new_draw_operation;
@@ -203,15 +201,7 @@ void DrawOperations::doubleStringArray() {
 // function that will reset the entire drawoperations back to the starting state
 void DrawOperations::reset() {
     // delete all of the arrays that are there
-    delete draw_operation;
-    delete draw_x;
-    delete draw_y;
-    delete draw_red;
-    delete draw_green;
-    delete draw_blue;
-    delete draw_sizes;
-    delete draw_text_rotations;
-    delete draw_string_index;
+    deallocateArrays();
     delete[] draw_text_strings;
 
     // put new standard arrays in their place
@@ -219,26 +209,7 @@ void DrawOperations::reset() {
     max_ops = 1024;
     total_strings = 0;
     max_strings = 8;
-    draw_operation = (unsigned int*) new unsigned int[max_ops];
-    draw_x = (unsigned int*) new unsigned int[max_ops];
-    draw_y = (unsigned int*) new unsigned int[max_ops];
-    draw_red = (int *) new int[max_ops];
-    draw_green = (int *) new int[max_ops];
-    draw_blue = (int *) new int[max_ops];
-    draw_sizes = (int *) new int[max_ops];
-    draw_string_index = new int[max_ops];
-    draw_text_rotations = new int[max_ops];
-    for(unsigned int i = 0; i < max_ops; i++) {
-        draw_operation[i] = 0;
-        draw_x[i] = 0;
-        draw_y[i] = 0;
-        draw_red[i] = 0;
-        draw_green[i] = 0;
-        draw_blue[i] = 0;
-        draw_sizes[i] = 0;
-        draw_string_index[i] = 0;
-        draw_text_rotations[i] = 0;
-    }
+    allocateArrays();
 
     // allocate an array of 32 QString objects
     draw_text_strings = new QString[max_strings];
