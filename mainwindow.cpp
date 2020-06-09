@@ -262,6 +262,9 @@ void MainWindow::deleteImage() {
     image_selector_spinbox->setValue(image_selector_spinbox->value() - 1);
     image_selector_spinbox->setRange(1, whiteboard->totalImages());
     total_images_label->setText(QString("/ %1").arg(whiteboard->totalImages()));
+
+    // set the title field to the title of the current image
+    image_title_edit->setText(whiteboard->imageTitleCurrent());
 }
 
 // slot that will export the current whiteboard to a set of PNG images

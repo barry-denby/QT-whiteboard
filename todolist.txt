@@ -1,4 +1,6 @@
 Features to add:
+    - modify the file save to take account of the string totals
+    - modify the file load to take account of the string totals
     - modify the file save to take account of the image title
         done - modify the DrawOperations to have an image title
         done - modify the MainWindow to trigger the change of image title
@@ -6,7 +8,7 @@ Features to add:
         done - modify the reset functionality of mainwindow to set an image title
         done - modify the add image functionality of mainwindow to set the image title to the title of the previous image
         done - modify the whiteboard class to return the title of the current image
-        - modify the delete image functionality of mainwindow to set the image title to the title of the last selected image
+        done - modify the delete image functionality of mainwindow to set the image title to the title of the last selected image
         done - modify the image change of main window to display the title of the new current image
     - modify the file save to take account of the image strings
     - modify the file read to take account of the image title
@@ -22,5 +24,3 @@ refactoring to do:
 
 stuff to fix:
     - figure out why when drawing a really really long line it doesn't double the array and starts eating it from the beginning.
-    - figure out when when a new image is added that the title disappears
-        - suspect that this is the title not being set before the spinner is being updated.
