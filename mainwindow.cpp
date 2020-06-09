@@ -228,6 +228,9 @@ void MainWindow::addNewImage() {
     image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
     // update the label with the total number of images too
     total_images_label->setText(QString("/ %1").arg(total_images));
+
+    // set the title on the new image
+    whiteboard->changeImageTitle(image_title_edit->text());
 }
 
 // slot that will change the current image
