@@ -409,6 +409,8 @@ void MainWindow::startNewWhiteboard() {
     whiteboard->resetWhiteBoard();
     image_selector_spinbox->setRange(1, 1);
     total_images_label->setText("/ 1");
+    image_title_edit->setText("Placeholder title");
+    whiteboard->changeImageTitle(QString("Placeholder title"));
 }
 
 // refactored function that will generate and return a colour sleector with the given colour
