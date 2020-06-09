@@ -12,26 +12,7 @@ DrawOperations::DrawOperations()
 : total_ops(0), max_ops(1024), total_strings(0), max_strings(8)
 {
     // initialise support for 1K drawing ops
-    draw_operation = (unsigned int*) new unsigned int[max_ops];
-    draw_x = (unsigned int*) new unsigned int[max_ops];
-    draw_y = (unsigned int*) new unsigned int[max_ops];
-    draw_red = (int *) new int[max_ops];
-    draw_green = (int *) new int[max_ops];
-    draw_blue = (int *) new int[max_ops];
-    draw_sizes = (int *) new int[max_ops];
-    draw_text_rotations = (int *) new int[max_ops];
-    draw_string_index = (int *) new int[max_ops];
-    for(unsigned int i = 0; i < max_ops; i++) {
-        draw_operation[i] = 0;
-        draw_x[i] = 0;
-        draw_y[i] = 0;
-        draw_red[i] = 0;
-        draw_green[i] = 0;
-        draw_blue[i] = 0;
-        draw_sizes[i] = 0;
-        draw_string_index[i] = 0;
-        draw_text_rotations[i] = 0;
-    }
+    allocateArrays();
 
     // allocate an array of 32 QString objects
     draw_text_strings = new QString[max_strings];
@@ -40,7 +21,31 @@ DrawOperations::DrawOperations()
 DrawOperations::DrawOperations(const unsigned int max_ops)
 : total_ops(0), max_ops(max_ops), total_strings(0), max_strings(8)
 {
-    // initialise support for 4K drawing ops
+    // initialise all arrays
+    allocateArrays();
+
+    // allocate an array of 32 QString objects
+    draw_text_strings = new QString[max_strings];
+}
+
+// destructor for the class
+DrawOperations::~DrawOperations() {
+    // delete all of our arrays
+    delete draw_operation;
+    delete draw_x;
+    delete draw_y;
+    delete draw_red;
+    delete draw_green;
+    delete draw_blue;
+    delete draw_sizes;
+    delete draw_text_rotations;
+    delete draw_string_index;
+    delete[] draw_text_strings;
+}
+
+// refactored function that will allocate all of our arrays
+void DrawOperations::allocateArrays() {
+    // initialise support for max_ops drawing ops
     draw_operation = (unsigned int*) new unsigned int[max_ops];
     draw_x = (unsigned int*) new unsigned int[max_ops];
     draw_y = (unsigned int*) new unsigned int[max_ops];
@@ -61,24 +66,6 @@ DrawOperations::DrawOperations(const unsigned int max_ops)
         draw_string_index[i] = 0;
         draw_text_rotations[i] = 0;
     }
-
-    // allocate an array of 32 QString objects
-    draw_text_strings = new QString[max_strings];
-}
-
-// destructor for the class
-DrawOperations::~DrawOperations() {
-    // delete all of our arrays
-    delete draw_operation;
-    delete draw_x;
-    delete draw_y;
-    delete draw_red;
-    delete draw_green;
-    delete draw_blue;
-    delete draw_sizes;
-    delete draw_text_rotations;
-    delete draw_string_index;
-    delete[] draw_text_strings;
 }
 
 // refactored function that will add in draw data to the necessary arrays

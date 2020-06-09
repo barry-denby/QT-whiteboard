@@ -20,6 +20,8 @@ public:
     DrawOperations(const unsigned int max_ops);
     // destructor for the class
     ~DrawOperations();
+    // function that will allocate and all arrays to size max_ops except the strings array
+    void allocateArrays();
     // adds draw data to the draw operations
     void addDrawData(unsigned int operation, int x, int y, QColor &colour, int draw_size);
     // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
