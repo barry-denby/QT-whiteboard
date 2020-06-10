@@ -1,8 +1,8 @@
 Features to add:
     done - modify the file save to take account of the string totals
     done - modify the file load to take account of the string totals
-    - modify the file save to take account of the image strings
-    - modify the file read to take account of the image strings
+    done - modify the file save to take account of the image strings
+    done - modify the file read to take account of the image strings
     - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
     - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)
 
