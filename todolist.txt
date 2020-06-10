@@ -1,17 +1,7 @@
 Features to add:
-    - modify the file save to take account of the string totals
-    - modify the file load to take account of the string totals
-    done - modify the file save to take account of the image title
-        done - modify the DrawOperations to have an image title
-        done - modify the MainWindow to trigger the change of image title
-        done - modify the Whiteboard to pass through the image title
-        done - modify the reset functionality of mainwindow to set an image title
-        done - modify the add image functionality of mainwindow to set the image title to the title of the previous image
-        done - modify the whiteboard class to return the title of the current image
-        done - modify the delete image functionality of mainwindow to set the image title to the title of the last selected image
-        done - modify the image change of main window to display the title of the new current image
+    done - modify the file save to take account of the string totals
+    done - modify the file load to take account of the string totals
     - modify the file save to take account of the image strings
-    done - modify the file read to take account of the image title
     - modify the file read to take account of the image strings
     - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
     - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)

@@ -333,8 +333,9 @@ void MainWindow::loadImages() {
         fread(&max_strings, sizeof(unsigned int), 1, to_read);
 
         // allocate a draw operations of the required size and then read in all of the data
-        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops, 8);
+        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops, max_strings);
         loaded_images[i]->total_ops = total_ops;
+        loaded_images[i]->total_strings = total_strings;
         fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_y, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
@@ -342,6 +343,8 @@ void MainWindow::loadImages() {
         fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_text_rotations, sizeof(int), loaded_images[i]->total_ops, to_read);
+        fread(loaded_images[i]->draw_string_index, sizeof(int), loaded_images[i]->total_ops, to_read);
 
         // read the length of the title and the title of the image
         char *image_title = new char[1024];
@@ -351,6 +354,17 @@ void MainWindow::loadImages() {
         QString title = QString::fromUtf8(QByteArray(image_title));
         loaded_images[i]->title = title;
         delete image_title;
+
+        // read in each of the strings for this image and attach them to the loaded image
+        for(unsigned int j = 0; j < total_strings; j++) {
+            image_title = new char[1024];
+            title_length = 0;
+            fread(&title_length, sizeof(unsigned int), 1, to_read);
+            fread(image_title, sizeof(char), title_length, to_read);
+            QString title = QString::fromUtf8(QByteArray(image_title));
+            loaded_images[i]->draw_text_strings[j] = title;
+            delete image_title;
+        }
     }
 
     // close the file for reading
@@ -418,6 +432,8 @@ void MainWindow::saveImages() {
         fwrite(images[i]->draw_green, sizeof(int), images[i]->total_ops, to_write);
         fwrite(images[i]->draw_blue, sizeof(int), images[i]->total_ops, to_write);
         fwrite(images[i]->draw_sizes, sizeof(int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_text_rotations, sizeof(int), images[i]->total_ops, to_write);
+        fwrite(images[i]->draw_string_index, sizeof(int), images[i]->total_ops, to_write);
 
         // write the length of the title and the title of the image
         QByteArray image_title = images[i]->title.toUtf8();
@@ -425,6 +441,15 @@ void MainWindow::saveImages() {
         const char *data = image_title.data();
         fwrite(&length, sizeof(unsigned int), 1, to_write);
         fwrite(data, sizeof(char), length, to_write);
+
+        // write each of the strings to the file
+        for(unsigned int j = 0; j < images[i]->total_strings; j++) {
+            image_title = images[i]->draw_text_strings[j].toUtf8();
+            length = (unsigned int) image_title.size();
+            const char *data = image_title.data();
+            fwrite(&length, sizeof(unsigned int), 1, to_write);
+            fwrite(data, sizeof(char), length, to_write);
+        }
     }
 
     // close the file when we are finished
