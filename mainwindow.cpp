@@ -27,8 +27,9 @@
 MainWindow::MainWindow(QWidget *parent)
 : QWidget(parent), filename("")
 {
-    // allocate space for our tools
+    // allocate space for our tools and selectors
     tools = new ToolSelector *[6];
+    colours = new ColourSelector *[14];
 
     // create a vbox layout for this widget
     QVBoxLayout *whiteboard_container_layout = new QVBoxLayout();
@@ -105,20 +106,21 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard_container_layout->addWidget(toolbar);
 
     // add in colour selectors to the bottom bar
-    generateColourSelector(toolbar_layout, 0, 0, 0);
-    generateColourSelector(toolbar_layout, 128, 0, 0);
-    generateColourSelector(toolbar_layout, 255, 0, 0);
-    generateColourSelector(toolbar_layout, 0, 128, 0);
-    generateColourSelector(toolbar_layout, 0, 255, 0);
-    generateColourSelector(toolbar_layout, 0, 0, 128);
-    generateColourSelector(toolbar_layout, 0, 0, 255);
-    generateColourSelector(toolbar_layout, 128, 128, 0);
-    generateColourSelector(toolbar_layout, 255, 255, 0);
-    generateColourSelector(toolbar_layout, 128, 0, 128);
-    generateColourSelector(toolbar_layout, 255, 0, 255);
-    generateColourSelector(toolbar_layout, 0, 128, 128);
-    generateColourSelector(toolbar_layout, 0, 255, 255);
-    generateColourSelector(toolbar_layout, 255, 255, 255);
+    colours[0] = generateColourSelector(toolbar_layout, 0, 0, 0);
+    colours[1] = generateColourSelector(toolbar_layout, 128, 0, 0);
+    colours[2] = generateColourSelector(toolbar_layout, 255, 0, 0);
+    colours[3] = generateColourSelector(toolbar_layout, 0, 128, 0);
+    colours[4] = generateColourSelector(toolbar_layout, 0, 255, 0);
+    colours[5] = generateColourSelector(toolbar_layout, 0, 0, 128);
+    colours[6] = generateColourSelector(toolbar_layout, 0, 0, 255);
+    colours[7] = generateColourSelector(toolbar_layout, 128, 128, 0);
+    colours[8] = generateColourSelector(toolbar_layout, 255, 255, 0);
+    colours[9] = generateColourSelector(toolbar_layout, 128, 0, 128);
+    colours[10] = generateColourSelector(toolbar_layout, 255, 0, 255);
+    colours[11] = generateColourSelector(toolbar_layout, 0, 128, 128);
+    colours[12] = generateColourSelector(toolbar_layout, 0, 255, 255);
+    colours[13] = generateColourSelector(toolbar_layout, 255, 255, 255);
+    colours[0]->setSelected(true);
 
     // add in a label for tools
     QLabel *tools_label = new QLabel("Tools:");
@@ -190,6 +192,7 @@ MainWindow::MainWindow(QWidget *parent)
 // destructor for the class
 MainWindow::~MainWindow() {
     delete tools;
+    delete colours;
 }
 
 // slot that readjust the spinners depending on the operation we have
@@ -243,6 +246,14 @@ void MainWindow::addNewImage() {
     // set the title on the new image
     whiteboard->changeImageTitle(title);
     image_title_edit->setText(title);
+}
+
+// slot that will update the colour selectors in response to a tool being changed
+void MainWindow::changeColour(int red, int green, int blue) {
+    // go through all the colours and disable their selected state
+    for(unsigned int i = 0; i < 14; i++) {
+        colours[i]->setSelected(false);
+    }
 }
 
 // slot that will change the current image
@@ -494,10 +505,14 @@ void MainWindow::startNewWhiteboard() {
 
 // refactored function that will generate and return a colour sleector with the given colour
 // this will also set up the appropriate signals
-void MainWindow::generateColourSelector(QHBoxLayout *layout, int red, int green, int blue) {
+ColourSelector *MainWindow::generateColourSelector(QHBoxLayout *layout, int red, int green, int blue) {
     ColourSelector *temp = new ColourSelector(red, green, blue);
     layout->addWidget(temp);
     QObject::connect(temp, SIGNAL(clicked(int, int, int)), whiteboard, SLOT(changeColour(int, int, int)));
+    QObject::connect(temp, SIGNAL(clicked(int, int, int)), this, SLOT(changeColour(int, int, int)));
+
+    // return the colour selector
+    return temp;
 }
 
 // refactored function that will generate and return a hbox with no contents margins

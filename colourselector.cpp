@@ -5,17 +5,18 @@
 // includes
 #include <QColor>
 #include <QMouseEvent>
+#include <QPainter>
 #include "colourselector.hpp"
 
 // default constructor for the class that will default the background to black
 ColourSelector::ColourSelector(QWidget *parent)
-: QWidget(parent), red(0), green(0), blue(0)
+: QWidget(parent), red(0), green(0), blue(0), selected(false)
 {
     // set a palette that we will use to paint the background to the provided colour
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(red, green, blue));
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
+    //QPalette pal = palette();
+    //pal.setColor(QPalette::Background, QColor(red, green, blue));
+    //this->setAutoFillBackground(true);
+    //this->setPalette(pal);
 
     // force a max width and height
     this->setMaximumWidth(32);
@@ -26,13 +27,13 @@ ColourSelector::ColourSelector(QWidget *parent)
 
 // constructor for the class that will take in an RGB value and will set it for this selector
 ColourSelector::ColourSelector(int red, int green, int blue, QWidget *parent)
-: QWidget(parent), red(red), green(green), blue(blue)
+: QWidget(parent), red(red), green(green), blue(blue), selected(false)
 {
     // set a palette that we will use to paint the background to the provided colour
-    QPalette pal = palette();
-    pal.setColor(QPalette::Background, QColor(red, green, blue));
-    this->setAutoFillBackground(true);
-    this->setPalette(pal);
+    //QPalette pal = palette();
+    //pal.setColor(QPalette::Background, QColor(red, green, blue));
+    //this->setAutoFillBackground(true);
+    //this->setPalette(pal);
 
     // force a max width and height
     this->setMaximumWidth(32);
@@ -46,8 +47,45 @@ ColourSelector::~ColourSelector() {
 
 }
 
+// set the selected state of this selector
+void ColourSelector::setSelected(const bool selected) {
+    this->selected = selected;
+    repaint();
+}
+
 // mouse release event that will
 void ColourSelector::mouseReleaseEvent(QMouseEvent *event) {
     // if we get a release then we have a full click and can emit the signal
     emit clicked(red, green, blue);
+
+    // mark this tool as selected and repaint
+    selected = true;
+    repaint();
+}
+
+// overridden paint event
+void ColourSelector::paintEvent(QPaintEvent *event) {
+    // get the painter for this object and start painting
+    QPainter painter;
+    painter.begin(this);
+
+    // set the colour and paint a full background square
+    painter.setPen(QColor(red, green, blue));
+    painter.setBrush(QColor(red, green, blue));
+    painter.drawRect(0, 0, 32, 32);
+
+    // if this tool is selected then draw a border around the edge of the image to indicate selection
+    if(selected) {
+        QPen border_pen(QColor(0, 160, 160));
+        border_pen.setWidth(6);
+        painter.setPen(border_pen);
+
+        painter.drawLine(0, 0, 0, 32);
+        painter.drawLine(0, 0, 32, 0);
+        painter.drawLine(0, 32, 32, 32);
+        painter.drawLine(32, 0, 32, 32);
+    }
+
+    // finish the painting of this widget
+    painter.end();
 }

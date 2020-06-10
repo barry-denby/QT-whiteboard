@@ -32,6 +32,8 @@ private slots:
     void enableSpinBoxes(const unsigned int op);
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
+    // slot that will update the colour selectors in response to a tool being changed
+    void changeColour(int red, int green, int blue);
     // slot that will change the current image
     void changeImage(int number);
     // slot that will update the tools in response to a tool being changed
@@ -49,7 +51,7 @@ private slots:
 // private section of the class
 private:
     // function that will generate and attach a colour picker to the given layout
-    void generateColourSelector(QHBoxLayout *layout, int red, int green, int blue);
+    ColourSelector *generateColourSelector(QHBoxLayout *layout, int red, int green, int blue);
     // function that will generate a hboxlayout with no contents margins in it
     QHBoxLayout *generateHBoxNoMargins();
     // function that will setup a basic toolbar. this is refactored out as we have two toolbars
@@ -81,6 +83,8 @@ private:
     QLineEdit *image_title_edit;
     // array containing reference to all of our tools
     ToolSelector **tools;
+    // array containing reference to all of our colour selectors
+    ColourSelector **colours;
 };
 
 #endif // _MAINWINDOW_HPP

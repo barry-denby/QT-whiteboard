@@ -3,12 +3,21 @@ Features to add:
     done - modify the file load to take account of the string totals
     done - modify the file save to take account of the image strings
     done - modify the file read to take account of the image strings
-    - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
-    - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)
+    done - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
+    done - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)
+    - keyboard shortcut for saving a file
+    - keyboard shortcut to advance an image
+    - keyboard shortcut to go back an image
+    - tool context sensitive shortcuts to increase or decrease size
+    - add in whiteboard modification detection
+    - modify the UI in response to the whiteboard modification
+    - adjust the image export to include the title and the image count in the image itself (probably along the bottom)
+    - add in the ability to lock drawing upto a point in an image to prevent accidental undo
 
 features to add in the long future:
     - figure out how to draw a tool wheel for selecting tools in place
     - figure out how to draw a colour wheel for selecting colours in place
+    - figure out how to add in image drawing into the whiteboards
 
 refactoring to do:
 
