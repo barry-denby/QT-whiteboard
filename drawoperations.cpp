@@ -170,6 +170,19 @@ void DrawOperations::doubleArrays() {
         new_draw_string_index[i] = draw_string_index[i];
     }
 
+    // initialise everything after max ops
+    for(unsigned int i = max_ops; i < new_max_ops; i++) {
+        new_draw_operation[i] = NO_DRAW;
+        new_draw_x[i] = 0;
+        new_draw_y[i] = 0;
+        new_draw_red[i] = 0;
+        new_draw_green[i] = 0;
+        new_draw_blue[i] = 0;
+        new_draw_sizes[i] = 0;
+        new_draw_text_rotations[i] = 0;
+        new_draw_string_index[i] = 0;
+    }
+
     // delete the old arrays
     deallocateArrays();
 
@@ -183,6 +196,9 @@ void DrawOperations::doubleArrays() {
     draw_sizes = new_draw_sizes;
     draw_text_rotations = new_draw_text_rotations;
     draw_string_index = new_draw_string_index;
+
+    // update the max ops for the new arrays
+    max_ops = new_max_ops;
 }
 
 // private function that will increase the size of the string array
@@ -196,6 +212,9 @@ void DrawOperations::doubleStringArray() {
         new_draw_text_strings[i] = draw_text_strings[i];
     delete[] draw_text_strings;
     draw_text_strings = new_draw_text_strings;
+
+    // also update the number of strings for the newly doubled array
+    max_strings = new_max_strings;
 }
 
 // function that will reset the entire drawoperations back to the starting state

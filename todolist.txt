@@ -13,4 +13,4 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
-    - figure out why when drawing a really really long line it doesn't double the array and starts eating it from the beginning.
+    done - figure out why when drawing a really really long line it doesn't double the array and starts eating it from the beginning.
