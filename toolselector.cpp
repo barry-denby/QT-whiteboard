@@ -12,7 +12,7 @@
 
 // constructor for the class that takes in the tool type
 ToolSelector::ToolSelector(const unsigned int tool, QWidget *parent)
-: QWidget(parent), tool(tool), black(QColor(0, 0, 0)), white(QColor(255, 255, 255)), pen(black), brush(black)
+: QWidget(parent), tool(tool), black(QColor(0, 0, 0)), white(QColor(255, 255, 255)), pen(black), brush(black), selected(false)
 {
     // force a max width and height
     this->setMaximumWidth(32);
@@ -27,9 +27,18 @@ ToolSelector::~ToolSelector() {
 
 }
 
+// sets the selection state for this tool
+void ToolSelector::setSelected(const bool selected) {
+    this->selected = selected;
+    repaint();
+}
+
 // function that will emit the clicked signal when the mouse button is released
 void ToolSelector::mouseReleaseEvent(QMouseEvent *event) {
+    // emit a clicked event, set this selected and repaint
     emit clicked(tool);
+    selected = true;
+    repaint();
 }
 
 // function that will paint the widget
@@ -56,6 +65,18 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
         drawLineStraightTool(painter);
     else if(tool == OP_DRAW_TEXT)
         drawTextTool(painter);
+
+    // if this tool is selected then draw a border around the edge of the image to indicate selection
+    if(selected) {
+        QPen border_pen(QColor(0, 160, 160));
+        border_pen.setWidth(6);
+        painter.setPen(border_pen);
+
+        painter.drawLine(0, 0, 0, 32);
+        painter.drawLine(0, 0, 32, 0);
+        painter.drawLine(0, 32, 32, 32);
+        painter.drawLine(32, 0, 32, 32);
+    }
 
     // finish the painting when done
     painter.end();

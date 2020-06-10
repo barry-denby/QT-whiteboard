@@ -27,6 +27,9 @@
 MainWindow::MainWindow(QWidget *parent)
 : QWidget(parent), filename("")
 {
+    // allocate space for our tools
+    tools = new ToolSelector *[6];
+
     // create a vbox layout for this widget
     QVBoxLayout *whiteboard_container_layout = new QVBoxLayout();
     this->setLayout(whiteboard_container_layout);
@@ -121,13 +124,14 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *tools_label = new QLabel("Tools:");
     toolbar_layout->addWidget(tools_label);
 
-    // add in all of our tools
-    generateToolSelector(toolbar_layout, OP_POINT_CIRCLE);
-    generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
-    generateToolSelector(toolbar_layout, OP_POINT_X);
-    generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
-    generateToolSelector(toolbar_layout, OP_LINE_STRAIGHT);
-    generateToolSelector(toolbar_layout, OP_DRAW_TEXT);
+    // add in all of our tools and set selected on the point square
+    tools[0] = generateToolSelector(toolbar_layout, OP_POINT_CIRCLE);
+    tools[1] = generateToolSelector(toolbar_layout, OP_POINT_SQUARE);
+    tools[2] = generateToolSelector(toolbar_layout, OP_POINT_X);
+    tools[3] = generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
+    tools[4] = generateToolSelector(toolbar_layout, OP_LINE_STRAIGHT);
+    tools[5] = generateToolSelector(toolbar_layout, OP_DRAW_TEXT);
+    tools[1]->setSelected(true);
 
     // add in a label and spinbox for the point size. connect tthe spinbox to the
     // appropriate method in the whiteboard
@@ -185,7 +189,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 // destructor for the class
 MainWindow::~MainWindow() {
-
+    delete tools;
 }
 
 // slot that readjust the spinners depending on the operation we have
@@ -253,6 +257,14 @@ void MainWindow::changeImage(int number) {
     whiteboard->changeImage(number);
     image_title_edit->setText(whiteboard->imageTitleCurrent());
 
+}
+
+// slot that will update the tools in response to a tool being changed
+void MainWindow::changeTools(unsigned int tool) {
+    // go through all of the tools and disable their selection
+    for(unsigned int i = 0; i < 6; i++) {
+        tools[i]->setSelected(false);
+    }
 }
 
 // slot that will delete the current image
@@ -515,13 +527,17 @@ QWidget *MainWindow::generateToolbar() {
 
 // refactored method that will generate the given tool selector, add it to the layout, and setup the
 // appropriate signals
-void MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int operation) {
+ToolSelector *MainWindow::generateToolSelector(QHBoxLayout *layout, const unsigned int operation) {
     // generate the tool and add it to the layout and connet the clicked signal to the whiteboard
     // and to the spinbox adjuster here
     ToolSelector *tool_selector = new ToolSelector(operation);
     layout->addWidget(tool_selector);
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), whiteboard, SLOT(changeTool(unsigned int)));
     QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), this, SLOT(enableSpinBoxes(unsigned int)));
+    QObject::connect(tool_selector, SIGNAL(clicked(unsigned int)), this, SLOT(changeTools(unsigned int)));
+
+    // return the tool selector
+    return tool_selector;
 }
 
 // function that will ask if the user is sure that they want to delete an image. true means the image

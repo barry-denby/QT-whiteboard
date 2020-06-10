@@ -13,6 +13,7 @@
 #include <QString>
 #include <QWidget>
 #include "colourselector.hpp"
+#include "toolselector.hpp"
 #include "whiteboard.hpp"
 
 // class definition
@@ -33,6 +34,8 @@ private slots:
     void addNewImage();
     // slot that will change the current image
     void changeImage(int number);
+    // slot that will update the tools in response to a tool being changed
+    void changeTools(unsigned int tool);
     // slot that will delete the current image
     void deleteImage();
     // slot that will export the current whiteboard to a set of PNG images
@@ -52,7 +55,7 @@ private:
     // function that will setup a basic toolbar. this is refactored out as we have two toolbars
     QWidget *generateToolbar();
     // function that will generate and attach the given tool selector to the given layout
-    void generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
+    ToolSelector *generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
     // function that will ask if the user is sure that they want to delete an image. true means the image
     // is to be deleted
     bool warnDelete();
@@ -76,6 +79,8 @@ private:
     QLineEdit *text_lineedit;
     // lineedit for setting the title of the image
     QLineEdit *image_title_edit;
+    // array containing reference to all of our tools
+    ToolSelector **tools;
 };
 
 #endif // _MAINWINDOW_HPP
