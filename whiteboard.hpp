@@ -71,6 +71,8 @@ public slots:
 signals:
     // signal to advance an image
     void advanceImage();
+    // signal to go back an image
+    void goBackImage();
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -85,6 +87,8 @@ protected:
 private slots:
     // slot that will emit a signal to advance the image on the whiteboard
     void advanceImageShortcut();
+    // slot that will emit a signal to go back an image on the whiteboard
+    void goBackImageShortcut();
     // slot for quitting the application
     void quitApplication();
     // slot that will undo the last drawing operation

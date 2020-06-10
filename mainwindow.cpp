@@ -94,6 +94,7 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
     QObject::connect(whiteboard, SIGNAL(advanceImage()), this, SLOT(advanceImage()));
+    QObject::connect(whiteboard, SIGNAL(goBackImage()), this, SLOT(goBackImage()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -303,6 +304,16 @@ void MainWindow::deleteImage() {
 
     // set the title field to the title of the current image
     image_title_edit->setText(whiteboard->imageTitleCurrent());
+}
+
+// slot that will go back an image
+void MainWindow::goBackImage() {
+    // if there is no image to go back then just return immediately
+    if(image_selector_spinbox->value() == 1)
+        return;
+
+    // take the current spinner value and advance it on by one.
+    image_selector_spinbox->setValue(image_selector_spinbox->value() - 1);
 }
 
 // slot that will export the current whiteboard to a set of PNG images

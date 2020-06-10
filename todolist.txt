@@ -1,7 +1,7 @@
 Features to add:
     - keyboard shortcut for saving a file
     done - keyboard shortcut to advance an image
-    - keyboard shortcut to go back an image
+    done - keyboard shortcut to go back an image
     - tool context sensitive shortcuts to increase or decrease size
     - add in whiteboard modification detection
     - modify the UI in response to the whiteboard modification

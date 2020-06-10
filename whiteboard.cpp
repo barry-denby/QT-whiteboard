@@ -26,8 +26,9 @@ Whiteboard::Whiteboard(QWidget* parent)
     // add a shortcut that will allow us to undo operations
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z), this, SLOT(undoLastDrawOp()));
 
-    // add a shortcut to trigger an advance image
+    // add a shortcut to trigger an advance image and go back an image
     new QShortcut(QKeySequence(Qt::Key_Right), this, SLOT(advanceImageShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_Left), this, SLOT(goBackImageShortcut()));
 
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
@@ -339,6 +340,12 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
 void Whiteboard::advanceImageShortcut() {
     // emit the advance image signal
     emit advanceImage();
+}
+
+// slot that will emit a signal to go back an image on the whiteboard
+void Whiteboard::goBackImageShortcut() {
+    // emmit the go back signal
+    emit goBackImage();
 }
 
 // function that will call on QT to quit the application
