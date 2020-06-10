@@ -4,7 +4,9 @@
 
 // includes
 #include <cstdlib>
+#include <cstring>
 #include <iostream>
+#include <QByteArray>
 #include <QFileDialog>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -80,6 +82,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *image_title_label = new QLabel("image Title:");
     main_toolbar_layout->addWidget(image_title_label);
     image_title_edit = new QLineEdit("Placeholder title");
+    image_title_edit->setMaxLength(1023);
     main_toolbar_layout->addWidget(image_title_edit);
 
     // add a whiteboard to the layout and drop all of the margins
@@ -172,6 +175,7 @@ MainWindow::MainWindow(QWidget *parent)
     QLabel *text_label = new QLabel("Text:");
     toolbar_layout->addWidget(text_label);
     text_lineedit = new QLineEdit("Placeholder text to draw");
+    text_lineedit->setMaxLength(1023);
     text_lineedit->setEnabled(false);
     text_lineedit->setPlaceholderText(QString("Enter text to draw here."));
     toolbar_layout->addWidget(text_lineedit);
@@ -323,6 +327,11 @@ void MainWindow::loadImages() {
         fread(&total_ops, sizeof(unsigned int), 1, to_read);
         fread(&max_ops, sizeof(unsigned int), 1, to_read);
 
+        // write the total strings and max strings to the file next
+        unsigned int total_strings = 0, max_strings = 0;
+        fread(&total_strings, sizeof(unsigned int), 1, to_read);
+        fread(&max_strings, sizeof(unsigned int), 1, to_read);
+
         // allocate a draw operations of the required size and then read in all of the data
         loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops, 8);
         loaded_images[i]->total_ops = total_ops;
@@ -333,6 +342,15 @@ void MainWindow::loadImages() {
         fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->total_ops, to_read);
         fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->total_ops, to_read);
+
+        // read the length of the title and the title of the image
+        char *image_title = new char[1024];
+        unsigned int title_length = 0;
+        fread(&title_length, sizeof(unsigned int), 1, to_read);
+        fread(image_title, sizeof(char), title_length, to_read);
+        QString title = QString::fromUtf8(QByteArray(image_title));
+        loaded_images[i]->title = title;
+        delete image_title;
     }
 
     // close the file for reading
@@ -347,6 +365,7 @@ void MainWindow::loadImages() {
     image_selector_spinbox->setRange(1, total_images);
     image_selector_spinbox->setValue(1);
     total_images_label->setText(QString("/ %1").arg(total_images));
+    image_title_edit->setText(loaded_images[0]->title);
 }
 
 // slot that will go through the process of saving a whiteboard to disk
@@ -387,6 +406,10 @@ void MainWindow::saveImages() {
         fwrite(&images[i]->total_ops, sizeof(unsigned int), 1, to_write);
         fwrite(&images[i]->max_ops, sizeof(unsigned int), 1, to_write);
 
+        // write the total strings and max strings to the file next
+        fwrite(&images[i]->total_strings, sizeof(unsigned int), 1, to_write);
+        fwrite(&images[i]->max_strings, sizeof(unsigned int), 1, to_write);
+
         // write all of the arrays to disk
         fwrite(images[i]->draw_operation, sizeof(unsigned int), images[i]->total_ops, to_write);
         fwrite(images[i]->draw_x, sizeof(unsigned int), images[i]->total_ops, to_write);
@@ -395,6 +418,13 @@ void MainWindow::saveImages() {
         fwrite(images[i]->draw_green, sizeof(int), images[i]->total_ops, to_write);
         fwrite(images[i]->draw_blue, sizeof(int), images[i]->total_ops, to_write);
         fwrite(images[i]->draw_sizes, sizeof(int), images[i]->total_ops, to_write);
+
+        // write the length of the title and the title of the image
+        QByteArray image_title = images[i]->title.toUtf8();
+        unsigned int length = (unsigned int) image_title.size();
+        const char *data = image_title.data();
+        fwrite(&length, sizeof(unsigned int), 1, to_write);
+        fwrite(data, sizeof(char), length, to_write);
     }
 
     // close the file when we are finished
