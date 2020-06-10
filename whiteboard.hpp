@@ -67,6 +67,10 @@ public slots:
     void changeTextSize(int text_size);
     // slot that will change the tool to the indicated tool
     void changeTool(unsigned int tool);
+// signals emitted by the class
+signals:
+    // signal to advance an image
+    void advanceImage();
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -79,6 +83,8 @@ protected:
     void paintEvent(QPaintEvent* event);
 // private slots section of the class
 private slots:
+    // slot that will emit a signal to advance the image on the whiteboard
+    void advanceImageShortcut();
     // slot for quitting the application
     void quitApplication();
     // slot that will undo the last drawing operation

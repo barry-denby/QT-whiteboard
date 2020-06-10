@@ -13,6 +13,7 @@
 #include <QRect>
 #include <QShortcut>
 #include "constants.hpp"
+#include "mainwindow.hpp"
 #include "whiteboard.hpp"
 
 // constructor for the class
@@ -24,6 +25,9 @@ Whiteboard::Whiteboard(QWidget* parent)
 
     // add a shortcut that will allow us to undo operations
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Z), this, SLOT(undoLastDrawOp()));
+
+    // add a shortcut to trigger an advance image
+    new QShortcut(QKeySequence(Qt::Key_Right), this, SLOT(advanceImageShortcut()));
 
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
@@ -329,6 +333,12 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
     // end the current painting
     painter.end();
 
+}
+
+// slot that will emit a signal to advance the image on the whiteboard
+void Whiteboard::advanceImageShortcut() {
+    // emit the advance image signal
+    emit advanceImage();
 }
 
 // function that will call on QT to quit the application

@@ -1,12 +1,6 @@
 Features to add:
-    done - modify the file save to take account of the string totals
-    done - modify the file load to take account of the string totals
-    done - modify the file save to take account of the image strings
-    done - modify the file read to take account of the image strings
-    done - modify the colour selector to show a visual indication that the colour is selected (orange border of a few pixels)
-    done - modify the tool selector to show a visual indication that the tool is selected (orange border of a few pixels)
     - keyboard shortcut for saving a file
-    - keyboard shortcut to advance an image
+    done - keyboard shortcut to advance an image
     - keyboard shortcut to go back an image
     - tool context sensitive shortcuts to increase or decrease size
     - add in whiteboard modification detection
@@ -22,4 +16,3 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
-    done - figure out why when drawing a really really long line it doesn't double the array and starts eating it from the beginning.

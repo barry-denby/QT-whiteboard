@@ -30,6 +30,8 @@ public:
 private slots:
     // slot that readjust the spinners depending on the operation we have
     void enableSpinBoxes(const unsigned int op);
+    // slot that will advance an image
+    void advanceImage();
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
     // slot that will update the colour selectors in response to a tool being changed

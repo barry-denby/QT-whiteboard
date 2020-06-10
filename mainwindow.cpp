@@ -93,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
+    QObject::connect(whiteboard, SIGNAL(advanceImage()), this, SLOT(advanceImage()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -220,6 +221,16 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
         text_rotation_spinbox->setEnabled(true);
         text_lineedit->setEnabled(true);
     }
+}
+
+// slot that will advance an image
+void MainWindow::advanceImage() {
+    // if there is no image to advance then just return immediately
+    if((unsigned int) image_selector_spinbox->value() == whiteboard->totalImages())
+        return;
+
+    // take the current spinner value and advance it on by one.
+    image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
 }
 
 // slot that will add a new image in the current place
