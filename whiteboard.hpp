@@ -77,6 +77,10 @@ signals:
     void increaseSize();
     // signal to go back an image
     void goBackImage();
+    // signal requesting the whiteboard to be saved
+    void requestSave();
+    // signal indicating that the whiteboard has been modified
+    void whiteboardModified();
 // protected methods of the class
 protected:
     // overriddent mousepressevent method so we can take user drawing on screen
@@ -99,6 +103,8 @@ private slots:
     void increaseSizeShortcut();
     // slot for quitting the application
     void quitApplication();
+    // slot that will request the application to save the whiteboard
+    void requestSaveShortcut();
     // slot that will undo the last drawing operation
     void undoLastDrawOp();
 // private fields of the class

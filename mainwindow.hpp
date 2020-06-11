@@ -56,6 +56,8 @@ private slots:
     void saveImages();
     // slot that will start a new whiteboard but will warn the user beforehand
     void startNewWhiteboard();
+    // slot that will save the current whiteboard
+    void whiteboardSave();
 // private section of the class
 private:
     // function that will generate and attach a colour picker to the given layout

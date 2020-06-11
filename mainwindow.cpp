@@ -97,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(whiteboard, SIGNAL(goBackImage()), this, SLOT(goBackImage()));
     QObject::connect(whiteboard, SIGNAL(increaseSize()), this, SLOT(increaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
+    QObject::connect(whiteboard, SIGNAL(requestSave()), this, SLOT(whiteboardSave()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -553,6 +554,11 @@ void MainWindow::startNewWhiteboard() {
     total_images_label->setText("/ 1");
     image_title_edit->setText("Placeholder title");
     whiteboard->changeImageTitle(QString("Placeholder title"));
+}
+
+// slot that will save the current whiteboard
+void MainWindow::whiteboardSave() {
+    saveImages();
 }
 
 // refactored function that will generate and return a colour sleector with the given colour

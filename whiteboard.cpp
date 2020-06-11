@@ -34,6 +34,9 @@ Whiteboard::Whiteboard(QWidget* parent)
     new QShortcut(QKeySequence(Qt::Key_Up), this, SLOT(increaseSizeShortcut()));
     new QShortcut(QKeySequence(Qt::Key_Down), this, SLOT(decreaseSizeShortcut()));
 
+    // add in a short cut to request for the whiteboard to be saved
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_S), this, SLOT(requestSaveShortcut()));
+
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
@@ -360,6 +363,11 @@ void Whiteboard::goBackImageShortcut() {
 // slot that will emit a signal to increase the size or thickness of the current draw op
 void Whiteboard::increaseSizeShortcut() {
     emit increaseSize();
+}
+
+// slot that will request the application to save the whiteboard
+void Whiteboard::requestSaveShortcut() {
+    emit requestSave();
 }
 
 // function that will call on QT to quit the application
