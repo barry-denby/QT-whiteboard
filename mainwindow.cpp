@@ -95,6 +95,8 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
     QObject::connect(whiteboard, SIGNAL(advanceImage()), this, SLOT(advanceImage()));
     QObject::connect(whiteboard, SIGNAL(goBackImage()), this, SLOT(goBackImage()));
+    QObject::connect(whiteboard, SIGNAL(increaseSize()), this, SLOT(increaseDrawSize()));
+    QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -290,6 +292,20 @@ void MainWindow::changeTools(unsigned int tool) {
     }
 }
 
+// slot for decreasing the draw size
+void MainWindow::decreaseDrawSize() {
+    // check which draw operation we have and change the appropriate spinbox
+    if(tools[0]->selected() || tools[1]->selected() || tools[2]->selected())
+        // this is one of the point tools so change the point size
+        point_size_spinbox->setValue(point_size_spinbox->value() - 1);
+    else if(tools[3]->selected() || tools[4]->selected())
+        // this is one of the line tools so change the line thickness
+        line_thickness_spinbox->setValue(line_thickness_spinbox->value() - 1);
+    else if(tools[5]->selected())
+        // this is the text tool so decrease the text size
+        text_size_spinbox->setValue(text_size_spinbox->value() - 1);
+}
+
 // slot that will delete the current image
 void MainWindow::deleteImage() {
     // if we only have the one image then do nothing
@@ -314,6 +330,20 @@ void MainWindow::goBackImage() {
 
     // take the current spinner value and advance it on by one.
     image_selector_spinbox->setValue(image_selector_spinbox->value() - 1);
+}
+
+// slot for increasing the draw size
+void MainWindow::increaseDrawSize() {
+    // check which draw operation we have and change the appropriate spinbox
+    if(tools[0]->selected() || tools[1]->selected() || tools[2]->selected())
+        // this is one of the point tools so change the point size
+        point_size_spinbox->setValue(point_size_spinbox->value() + 1);
+    else if(tools[3]->selected() || tools[4]->selected())
+        // this is one of the line tools so change the line thickness
+        line_thickness_spinbox->setValue(line_thickness_spinbox->value() + 1);
+    else if(tools[5]->selected())
+        // this is the text tool so increase the text size
+        text_size_spinbox->setValue(text_size_spinbox->value() + 1);
 }
 
 // slot that will export the current whiteboard to a set of PNG images

@@ -40,10 +40,14 @@ private slots:
     void changeImage(int number);
     // slot that will update the tools in response to a tool being changed
     void changeTools(unsigned int tool);
+    // slot for decreasing the draw size
+    void decreaseDrawSize();
     // slot that will delete the current image
     void deleteImage();
     // slot that will go back an image
     void goBackImage();
+    // slot for increasing the draw size
+    void increaseDrawSize();
     // slot that will export the current whiteboard to a set of PNG images
     void exportPNG();
     // slot that will run through the process of loading a set of images for a whiteboard

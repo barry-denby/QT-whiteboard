@@ -25,6 +25,8 @@ public:
     ToolSelector(const unsigned int tool, QWidget *parent = 0);
     // destructor for the class
     ~ToolSelector();
+    // returns the selected state for this tool
+    const bool selected();
     // sets the selection state for this tool
     void setSelected(const bool selected);
 // signals that can be emitted by the class
@@ -60,7 +62,7 @@ private:
     QPen pen;
     QBrush brush;
     // has this tool been selected
-    bool selected;
+    bool _selected;
 };
 
 #endif // _TOOLSELECTOR_HPP

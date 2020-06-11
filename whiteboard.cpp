@@ -30,6 +30,10 @@ Whiteboard::Whiteboard(QWidget* parent)
     new QShortcut(QKeySequence(Qt::Key_Right), this, SLOT(advanceImageShortcut()));
     new QShortcut(QKeySequence(Qt::Key_Left), this, SLOT(goBackImageShortcut()));
 
+    // add in shortcuts to trigger an increase or decrease in the size of the draw op
+    new QShortcut(QKeySequence(Qt::Key_Up), this, SLOT(increaseSizeShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_Down), this, SLOT(decreaseSizeShortcut()));
+
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
@@ -342,10 +346,20 @@ void Whiteboard::advanceImageShortcut() {
     emit advanceImage();
 }
 
+// slot that will emit a signal to decreate the size of thickness of the current draw op
+void Whiteboard::decreaseSizeShortcut() {
+    emit decreaseSize();
+}
+
 // slot that will emit a signal to go back an image on the whiteboard
 void Whiteboard::goBackImageShortcut() {
     // emmit the go back signal
     emit goBackImage();
+}
+
+// slot that will emit a signal to increase the size or thickness of the current draw op
+void Whiteboard::increaseSizeShortcut() {
+    emit increaseSize();
 }
 
 // function that will call on QT to quit the application
