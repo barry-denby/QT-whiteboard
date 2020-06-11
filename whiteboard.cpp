@@ -324,9 +324,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
         images[image_current]->addDrawText(text, event->x(), event->y(), current_colour, text_size, text_rotation);
     }
 
-    // repaint the view
+    // repaint the view and state the board has been modified
     repaint();
-
+    emit modified();
 }
 
 // overridden paint event class that will paint the screen

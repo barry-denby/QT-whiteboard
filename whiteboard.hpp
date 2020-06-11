@@ -77,6 +77,8 @@ signals:
     void increaseSize();
     // signal to go back an image
     void goBackImage();
+    // signal that will be emitted to say this whiteboard was modified
+    void modified();
     // signal requesting the whiteboard to be saved
     void requestSave();
     // signal indicating that the whiteboard has been modified

@@ -9,6 +9,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QString>
 #include <QWidget>
@@ -34,6 +35,8 @@ private slots:
     void advanceImage();
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
+    // slot that will react by changing the UI when the board has been modified
+    void boardModified();
     // slot that will update the colour selectors in response to a tool being changed
     void changeColour(int red, int green, int blue);
     // slot that will change the current image
@@ -95,6 +98,8 @@ private:
     ToolSelector **tools;
     // array containing reference to all of our colour selectors
     ColourSelector **colours;
+    // the save button of the window
+    QPushButton *save_button;
 };
 
 #endif // _MAINWINDOW_HPP

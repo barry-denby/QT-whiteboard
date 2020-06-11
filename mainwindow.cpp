@@ -53,8 +53,9 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(open_button, SIGNAL(clicked()), this, SLOT(loadImages()));
 
     // add in a save button for the set of images
-    QPushButton *save_button = new QPushButton("Save");
+    save_button = new QPushButton("Save");
     main_toolbar_layout->addWidget(save_button);
+    save_button->setEnabled(false);
     QObject::connect(save_button, SIGNAL(clicked()), this, SLOT(saveImages()));
 
     // add in an export to PNG button
@@ -98,6 +99,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(whiteboard, SIGNAL(increaseSize()), this, SLOT(increaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(requestSave()), this, SLOT(whiteboardSave()));
+    QObject::connect(whiteboard, SIGNAL(modified()), this, SLOT(boardModified()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -261,6 +263,12 @@ void MainWindow::addNewImage() {
     // set the title on the new image
     whiteboard->changeImageTitle(title);
     image_title_edit->setText(title);
+}
+
+// slot that will react by changing the UI when the board has been modified
+void MainWindow::boardModified() {
+    // enable the save button
+    save_button->setEnabled(true);
 }
 
 // slot that will update the colour selectors in response to a tool being changed
@@ -460,6 +468,10 @@ void MainWindow::loadImages() {
 
 // slot that will go through the process of saving a whiteboard to disk
 void MainWindow::saveImages() {
+    // if the save button is disabled then there has been no modification so do nothing
+    if(save_button->isEnabled() == false)
+        return;
+
     // if the current image has no title then do nothing
     if(QString::compare(image_title_edit->text(), QString(""))== 0) {
         warnNoTitle();
@@ -530,6 +542,9 @@ void MainWindow::saveImages() {
 
     // close the file when we are finished
     fclose(to_write);
+
+    // disable the save button as we are now in a non modified state
+    save_button->setEnabled(false);
 
 }
 
