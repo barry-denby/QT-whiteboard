@@ -89,6 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     image_title_edit = new QLineEdit("Placeholder title");
     image_title_edit->setMaxLength(1023);
     main_toolbar_layout->addWidget(image_title_edit);
+    QObject::connect(image_title_edit, SIGNAL(textEdited(const QString &)), this, SLOT(titleChanged(const QString &)));
 
     // add a whiteboard to the layout and drop all of the margins
     whiteboard = new Whiteboard();
@@ -652,6 +653,11 @@ void MainWindow::startNewWhiteboard() {
     total_images_label->setText("/ 1");
     image_title_edit->setText("Placeholder title");
     whiteboard->changeImageTitle(QString("Placeholder title"));
+}
+
+// slot that will enable the save button when the title on an image has been changed
+void MainWindow::titleChanged(const QString &text) {
+    save_button->setEnabled(true);
 }
 
 // slot that will save the current whiteboard
