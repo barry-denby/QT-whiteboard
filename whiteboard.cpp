@@ -154,6 +154,23 @@ QImage *Whiteboard::exportBoard(const unsigned int board) {
     // draw the board
     drawBoard(painter);
 
+    // at the bottom left of the image draw some text denoting the position of this image in the set
+    QFont tempfont(QString("Arial"), 20);
+    painter.save();
+    painter.setFont(tempfont);
+    painter.translate(32, 1052);
+    painter.setPen(QColor(0, 0, 0));
+    painter.drawText(0, 0, QString("(%1 / %2)").arg(image_current + 1).arg(image_total));
+    painter.restore();
+
+    // at the bottom middle of the image draw some text denoting the title of the image
+    painter.save();
+    painter.setFont(tempfont);
+    painter.translate(256, 1052);
+    painter.setPen(QColor(0, 0, 0));
+    painter.drawText(0, 0, images[image_current]->title);
+    painter.restore();
+
     // end the current painting
     painter.end();
 

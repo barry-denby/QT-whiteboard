@@ -1,5 +1,4 @@
 Features to add:
-    - adjust the image export to include the title and the image count in the image itself (probably along the bottom)
     - add in the ability to lock drawing upto a point in an image to prevent accidental undo
     - add in the ability to import and draw images (JPG and PNG)
     - add in the ability to import and render SVG onto an image
@@ -11,3 +10,6 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
+    - when an image is added it should trigger the save button becoming active
+    - when an image is removed it should trigger the save button becoming active
+    - when an image title is changed it should trigger the save button becoming active.
