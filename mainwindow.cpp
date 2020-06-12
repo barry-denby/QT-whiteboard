@@ -371,6 +371,9 @@ void MainWindow::deleteImage() {
 
     // set the title field to the title of the current image
     image_title_edit->setText(whiteboard->imageTitleCurrent());
+
+    // enable the save button as the board as been modified
+    save_button->setEnabled(true);
 }
 
 // slot that will go back a colour
@@ -541,6 +544,9 @@ void MainWindow::loadImages() {
     image_selector_spinbox->setValue(1);
     total_images_label->setText(QString("/ %1").arg(total_images));
     image_title_edit->setText(loaded_images[0]->title);
+
+    // as there is no modification at this point disable the save button
+    save_button->setEnabled(false);
 }
 
 // slot that will go through the process of saving a whiteboard to disk
