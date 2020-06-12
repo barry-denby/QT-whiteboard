@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 : QWidget(parent), filename("")
 {
     // allocate space for our tools and selectors
-    tools = new ToolSelector *[6];
+    tools = new ToolSelector *[8];
     colours = new ColourSelector *[14];
 
     // create a vbox layout for this widget
@@ -145,6 +145,8 @@ MainWindow::MainWindow(QWidget *parent)
     tools[3] = generateToolSelector(toolbar_layout, OP_LINE_FREEFORM);
     tools[4] = generateToolSelector(toolbar_layout, OP_LINE_STRAIGHT);
     tools[5] = generateToolSelector(toolbar_layout, OP_DRAW_TEXT);
+    tools[6] = generateToolSelector(toolbar_layout, OP_DRAW_RASTER);
+    tools[7] = generateToolSelector(toolbar_layout, OP_DRAW_SVG);
     tools[1]->setSelected(true);
 
     // add in a label and spinbox for the point size. connect tthe spinbox to the
@@ -266,13 +268,13 @@ void MainWindow::advanceImage() {
 void MainWindow::advanceTool() {
     // determine the current tool that is selected
     unsigned int index = 0;
-    for(index = 0; index < 6; index++) {
+    for(index = 0; index < 8; index++) {
         if(tools[index]->selected())
             break;
     }
 
-    // if the index is less than 13 then deselect the current tool and advance the current one
-    if(index < 5) {
+    // if the index is less than 7 then deselect the current tool and advance the current one
+    if(index < 7) {
         tools[index]->setSelected(false);
         tools[index + 1]->setSelected(true);
         whiteboard->changeTool(tools[index + 1]->tool());
@@ -409,7 +411,7 @@ void MainWindow::goBackImage() {
 void MainWindow::goBackTool() {
     // determine the current tool that is selected
     unsigned int index = 0;
-    for(index = 0; index < 6; index++) {
+    for(index = 0; index < 8; index++) {
         if(tools[index]->selected())
             break;
     }
