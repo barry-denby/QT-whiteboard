@@ -10,6 +10,5 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
-    - when an image is added it should trigger the save button becoming active
     - when an image is removed it should trigger the save button becoming active
     - when an image title is changed it should trigger the save button becoming active.

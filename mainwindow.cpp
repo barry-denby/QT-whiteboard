@@ -302,6 +302,9 @@ void MainWindow::addNewImage() {
     // set the title on the new image
     whiteboard->changeImageTitle(title);
     image_title_edit->setText(title);
+
+    // enable the save button
+    save_button->setEnabled(true);
 }
 
 // slot that will react by changing the UI when the board has been modified
