@@ -73,6 +73,11 @@ MainWindow::MainWindow(QWidget *parent)
     main_toolbar_layout->addWidget(delete_button);
     QObject::connect(delete_button, SIGNAL(clicked()), this, SLOT(deleteImage()));
 
+    // add in a pushbutton for loading an image
+    load_image_pushbutton = new QPushButton("Load PNG/JPG/SVG");
+    load_image_pushbutton->setEnabled(false);
+    main_toolbar_layout->addWidget(load_image_pushbutton);
+
     // add in a spinbox for choosing the image number along with labels for this
     QLabel *image_number_label = new QLabel("Viewing image:");
     main_toolbar_layout->addWidget(image_number_label);
@@ -279,6 +284,12 @@ void MainWindow::advanceTool() {
         tools[index + 1]->setSelected(true);
         whiteboard->changeTool(tools[index + 1]->tool());
     }
+
+    // if the index is one of the image tools then enable the load image button and vice versa
+    if(index + 1== 6 || index + 1 == 7)
+        load_image_pushbutton->setEnabled(true);
+    else
+        load_image_pushbutton->setEnabled(false);
 }
 
 // slot that will add a new image in the current place
@@ -344,6 +355,12 @@ void MainWindow::changeTools(unsigned int tool) {
     for(unsigned int i = 0; i < 8; i++) {
         tools[i]->setSelected(false);
     }
+
+    // if the tool is one of the IMG or SVG tools then enable the load image button
+    if(tool == OP_DRAW_RASTER || tool == OP_DRAW_SVG)
+        load_image_pushbutton->setEnabled(true);
+    else
+        load_image_pushbutton->setEnabled(false);
 }
 
 // slot for decreasing the draw size
@@ -422,6 +439,12 @@ void MainWindow::goBackTool() {
         tools[index - 1]->setSelected(true);
         whiteboard->changeTool(tools[index - 1]->tool());
     }
+
+    // if the index is one of the image tools then enable the load image button and vice versa
+    if(index - 1 == 6 || index - 1 == 7)
+        load_image_pushbutton->setEnabled(true);
+    else
+        load_image_pushbutton->setEnabled(false);
 }
 
 // slot for increasing the draw size

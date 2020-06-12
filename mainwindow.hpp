@@ -110,6 +110,8 @@ private:
     ColourSelector **colours;
     // the save button of the window
     QPushButton *save_button;
+    // the load image button of the window
+    QPushButton *load_image_pushbutton;
 };
 
 #endif // _MAINWINDOW_HPP
