@@ -40,6 +40,8 @@ Whiteboard::Whiteboard(QWidget* parent)
     // set the shortcuts for advancing/goback on the colours and tools
     new QShortcut(QKeySequence(Qt::Key_E), this, SLOT(advanceColourShortcut()));
     new QShortcut(QKeySequence(Qt::Key_W), this, SLOT(goBackColourShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_D), this, SLOT(advanceToolShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_S), this, SLOT(goBackToolShortcut()));
 
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));

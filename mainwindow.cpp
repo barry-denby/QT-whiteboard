@@ -96,8 +96,10 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
     QObject::connect(whiteboard, SIGNAL(advanceColour()), this, SLOT(advanceColour()));
     QObject::connect(whiteboard, SIGNAL(advanceImage()), this, SLOT(advanceImage()));
+    QObject::connect(whiteboard, SIGNAL(advanceTool()), this, SLOT(advanceTool()));
     QObject::connect(whiteboard, SIGNAL(goBackColour()), this, SLOT(goBackColour()));
     QObject::connect(whiteboard, SIGNAL(goBackImage()), this, SLOT(goBackImage()));
+    QObject::connect(whiteboard, SIGNAL(goBackTool()), this, SLOT(goBackTool()));
     QObject::connect(whiteboard, SIGNAL(increaseSize()), this, SLOT(increaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(requestSave()), this, SLOT(whiteboardSave()));
@@ -261,7 +263,19 @@ void MainWindow::advanceImage() {
 
 // slot that will advance a tool
 void MainWindow::advanceTool() {
+    // determine the current tool that is selected
+    unsigned int index = 0;
+    for(index = 0; index < 6; index++) {
+        if(tools[index]->selected())
+            break;
+    }
 
+    // if the index is less than 13 then deselect the current tool and advance the current one
+    if(index < 5) {
+        tools[index]->setSelected(false);
+        tools[index + 1]->setSelected(true);
+        whiteboard->changeTool(tools[index + 1]->tool());
+    }
 }
 
 // slot that will add a new image in the current place
@@ -386,7 +400,19 @@ void MainWindow::goBackImage() {
 
 // slot that will go back a tool
 void MainWindow::goBackTool() {
+    // determine the current tool that is selected
+    unsigned int index = 0;
+    for(index = 0; index < 6; index++) {
+        if(tools[index]->selected())
+            break;
+    }
 
+    // if the index is less than 13 then deselect the current tool and advance the current one
+    if(index > 0) {
+        tools[index]->setSelected(false);
+        tools[index - 1]->setSelected(true);
+        whiteboard->changeTool(tools[index - 1]->tool());
+    }
 }
 
 // slot for increasing the draw size

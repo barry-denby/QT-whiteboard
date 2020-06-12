@@ -29,6 +29,8 @@ public:
     const bool selected();
     // sets the selection state for this tool
     void setSelected(const bool selected);
+    // states what this tool is
+    const unsigned int tool();
 // signals that can be emitted by the class
 signals:
     // when selected the tool will emit which operation it is
@@ -55,7 +57,7 @@ private:
     // function that will draw the text tool
     void drawTextTool(QPainter &painter);
     // the tool that this selector represents
-    const unsigned int tool;
+    const unsigned int _tool;
     // colours that we will use for painting
     const QColor black, white;
     // pen and brush that we will use for drawing

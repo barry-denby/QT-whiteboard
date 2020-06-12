@@ -1,6 +1,4 @@
 Features to add:
-    done - add in keyboard shortcuts for moving forward and back a colour
-    - add in keyboard shortcuts for moving forward and back a tool
     - adjust the image export to include the title and the image count in the image itself (probably along the bottom)
     - add in the ability to lock drawing upto a point in an image to prevent accidental undo
     - add in the ability to import and draw images (JPG and PNG)
@@ -9,7 +7,6 @@ Features to add:
 features to add in the long future:
     - figure out how to draw a tool wheel for selecting tools in place
     - figure out how to draw a colour wheel for selecting colours in place
-    - figure out how to add in image drawing into the whiteboards
 
 refactoring to do:
 

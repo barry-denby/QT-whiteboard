@@ -12,7 +12,7 @@
 
 // constructor for the class that takes in the tool type
 ToolSelector::ToolSelector(const unsigned int tool, QWidget *parent)
-: QWidget(parent), tool(tool), black(QColor(0, 0, 0)), white(QColor(255, 255, 255)), pen(black), brush(black), _selected(false)
+: QWidget(parent), _tool(tool), black(QColor(0, 0, 0)), white(QColor(255, 255, 255)), pen(black), brush(black), _selected(false)
 {
     // force a max width and height
     this->setMaximumWidth(32);
@@ -38,10 +38,15 @@ void ToolSelector::setSelected(const bool selected) {
     repaint();
 }
 
+// states what this tool is
+const unsigned int ToolSelector::tool() {
+    return _tool;
+}
+
 // function that will emit the clicked signal when the mouse button is released
 void ToolSelector::mouseReleaseEvent(QMouseEvent *event) {
     // emit a clicked event, set this selected and repaint
-    emit clicked(tool);
+    emit clicked(_tool);
     _selected = true;
     repaint();
 }
@@ -58,17 +63,17 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
     painter.drawRect(0, 0, 32, 32);
 
     // draw a tool depending on what tool constant we have
-    if(tool == OP_POINT_CIRCLE)
+    if(_tool == OP_POINT_CIRCLE)
         drawPointCircleTool(painter);
-    else if(tool == OP_POINT_X)
+    else if(_tool == OP_POINT_X)
         drawPointXTool(painter);
-    else if(tool == OP_POINT_SQUARE)
+    else if(_tool == OP_POINT_SQUARE)
         drawPointSquareTool(painter);
-    else if(tool == OP_LINE_FREEFORM)
+    else if(_tool == OP_LINE_FREEFORM)
         drawLineFreeformTool(painter);
-    else if(tool == OP_LINE_STRAIGHT)
+    else if(_tool == OP_LINE_STRAIGHT)
         drawLineStraightTool(painter);
-    else if(tool == OP_DRAW_TEXT)
+    else if(_tool == OP_DRAW_TEXT)
         drawTextTool(painter);
 
     // if this tool is selected then draw a border around the edge of the image to indicate selection
