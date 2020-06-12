@@ -75,6 +75,10 @@ void ToolSelector::paintEvent(QPaintEvent *event) {
         drawLineStraightTool(painter);
     else if(_tool == OP_DRAW_TEXT)
         drawTextTool(painter);
+    else if(_tool == OP_DRAW_RASTER)
+        drawImageRasterTool(painter);
+    else if(_tool == OP_DRAW_SVG)
+        drawImageSVGTool(painter);
 
     // if this tool is selected then draw a border around the edge of the image to indicate selection
     if(_selected) {
@@ -146,4 +150,34 @@ void ToolSelector::drawTextTool(QPainter &painter) {
     painter.setBrush(brush);
     painter.setFont(font);
     painter.drawText(16 - (width), 16 + (height / 2), QString("T"));
+}
+
+// function that will draw the image raster tool
+void ToolSelector::drawImageRasterTool(QPainter &painter) {
+    // get a font and figure out the width and height of a T
+    QFont font(QString("Arial"), 10, QFont::Bold);
+    QFontMetrics metrics = painter.fontMetrics();
+    int width = metrics.horizontalAdvance(QString("IMG"));
+    int height = metrics.height();
+
+    // draw the text in the middle
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.setFont(font);
+    painter.drawText(16 - (width / 2), 16 + (height / 4), QString("IMG"));
+}
+
+// function that will draw the svg image tool
+void ToolSelector::drawImageSVGTool(QPainter &painter) {
+    // get a font and figure out the width and height of a T
+    QFont font(QString("Arial"), 10, QFont::Bold);
+    QFontMetrics metrics = painter.fontMetrics();
+    int width = metrics.horizontalAdvance(QString("SVG"));
+    int height = metrics.height();
+
+    // draw the text in the middle
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    painter.setFont(font);
+    painter.drawText(16 - (width / 2), 16 + (height / 4), QString("SVG"));
 }

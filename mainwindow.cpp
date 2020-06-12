@@ -341,7 +341,7 @@ void MainWindow::changeImage(int number) {
 // slot that will update the tools in response to a tool being changed
 void MainWindow::changeTools(unsigned int tool) {
     // go through all of the tools and disable their selection
-    for(unsigned int i = 0; i < 6; i++) {
+    for(unsigned int i = 0; i < 8; i++) {
         tools[i]->setSelected(false);
     }
 }

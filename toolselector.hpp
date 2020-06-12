@@ -56,6 +56,10 @@ private:
     void drawPointSquareTool(QPainter &painter);
     // function that will draw the text tool
     void drawTextTool(QPainter &painter);
+    // function that will draw the image raster tool
+    void drawImageRasterTool(QPainter &painter);
+    // function that will draw the svg image tool
+    void drawImageSVGTool(QPainter &painter);
     // the tool that this selector represents
     const unsigned int _tool;
     // colours that we will use for painting
