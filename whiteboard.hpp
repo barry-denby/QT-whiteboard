@@ -69,14 +69,22 @@ public slots:
     void changeTool(unsigned int tool);
 // signals emitted by the class
 signals:
+    // signal to advance a colour
+    void advanceColour();
     // signal to advance an image
     void advanceImage();
+    // signal to advance a tool
+    void advanceTool();
     // signal to decrease the size of the draw op
     void decreaseSize();
     // signal to increase the size of the draw op
     void increaseSize();
+    // signal to go back a colour
+    void goBackColour();
     // signal to go back an image
     void goBackImage();
+    // signal to go back a tool
+    void goBackTool();
     // signal that will be emitted to say this whiteboard was modified
     void modified();
     // signal requesting the whiteboard to be saved
@@ -95,12 +103,20 @@ protected:
     void paintEvent(QPaintEvent* event);
 // private slots section of the class
 private slots:
+    // slot that will emit a signal to advance the colour
+    void advanceColourShortcut();
     // slot that will emit a signal to advance the image on the whiteboard
     void advanceImageShortcut();
+    // slot that will emit a signal to advance the tool
+    void advanceToolShortcut();
     // slot that will emit a signal to decreate the size of thickness of the current draw op
     void decreaseSizeShortcut();
+    // slot that will emit a signal to go back a colour
+    void goBackColourShortcut();
     // slot that will emit a signal to go back an image on the whiteboard
     void goBackImageShortcut();
+    // slot that will emit a signal to go back a tool
+    void goBackToolShortcut();
     // slot that will emit a signal to increase the size or thickness of the current draw op
     void increaseSizeShortcut();
     // slot for quitting the application

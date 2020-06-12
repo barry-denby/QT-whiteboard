@@ -94,7 +94,9 @@ MainWindow::MainWindow(QWidget *parent)
     whiteboard = new Whiteboard();
     whiteboard_container_layout->addWidget(whiteboard);
     whiteboard_container_layout->setContentsMargins(0, 0, 0, 0);
+    QObject::connect(whiteboard, SIGNAL(advanceColour()), this, SLOT(advanceColour()));
     QObject::connect(whiteboard, SIGNAL(advanceImage()), this, SLOT(advanceImage()));
+    QObject::connect(whiteboard, SIGNAL(goBackColour()), this, SLOT(goBackColour()));
     QObject::connect(whiteboard, SIGNAL(goBackImage()), this, SLOT(goBackImage()));
     QObject::connect(whiteboard, SIGNAL(increaseSize()), this, SLOT(increaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
@@ -229,6 +231,24 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
     }
 }
 
+// slot that will advance a colour
+void MainWindow::advanceColour() {
+    // determine the current tool that is selected
+    unsigned int index = 0;
+    for(index = 0; index < 14; index++) {
+        if(colours[index]->selected())
+            break;
+    }
+
+    // if the index is less than 13 then deselect the current tool and advance the current one
+    if(index < 13) {
+        colours[index]->setSelected(false);
+        colours[index + 1]->setSelected(true);
+        QColor colour = colours[index + 1]->colour();
+        whiteboard->changeColour(colour.red(), colour.green(), colour.blue());
+    }
+}
+
 // slot that will advance an image
 void MainWindow::advanceImage() {
     // if there is no image to advance then just return immediately
@@ -237,6 +257,11 @@ void MainWindow::advanceImage() {
 
     // take the current spinner value and advance it on by one.
     image_selector_spinbox->setValue(image_selector_spinbox->value() + 1);
+}
+
+// slot that will advance a tool
+void MainWindow::advanceTool() {
+
 }
 
 // slot that will add a new image in the current place
@@ -331,6 +356,24 @@ void MainWindow::deleteImage() {
     image_title_edit->setText(whiteboard->imageTitleCurrent());
 }
 
+// slot that will go back a colour
+void MainWindow::goBackColour() {
+    // determine the current colour that is selected
+    unsigned int index = 0;
+    for(index = 0; index < 14; index++) {
+        if(colours[index]->selected())
+            break;
+    }
+
+    // if the index is less than 13 then deselect the current tool and advance the current one and set the colour on the whiteboard
+    if(index > 0) {
+        colours[index]->setSelected(false);
+        colours[index - 1]->setSelected(true);
+        QColor colour = colours[index - 1]->colour();
+        whiteboard->changeColour(colour.red(), colour.green(), colour.blue());
+    }
+}
+
 // slot that will go back an image
 void MainWindow::goBackImage() {
     // if there is no image to go back then just return immediately
@@ -339,6 +382,11 @@ void MainWindow::goBackImage() {
 
     // take the current spinner value and advance it on by one.
     image_selector_spinbox->setValue(image_selector_spinbox->value() - 1);
+}
+
+// slot that will go back a tool
+void MainWindow::goBackTool() {
+
 }
 
 // slot for increasing the draw size

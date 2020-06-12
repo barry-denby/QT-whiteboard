@@ -10,7 +10,7 @@
 
 // default constructor for the class that will default the background to black
 ColourSelector::ColourSelector(QWidget *parent)
-: QWidget(parent), red(0), green(0), blue(0), selected(false)
+: QWidget(parent), red(0), green(0), blue(0), _selected(false)
 {
     // set a palette that we will use to paint the background to the provided colour
     //QPalette pal = palette();
@@ -27,7 +27,7 @@ ColourSelector::ColourSelector(QWidget *parent)
 
 // constructor for the class that will take in an RGB value and will set it for this selector
 ColourSelector::ColourSelector(int red, int green, int blue, QWidget *parent)
-: QWidget(parent), red(red), green(green), blue(blue), selected(false)
+: QWidget(parent), red(red), green(green), blue(blue), _selected(false)
 {
     // set a palette that we will use to paint the background to the provided colour
     //QPalette pal = palette();
@@ -47,9 +47,19 @@ ColourSelector::~ColourSelector() {
 
 }
 
+// returns the colour for this selector
+const QColor ColourSelector::colour() {
+    return QColor(red, green, blue);
+}
+
+// returns the selected state of this selector
+const bool ColourSelector::selected() {
+    return _selected;
+}
+
 // set the selected state of this selector
 void ColourSelector::setSelected(const bool selected) {
-    this->selected = selected;
+    _selected = selected;
     repaint();
 }
 
@@ -59,7 +69,7 @@ void ColourSelector::mouseReleaseEvent(QMouseEvent *event) {
     emit clicked(red, green, blue);
 
     // mark this tool as selected and repaint
-    selected = true;
+    _selected = true;
     repaint();
 }
 
@@ -75,7 +85,7 @@ void ColourSelector::paintEvent(QPaintEvent *event) {
     painter.drawRect(0, 0, 32, 32);
 
     // if this tool is selected then draw a border around the edge of the image to indicate selection
-    if(selected) {
+    if(_selected) {
         QPen border_pen(QColor(0, 160, 160));
         border_pen.setWidth(6);
         painter.setPen(border_pen);

@@ -21,6 +21,10 @@ public:
     ColourSelector(int red, int green, int blue, QWidget *parent = 0);
     // destructor for the class
     ~ColourSelector();
+    // returns the colour for this selector
+    const QColor colour();
+    // returns the selected state of this selector
+    const bool selected();
     // set the selected state of this selector
     void setSelected(const bool selected);
 // signals of the class
@@ -37,7 +41,7 @@ private:
     // the red, green, and blue values of this colour selector
     int red, green, blue;
     // is this widget selected
-    bool selected;
+    bool _selected;
 };
 
 #endif // _COLOURSELECTOR_HPP

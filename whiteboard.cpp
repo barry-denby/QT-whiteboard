@@ -37,6 +37,10 @@ Whiteboard::Whiteboard(QWidget* parent)
     // add in a short cut to request for the whiteboard to be saved
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_S), this, SLOT(requestSaveShortcut()));
 
+    // set the shortcuts for advancing/goback on the colours and tools
+    new QShortcut(QKeySequence(Qt::Key_E), this, SLOT(advanceColourShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_W), this, SLOT(goBackColourShortcut()));
+
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
@@ -343,10 +347,20 @@ void Whiteboard::paintEvent(QPaintEvent* event) {
 
 }
 
+// slot that will emit a signal to advance the colour
+void Whiteboard::advanceColourShortcut() {
+    emit advanceColour();
+}
+
 // slot that will emit a signal to advance the image on the whiteboard
 void Whiteboard::advanceImageShortcut() {
     // emit the advance image signal
     emit advanceImage();
+}
+
+// slot that will emit a signal to advance the tool
+void Whiteboard::advanceToolShortcut() {
+    emit advanceTool();
 }
 
 // slot that will emit a signal to decreate the size of thickness of the current draw op
@@ -354,10 +368,20 @@ void Whiteboard::decreaseSizeShortcut() {
     emit decreaseSize();
 }
 
+// slot that will emit a signal to go back a colour
+void Whiteboard::goBackColourShortcut() {
+    emit goBackColour();
+}
+
 // slot that will emit a signal to go back an image on the whiteboard
 void Whiteboard::goBackImageShortcut() {
     // emmit the go back signal
     emit goBackImage();
+}
+
+// slot that will emit a signal to go back a tool
+void Whiteboard::goBackToolShortcut() {
+    emit goBackTool();
 }
 
 // slot that will emit a signal to increase the size or thickness of the current draw op

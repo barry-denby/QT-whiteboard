@@ -31,8 +31,12 @@ public:
 private slots:
     // slot that readjust the spinners depending on the operation we have
     void enableSpinBoxes(const unsigned int op);
+    // slot that will advance a colour
+    void advanceColour();
     // slot that will advance an image
     void advanceImage();
+    // slot that will advance a tool
+    void advanceTool();
     // slot that will add a new image to the whiteboard immediately after the current image
     void addNewImage();
     // slot that will react by changing the UI when the board has been modified
@@ -47,8 +51,12 @@ private slots:
     void decreaseDrawSize();
     // slot that will delete the current image
     void deleteImage();
+    // slot that will go back a colour
+    void goBackColour();
     // slot that will go back an image
     void goBackImage();
+    // slot that will go back a tool
+    void goBackTool();
     // slot for increasing the draw size
     void increaseDrawSize();
     // slot that will export the current whiteboard to a set of PNG images

@@ -1,11 +1,6 @@
 Features to add:
-    done - keyboard shortcut for saving a file
-    done - keyboard shortcut to advance an image
-    done - keyboard shortcut to go back an image
-    done - tool context sensitive shortcuts to increase or decrease size
-    - add in keyboard shortcuts for moving forward and back a colour
-    done - add in whiteboard modification detection
-    done - modify the UI in response to the whiteboard modification
+    done - add in keyboard shortcuts for moving forward and back a colour
+    - add in keyboard shortcuts for moving forward and back a tool
     - adjust the image export to include the title and the image count in the image itself (probably along the bottom)
     - add in the ability to lock drawing upto a point in an image to prevent accidental undo
     - add in the ability to import and draw images (JPG and PNG)
