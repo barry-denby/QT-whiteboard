@@ -25,7 +25,7 @@
 
 // constructor for the class
 MainWindow::MainWindow(QWidget *parent)
-: QWidget(parent), filename("")
+: QWidget(parent), filename(""), image_filename(""), load_raster(true)
 {
     // allocate space for our tools and selectors
     tools = new ToolSelector *[8];
@@ -77,6 +77,7 @@ MainWindow::MainWindow(QWidget *parent)
     load_image_pushbutton = new QPushButton("Load PNG/JPG/SVG");
     load_image_pushbutton->setEnabled(false);
     main_toolbar_layout->addWidget(load_image_pushbutton);
+    QObject::connect(load_image_pushbutton, SIGNAL(clicked()), this, SLOT(loadJpgPngSvgImage()));
 
     // add in a spinbox for choosing the image number along with labels for this
     QLabel *image_number_label = new QLabel("Viewing image:");
@@ -286,10 +287,16 @@ void MainWindow::advanceTool() {
     }
 
     // if the index is one of the image tools then enable the load image button and vice versa
-    if(index + 1== 6 || index + 1 == 7)
+    if(index + 1 == 6 || index + 1 == 7)
         load_image_pushbutton->setEnabled(true);
     else
         load_image_pushbutton->setEnabled(false);
+
+    // if the index is 6 or 7 change to either a raster or svg image
+    if(index + 1 == 6)
+        load_raster = true;
+    else if(index + 1 == 7)
+        load_raster = false;
 }
 
 // slot that will add a new image in the current place
@@ -361,6 +368,12 @@ void MainWindow::changeTools(unsigned int tool) {
         load_image_pushbutton->setEnabled(true);
     else
         load_image_pushbutton->setEnabled(false);
+
+    // if the tool is raster or the svg set that type to load
+    if(tool == OP_DRAW_RASTER)
+        load_raster = true;
+    else if(tool == OP_DRAW_SVG)
+        load_raster = false;
 }
 
 // slot for decreasing the draw size
@@ -445,6 +458,12 @@ void MainWindow::goBackTool() {
         load_image_pushbutton->setEnabled(true);
     else
         load_image_pushbutton->setEnabled(false);
+
+    // if the index is 6 or 7 change to either a raster or svg image
+    if(index + 1 == 6)
+        load_raster = true;
+    else if(index + 1 == 7)
+        load_raster = false;
 }
 
 // slot for increasing the draw size
@@ -573,6 +592,22 @@ void MainWindow::loadImages() {
 
     // as there is no modification at this point disable the save button
     save_button->setEnabled(false);
+}
+
+// slot that will load an image for drawing onto the board
+void MainWindow::loadJpgPngSvgImage() {
+    // throw up a different dialog box depending on whether we are loading a raster image or an SVG
+    if(load_raster) {
+        // get the filename that we want to load. if no file is selected then don't do anything
+        QString filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Raster image Files (*.jpg, *.png)");
+    } else {
+        // get the filename that we want to load. if no file is selected then don't do anything
+        QString filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Vector image Files (*.svg)");
+    }
+
+    // if we have no filename then return immediately
+    if(filename.compare(QString("")) == 0)
+        return;
 }
 
 // slot that will go through the process of saving a whiteboard to disk

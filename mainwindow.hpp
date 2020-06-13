@@ -63,6 +63,8 @@ private slots:
     void exportPNG();
     // slot that will run through the process of loading a set of images for a whiteboard
     void loadImages();
+    // slot that will load an image for drawing onto the board
+    void loadJpgPngSvgImage();
     // slot that will run through the process of saving an image
     void saveImages();
     // slot that will start a new whiteboard but will warn the user beforehand
@@ -112,6 +114,10 @@ private:
     QPushButton *save_button;
     // the load image button of the window
     QPushButton *load_image_pushbutton;
+    // the filename of the image we are loading
+    QString image_filename;
+    // are we loading a raster image or an SVG
+    bool load_raster;
 };
 
 #endif // _MAINWINDOW_HPP
