@@ -4,7 +4,7 @@ project('qt_whiteboard', 'cpp')
 
 # import the qt5 module. we need seperate dependancies for the test frame work and also the gui itself
 qt5_module = import('qt5')
-qt5_components = dependency('qt5', modules: ['Core', 'Gui', 'Widgets'])
+qt5_components = dependency('qt5', modules: ['Core', 'Gui', 'Widgets', 'Svg'])
 
 # variable for the include directory that will be referenced by subsequent meson.build files
 # note that thiqs has to be declared before the subdirs so they will see it

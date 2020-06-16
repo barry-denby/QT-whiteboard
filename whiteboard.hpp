@@ -43,6 +43,8 @@ public:
     const unsigned int maxImages();
     // function that will replace the current set of images with this set of images
     void setDrawOperations(DrawOperations **operations, const unsigned int total, const unsigned int max);
+    // function that will set the filename of the image to be imported on the next draw operation
+    void setImportImageFilename(const QString &filename);
     // function that will reset the whiteboard to its starting conditions
     void resetWhiteBoard();
     // function that states how many images in total this whiteboard has thus far
@@ -157,6 +159,11 @@ private:
     int text_size;
     int text_rotation;
     QString text;
+    // the name of the jpg, png, svg we are loading in
+    QString image_import_filename;
+    // preview image width and height
+    int preview_image_width;
+    int preview_image_height;
 };
 
 #endif // _WHITEBOARD_HPP

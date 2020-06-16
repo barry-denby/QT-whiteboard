@@ -239,6 +239,13 @@ void MainWindow::enableSpinBoxes(const unsigned int op) {
         text_size_spinbox->setEnabled(true);
         text_rotation_spinbox->setEnabled(true);
         text_lineedit->setEnabled(true);
+    } else if(op == OP_DRAW_RASTER || op == OP_DRAW_SVG) {
+        // enable the text size, rotation, and line edit, disable everything else
+        point_size_spinbox->setEnabled(false);
+        line_thickness_spinbox->setEnabled(false);
+        text_size_spinbox->setEnabled(false);
+        text_rotation_spinbox->setEnabled(false);
+        text_lineedit->setEnabled(false);
     }
 }
 
@@ -287,10 +294,13 @@ void MainWindow::advanceTool() {
     }
 
     // if the index is one of the image tools then enable the load image button and vice versa
-    if(index + 1 == 6 || index + 1 == 7)
+    if(index + 1 == 6 || index + 1 == 7) {
         load_image_pushbutton->setEnabled(true);
-    else
+        whiteboard->setImportImageFilename(QString(""));
+    } else {
         load_image_pushbutton->setEnabled(false);
+        whiteboard->setImportImageFilename(QString(""));
+    }
 
     // if the index is 6 or 7 change to either a raster or svg image
     if(index + 1 == 6)
@@ -364,10 +374,13 @@ void MainWindow::changeTools(unsigned int tool) {
     }
 
     // if the tool is one of the IMG or SVG tools then enable the load image button
-    if(tool == OP_DRAW_RASTER || tool == OP_DRAW_SVG)
+    if(tool == OP_DRAW_RASTER || tool == OP_DRAW_SVG) {
         load_image_pushbutton->setEnabled(true);
-    else
+        whiteboard->setImportImageFilename(QString(""));
+    } else {
         load_image_pushbutton->setEnabled(false);
+        whiteboard->setImportImageFilename(QString(""));
+    }
 
     // if the tool is raster or the svg set that type to load
     if(tool == OP_DRAW_RASTER)
@@ -454,10 +467,13 @@ void MainWindow::goBackTool() {
     }
 
     // if the index is one of the image tools then enable the load image button and vice versa
-    if(index - 1 == 6 || index - 1 == 7)
+    if(index - 1 == 6 || index - 1 == 7) {
         load_image_pushbutton->setEnabled(true);
-    else
+        whiteboard->setImportImageFilename(QString(""));
+    } else {
         load_image_pushbutton->setEnabled(false);
+        whiteboard->setImportImageFilename(QString(""));
+    }
 
     // if the index is 6 or 7 change to either a raster or svg image
     if(index + 1 == 6)
@@ -597,17 +613,21 @@ void MainWindow::loadImages() {
 // slot that will load an image for drawing onto the board
 void MainWindow::loadJpgPngSvgImage() {
     // throw up a different dialog box depending on whether we are loading a raster image or an SVG
+    QString filename;
     if(load_raster) {
         // get the filename that we want to load. if no file is selected then don't do anything
-        QString filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Raster image Files (*.jpg, *.png)");
+        filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Raster image Files (*.jpg, *.png)");
     } else {
         // get the filename that we want to load. if no file is selected then don't do anything
-        QString filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Vector image Files (*.svg)");
+        filename = QFileDialog::getOpenFileName(this, "Open Image", "", "Vector image Files (*.svg)");
     }
 
     // if we have no filename then return immediately
     if(filename.compare(QString("")) == 0)
         return;
+
+    // set the filename on the whiteboard
+    whiteboard->setImportImageFilename(filename);
 }
 
 // slot that will go through the process of saving a whiteboard to disk

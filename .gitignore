@@ -3,3 +3,4 @@ test_board_export/*
 *.gch
 *.wbd
 *.png
+*.svg

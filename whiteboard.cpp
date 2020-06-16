@@ -11,6 +11,7 @@
 #include <QPainter>
 #include <QObject>
 #include <QRect>
+#include <QtSvg>
 #include <QShortcut>
 #include "constants.hpp"
 #include "mainwindow.hpp"
@@ -18,7 +19,7 @@
 
 // constructor for the class
 Whiteboard::Whiteboard(QWidget* parent)
-: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20), text_size(20), text_rotation(0), text(QString("Placeholder text to draw"))
+: QWidget(parent), current_colour(0, 0, 0), pen(QColor(0, 0, 0)), tool(OP_POINT_SQUARE), current_line_thickness(2), current_point_size(6), image_current(0), image_max(16), image_total(1), on_preview(false), font(QString("Arial"), 20), text_size(20), text_rotation(0), text(QString("Placeholder text to draw")), image_import_filename("")
 {
     // add in a shortcut that will allow us to quit the application
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q), this, SLOT(quitApplication()));
@@ -206,6 +207,26 @@ void Whiteboard::setDrawOperations(DrawOperations **operations, const unsigned i
     repaint();
 }
 
+// function that will set the filename of the image to be imported on the next draw operation
+void Whiteboard::setImportImageFilename(const QString &filename) {
+    image_import_filename = filename;
+
+    std::cout << image_import_filename.toStdString() << std::endl;
+
+    // get the width and height of the image for the preview purposes
+    if(tool == OP_DRAW_RASTER) {
+        // generate a QImage out of this file and get the width and height
+        QImage preview(image_import_filename);
+        preview_image_width = preview.width();
+        preview_image_height = preview.height();
+    } else {
+        QSvgRenderer preview(image_import_filename);
+        QSize preview_size = preview.defaultSize();
+        preview_image_width = preview_size.width();
+        preview_image_height = preview_size.height();
+    }
+}
+
 // function that will reset the state of the whiteboard to its original state
 void Whiteboard::resetWhiteBoard() {
     // delete the current array of objects and put a new one in its place
@@ -277,6 +298,12 @@ void Whiteboard::changeTextSize(int text_size) {
 // public slot taht will change the current draw tool
 void Whiteboard::changeTool(unsigned int tool) {
     this->tool = tool;
+
+    // if the tool is anything other than the draw images then set the image_preview sizes to zero
+    if(tool != OP_DRAW_RASTER && tool != OP_DRAW_SVG) {
+        preview_image_width = 0;
+        preview_image_height = 0;
+    }
 }
 
 // overridden mousePressEvent function that will start a user's drawing
@@ -571,6 +598,20 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // restore our painter state
             painter.restore();
+        } else if(tool == OP_DRAW_RASTER && preview_image_width != 0) {
+            // draw a preview rectangle with with the same aspect ration as the image. lock the preview to
+            // the width
+            painter.setPen(QColor(0, 255, 255));
+            painter.setBrush(QColor(0, 255, 255));
+            int preview_width = preview_end_x - preview_start_x;
+            int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
+            painter.drawRect(preview_start_x, preview_start_y, preview_width, preview_height);
+        } else if(tool == OP_DRAW_SVG && preview_image_width != 0) {
+            painter.setPen(QColor(0, 255, 255));
+            painter.setBrush(QColor(0, 255, 255));
+            int preview_width = preview_end_x - preview_start_x;
+            int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
+            painter.drawRect(preview_start_x, preview_start_y, preview_width, preview_height);
         }
     }
 }
