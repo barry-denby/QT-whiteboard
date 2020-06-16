@@ -372,6 +372,15 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
 
         // we have the final point of a text string so add in its draw data
         images[image_current]->addDrawText(text, event->x(), event->y(), current_colour, text_size, text_rotation);
+    } else if(tool == OP_DRAW_RASTER) {
+        // if there is no image set then do nothing
+        if(QString::compare(image_import_filename, QString("")) == 0)
+            return;
+
+        // we have the final draw positions of an image so add in the draw data
+        unsigned int preview_width = preview_end_x - preview_start_x;
+        unsigned int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
+        images[image_current]->addDrawRasterImage(image_import_filename, preview_start_x, preview_start_y, preview_end_x - preview_width, preview_height);
     }
 
     // repaint the view and state the board has been modified
@@ -549,6 +558,10 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // restore our painter state
             painter.restore();
+        } else if(images[image_current]->draw_operation[i] == DRAW_RASTER) {
+            // create an image out of the
+        } else if(images[image_current]->draw_operation[i] == DRAW_SVG) {
+
         }
     }
 

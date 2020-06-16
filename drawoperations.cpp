@@ -9,23 +9,25 @@
 
 // default constructor for the class that will initialise a 4K sized draw operations object
 DrawOperations::DrawOperations()
-: total_ops(0), max_ops(1024), total_strings(0), max_strings(8), title(QString(""))
+: total_ops(0), max_ops(1024), total_strings(0), max_strings(8), title(QString("")), total_images(0), max_images(8)
 {
     // initialise support for 1K drawing ops
     allocateArrays();
 
     // allocate an array of QString objects
     draw_text_strings = new QString[max_strings];
+    image_locations = new QString[max_images];
 }
 
-DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings)
-: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings), title(QString(""))
+DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images)
+: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings), title(QString("")), total_images(0), max_images(max_images)
 {
     // initialise all arrays
     allocateArrays();
 
     // allocate an array of QString objects
     draw_text_strings = new QString[max_strings];
+    image_locations = new QString[max_images];
 }
 
 // destructor for the class

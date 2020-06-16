@@ -22,7 +22,7 @@ public:
     DrawOperations();
     // constructor that will make a draw operations object with the given number of objects and
     // a maximum number of strings
-    DrawOperations(const unsigned int max_ops, const unsigned int max_strings);
+    DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images);
     // destructor for the class
     ~DrawOperations();
     // function that will allocate and all arrays to size max_ops except the strings array
@@ -73,6 +73,12 @@ public:
     unsigned int max_strings;
     // the title of the current image
     QString title;
+    // how many draw images do we have and the storage and max
+    QString *image_locations;
+    unsigned int total_images;
+    unsigned int max_images;
+    // the image indices we are using
+    unsigned int *image_indicies;
 };
 
 #endif // _DRAWOPERATIONS_HPP
