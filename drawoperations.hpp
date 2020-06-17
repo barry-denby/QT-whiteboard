@@ -154,6 +154,8 @@ public:
     void allocateArrays();
     // adds draw data for a circle point
     void addDrawPointCircle(int x, int y, unsigned int colour, int draw_size);
+    // adds draw data for a square point
+    void addDrawPointSquare(int x, int y, unsigned int colour, int draw_size);
     // adds draw data to the draw operations
     void addDrawData(unsigned int operation, int x, int y, QColor &colour, int draw_size);
     // adds in drawn text to the draw operations as this needs to be handled differently to the other operations

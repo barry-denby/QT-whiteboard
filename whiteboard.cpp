@@ -353,6 +353,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     if(tool == OP_POINT_SQUARE) {
         // we have a square point then just save it and update the draw ops
         //images[image_current]->addDrawData(POINT_SQUARE, event->x(), event->y(), current_colour, current_point_size);
+        images[image_current]->addDrawPointSquare(event->x(), event->y(), current_colour.rgba(), current_point_size);
     } else if(tool == OP_POINT_CIRCLE) {
         // we have a circle point then so store it and repaint it
         //images[image_current]->addDrawData(POINT_CIRCLE, event->x(), event->y(), current_colour, current_point_size);
@@ -513,6 +514,12 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.setPen(QColor(temp->colour));
             painter.setBrush(QColor(temp->colour));
             painter.drawEllipse(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+        } else if(images[image_current]->operations[i].draw_operation == POINT_SQUARE) {
+            // get the circle point structure set teh pen and draw the point
+            PointSquare *temp = (PointSquare *) &images[image_current]->operations[i];
+            painter.setPen(QColor(temp->colour));
+            painter.setBrush(QColor(temp->colour));
+            painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
         }
     }
 
