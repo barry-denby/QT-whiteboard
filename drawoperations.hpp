@@ -13,6 +13,131 @@
 
 // includes
 #include <QColor>
+#include <QtSvg>
+
+// structure definitions for all of the operation types
+
+// structure definition for the point circle
+struct PointCircle {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure definition for the x point
+struct PointX {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure definition for the square point
+struct PointSquare {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking the start of a freehand line
+struct LineStart {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking a middle point of a freehand line
+struct LinePoint {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking an end point of a freehand line
+struct LineEnd {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking the start point of a straight line
+struct StraightLineStart {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking the end point of a straight line
+struct StraightLineEnd {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+};
+
+// structure marking where a text has been written in the image
+struct Text {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    unsigned int colour; // the ARGB colour of this circle
+    int size; // the size of the point
+    int rotation; // the rotation of the text
+    QString *string; // pointer to the string of text that is to be displayed
+};
+
+// structure marking where a raster image has been placed in this whiteboard
+struct RasterImage {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    int width; // the width of the image
+    int height; // the height of the image
+    QString *filename; // the name of the file that the image is loaded from
+    QImage *image; // the loaded in image.
+};
+
+// structure marking where an SVG image has been placed in this whiteboard
+struct SVGImage {
+    unsigned int draw_operation; // common starting value to determine what the rest of the values in the struct are
+    int x; // x position of the circle
+    int y; // y position of the circle
+    int width; // the width of the image
+    int height; // the height of the image
+    QString *filename; // the name of the file that the image is loaded from
+    QSvgRenderer *image; // the loaded in image.
+};
+
+// union type that will collect all the operations into one overlapping structure. note that we declare the draw
+// operation here in advance
+union DrawOp {
+    unsigned int draw_operation; // the draw operation code that appears at the start of all structs
+    PointCircle point_circle;
+    PointX point_x;
+    PointSquare point_square;
+    LineStart line_start;
+    LinePoint line_point;
+    LineEnd line_end;
+    StraightLineStart straight_line_start;
+    StraightLineEnd straight_line_end;
+    Text text;
+    RasterImage raster_image;
+    SVGImage svg_image;
+};
 
 // class definition
 class DrawOperations {
@@ -27,6 +152,8 @@ public:
     ~DrawOperations();
     // function that will allocate and all arrays to size max_ops except the strings array
     void allocateArrays();
+    // adds draw data for a circle point
+    void addDrawPointCircle(int x, int y, unsigned int colour, int draw_size);
     // adds draw data to the draw operations
     void addDrawData(unsigned int operation, int x, int y, QColor &colour, int draw_size);
     // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
@@ -79,6 +206,8 @@ public:
     unsigned int max_images;
     // the image indices we are using
     unsigned int *image_indicies;
+    // list of draw operations that is held by this object
+    DrawOp *operations;
 };
 
 #endif // _DRAWOPERATIONS_HPP
