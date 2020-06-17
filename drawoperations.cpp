@@ -86,8 +86,22 @@ void DrawOperations::addDrawPointCircle(int x, int y, unsigned int colour, int d
 // adds draw data for a square point
 void DrawOperations::addDrawPointSquare(int x, int y, unsigned int colour, int draw_size) {
     // set the current draw operation to a square point and fill in the data
-    PointCircle *temp = (PointCircle *) &operations[total_ops];
+    PointSquare *temp = (PointSquare *) &operations[total_ops];
     temp->draw_operation = POINT_SQUARE;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
+// adds draw data for an x point
+void DrawOperations::addDrawPointX(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a square point and fill in the data
+    PointX *temp = (PointX *) &operations[total_ops];
+    temp->draw_operation = POINT_X;
     temp->x = x;
     temp->y = y;
     temp->colour = colour;

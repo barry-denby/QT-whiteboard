@@ -361,6 +361,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     } else if(tool == OP_POINT_X) {
         // we have a circle point then so store it and repaint it
         //images[image_current]->addDrawData(POINT_X, event->x(), event->y(), current_colour, current_point_size);
+        images[image_current]->addDrawPointX(event->x(), event->y(), current_colour.rgba(), current_point_size);
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         //images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
@@ -515,11 +516,22 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.setBrush(QColor(temp->colour));
             painter.drawEllipse(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
         } else if(images[image_current]->operations[i].draw_operation == POINT_SQUARE) {
-            // get the circle point structure set teh pen and draw the point
+            // get the square point structure set teh pen and draw the point
             PointSquare *temp = (PointSquare *) &images[image_current]->operations[i];
             painter.setPen(QColor(temp->colour));
             painter.setBrush(QColor(temp->colour));
             painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+        } else if(images[image_current]->operations[i].draw_operation == POINT_X) {
+            // get the x point structure set teh pen and draw the point
+            PointX *temp = (PointX *) &images[image_current]->operations[i];
+            QPen pen(QColor(temp->colour));
+            pen.setWidth(2);
+            painter.setPen(pen);
+            painter.setBrush(QColor(temp->colour));
+
+            // draw the two lines to make the x point
+            painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
+            painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
         }
     }
 
