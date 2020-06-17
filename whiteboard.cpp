@@ -322,6 +322,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     } else if(tool == OP_LINE_STRAIGHT) {
         // we have the starting point of a straight line so store this in the draw operations
         //images[image_current]->addDrawData(STRAIGHT_LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawStraightLineStart(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }
 
     // repaint the view
@@ -368,6 +369,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     }  else if(tool == OP_LINE_STRAIGHT) {
         // we have the end point of a straight line so store this in the draw operations
         //images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawStraightLineEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     } else if(tool == OP_DRAW_TEXT) {
         // if there is no text entered then do nothing
         if(QString::compare(text, QString("")) == 0)
@@ -532,6 +534,19 @@ void Whiteboard::drawBoard(QPainter &painter) {
             // draw the two lines to make the x point
             painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
             painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
+        } else if(images[image_current]->operations[i].draw_operation == STRAIGHT_LINE_END) {
+            // get references to the start and end of the straight line
+            StraightLineStart *start = (StraightLineStart *) &images[image_current]->operations[i - 1];
+            StraightLineEnd *end = (StraightLineEnd *) &images[image_current]->operations[i];
+
+            // set teh pen with the right thickness and the brush
+            QPen pen(QColor(end->colour));
+            pen.setWidth(end->size);
+            painter.setPen(pen);
+            painter.setBrush(QColor(end->colour));
+
+            // draw the line
+            painter.drawLine(start->x, start->y, end->x, end->y);
         }
     }
 

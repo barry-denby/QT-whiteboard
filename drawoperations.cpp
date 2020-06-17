@@ -111,6 +111,34 @@ void DrawOperations::addDrawPointX(int x, int y, unsigned int colour, int draw_s
     total_ops++;
 }
 
+// adds draw data for a straight line end
+void DrawOperations::addDrawStraightLineEnd(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a straight line start and fill in the data
+    StraightLineEnd *temp = (StraightLineEnd *) &operations[total_ops];
+    temp->draw_operation = STRAIGHT_LINE_END;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
+// adds draw data for a straight line start
+void DrawOperations::addDrawStraightLineStart(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a straight line start and fill in the data
+    StraightLineStart *temp = (StraightLineStart *) &operations[total_ops];
+    temp->draw_operation = STRAIGHT_LINE_START;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
 // refactored function that will add in draw data to the necessary arrays
 void DrawOperations::addDrawData(unsigned int operation, int x, int y, QColor& colour, int draw_size) {
     // add in the draw data
