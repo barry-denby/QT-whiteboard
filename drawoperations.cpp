@@ -181,25 +181,6 @@ void DrawOperations::addDrawStraightLineStart(int x, int y, unsigned int colour,
     total_ops++;
 }
 
-// refactored function that will add in draw data to the necessary arrays
-void DrawOperations::addDrawData(unsigned int operation, int x, int y, QColor& colour, int draw_size) {
-    // add in the draw data
-    // draw_operation[total_ops] = operation;
-    // draw_x[total_ops] = x;
-    // draw_y[total_ops] = y;
-    // draw_red[total_ops] = colour.red();
-    // draw_green[total_ops] = colour.green();
-    // draw_blue[total_ops] = colour.blue();
-    // draw_sizes[total_ops] = draw_size;
-    // draw_text_rotations[total_ops] = 0;
-    // draw_string_index[total_ops] = 0;
-    // total_ops++;
-    //
-    // // if the total ops is equal the the max ops then we don't have any more room so double the memory.
-    // if(total_ops == max_ops)
-    //     doubleArrays();
-}
-
 // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
 void DrawOperations::addDrawText(const QString &text, int x, int y, QColor &colour, int draw_size, int draw_rotation) {
     // add in the text draw data

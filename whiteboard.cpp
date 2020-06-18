@@ -318,11 +318,9 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     // see what operation we are doing
     if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
-        //images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
         images[image_current]->addDrawFreehandStart(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     } else if(tool == OP_LINE_STRAIGHT) {
         // we have the starting point of a straight line so store this in the draw operations
-        //images[image_current]->addDrawData(STRAIGHT_LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
         images[image_current]->addDrawStraightLineStart(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }
 
@@ -339,7 +337,6 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     // see what operation we are doing
     if (tool == OP_LINE_FREEFORM) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
-        //images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
         images[image_current]->addDrawFreehandMid(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }
 
@@ -355,23 +352,18 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     // do a different action depending on the event type
     if(tool == OP_POINT_SQUARE) {
         // we have a square point then just save it and update the draw ops
-        //images[image_current]->addDrawData(POINT_SQUARE, event->x(), event->y(), current_colour, current_point_size);
         images[image_current]->addDrawPointSquare(event->x(), event->y(), current_colour.rgba(), current_point_size);
     } else if(tool == OP_POINT_CIRCLE) {
         // we have a circle point then so store it and repaint it
-        //images[image_current]->addDrawData(POINT_CIRCLE, event->x(), event->y(), current_colour, current_point_size);
         images[image_current]->addDrawPointCircle(event->x(), event->y(), current_colour.rgba(), current_point_size);
     } else if(tool == OP_POINT_X) {
         // we have a circle point then so store it and repaint it
-        //images[image_current]->addDrawData(POINT_X, event->x(), event->y(), current_colour, current_point_size);
         images[image_current]->addDrawPointX(event->x(), event->y(), current_colour.rgba(), current_point_size);
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
-        //images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
         images[image_current]->addDrawFreehandEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }  else if(tool == OP_LINE_STRAIGHT) {
         // we have the end point of a straight line so store this in the draw operations
-        //images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
         images[image_current]->addDrawStraightLineEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     } else if(tool == OP_DRAW_TEXT) {
         // if there is no text entered then do nothing
@@ -506,13 +498,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
     painter.drawRect(0, 0, 1920, 1080);
 
     // go through all of the draw operations that are in the list
-    // QColor draw_colour;
     for(unsigned int i = 0; i < images[image_current]->total_ops; i++) {
-        // set the colour of the current position
-        //draw_colour.setRgb(images[image_current]->draw_red[i], images[image_current]->draw_green[i], images[image_current]->draw_blue[i]);
-        //painter.setPen(draw_colour);
-        //painter.setBrush(draw_colour);
-
         // go through each of the draw ops and perform the necessary action
         if(images[image_current]->operations[i].draw_operation == POINT_CIRCLE) {
             // get the circle point structure set teh pen and draw the point
@@ -581,43 +567,11 @@ void Whiteboard::drawBoard(QPainter &painter) {
                 // draw the line
                 painter.drawLine(start->x, start->y, end->x, end->y);
             }
+        } else if(images[image_current]->operations[i].draw_operation == DRAW_TEXT) {
+            //
         }
     }
 
-    //     // go through each of the draw ops and draw the necessary action
-    //     if(images[image_current]->draw_operation[i] == POINT_SQUARE) {
-    //         // we have a single point so draw that
-    //         int point_size = images[image_current]->draw_sizes[i];
-    //         painter.drawRect(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
-    //     } else if(images[image_current]->draw_operation[i] == POINT_CIRCLE) {
-    //         // draw the circle point
-    //         int point_size = images[image_current]->draw_sizes[i];
-    //         painter.drawEllipse(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), point_size, point_size);
-    //     } else if(images[image_current]->draw_operation[i] == POINT_X) {
-    //         // set the pen size to 2
-    //         QPen pen(draw_colour);
-    //         pen.setWidth(2);
-    //         painter.setPen(pen);
-    //
-    //         // draw the x point
-    //         int point_size = images[image_current]->draw_sizes[i];
-    //         painter.drawLine(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2), images[image_current]->draw_x[i] + (point_size / 2), images[image_current]->draw_y[i] + (point_size / 2));
-    //         painter.drawLine(images[image_current]->draw_x[i] - (point_size / 2), images[image_current]->draw_y[i] + (point_size / 2), images[image_current]->draw_x[i] + (point_size / 2), images[image_current]->draw_y[i] - (point_size / 2));
-    //
-    //     } else if(images[image_current]->draw_operation[i] == LINE_POINT || images[image_current]->draw_operation[i] == LINE_END) {
-    //         QPen pen(draw_colour);
-    //         pen.setWidth(images[image_current]->draw_sizes[i]);
-    //         painter.setPen(pen);
-    //
-    //         // draw this line segment
-    //         painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
-    //     } else if(images[image_current]->draw_operation[i] == STRAIGHT_LINE_END) {
-    //         QPen pen(draw_colour);
-    //         pen.setWidth(images[image_current]->draw_sizes[i]);
-    //         painter.setPen(pen);
-    //
-    //         // draw this straight line
-    //         painter.drawLine(images[image_current]->draw_x[i - 1], images[image_current]->draw_y[i - 1], images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
     //     } else if(images[image_current]->draw_operation[i] == DRAW_TEXT) {
     //         // get the font metrics and determine the width of the string
     //         unsigned int string_index = images[image_current]->draw_string_index[i];
@@ -637,12 +591,6 @@ void Whiteboard::drawBoard(QPainter &painter) {
     //
     //         // restore our painter state
     //         painter.restore();
-    //     } else if(images[image_current]->draw_operation[i] == DRAW_RASTER) {
-    //         // create an image out of the
-    //     } else if(images[image_current]->draw_operation[i] == DRAW_SVG) {
-    //
-    //     }
-    // }
 
     // draw the preview in a cyan colour for all operations bar the free form line
     painter.setPen(QColor(0, 255, 255));

@@ -168,8 +168,6 @@ public:
     void addDrawStraightLineEnd(int x, int y, unsigned int colour, int draw_size);
     // adds draw data for a straight line start
     void addDrawStraightLineStart(int x, int y, unsigned int colour, int draw_size);
-    // adds draw data to the draw operations
-    void addDrawData(unsigned int operation, int x, int y, QColor &colour, int draw_size);
     // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
     void addDrawText(const QString &text, int x, int y, QColor &colour, int draw_size, int draw_rotation);
     // adds in a drawn raster image to the draw operations as this needs to be handled differently to other operations
