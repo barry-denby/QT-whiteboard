@@ -152,6 +152,12 @@ public:
     ~DrawOperations();
     // function that will allocate and all arrays to size max_ops except the strings array
     void allocateArrays();
+    // adds draw data for the start point of a freehand line
+    void addDrawFreehandStart(int x, int y, unsigned int colour, int draw_size);
+    // adds draw data for a mid point of the middle of a freehand line
+    void addDrawFreehandMid(int x, int y, unsigned int colour, int draw_size);
+    // adds draw data for the end point of a freehand line
+    void addDrawFreehandEnd(int x, int y, unsigned int colour, int draw_size);
     // adds draw data for a circle point
     void addDrawPointCircle(int x, int y, unsigned int colour, int draw_size);
     // adds draw data for a square point

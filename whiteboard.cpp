@@ -319,6 +319,7 @@ void Whiteboard::mousePressEvent(QMouseEvent* event) {
     if (tool == OP_LINE_FREEFORM) {
         // we have the starting point of a line so store this in the draw operations
         //images[image_current]->addDrawData(LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawFreehandStart(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     } else if(tool == OP_LINE_STRAIGHT) {
         // we have the starting point of a straight line so store this in the draw operations
         //images[image_current]->addDrawData(STRAIGHT_LINE_START, event->x(), event->y(), current_colour, current_line_thickness);
@@ -339,6 +340,7 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     if (tool == OP_LINE_FREEFORM) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         //images[image_current]->addDrawData(LINE_POINT, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawFreehandMid(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }
 
     // repaint the view
@@ -366,6 +368,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
     } else if(tool == OP_LINE_FREEFORM) {
         // we have the end point of a line so store this in the draw operations and repaint
         //images[image_current]->addDrawData(LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
+        images[image_current]->addDrawFreehandEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }  else if(tool == OP_LINE_STRAIGHT) {
         // we have the end point of a straight line so store this in the draw operations
         //images[image_current]->addDrawData(STRAIGHT_LINE_END, event->x(), event->y(), current_colour, current_line_thickness);
@@ -547,6 +550,37 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // draw the line
             painter.drawLine(start->x, start->y, end->x, end->y);
+        } else if(images[image_current]->operations[i].draw_operation == LINE_POINT) {
+            // get a reference to the current line point
+            LinePoint *end = (LinePoint *) &images[image_current]->operations[i];
+
+            // check if the previous point is a LINE_START or a LINE_POINT
+            if(images[image_current]->operations[i - 1].draw_operation == LINE_POINT) {
+                // get reference to the previous line point
+                LinePoint *start = (LinePoint *) &images[image_current]->operations[i - 1];
+
+                // set teh pen with the right thickness and the brush
+                QPen pen(QColor(end->colour));
+                pen.setWidth(end->size);
+                painter.setPen(pen);
+                painter.setBrush(QColor(end->colour));
+
+                // draw the line
+                painter.drawLine(start->x, start->y, end->x, end->y);
+
+            } else if(images[image_current]->operations[i - 1].draw_operation == LINE_START) {
+                // get reference to the previous line point
+                LineStart *start = (LineStart *) &images[image_current]->operations[i - 1];
+
+                // set teh pen with the right thickness and the brush
+                QPen pen(QColor(end->colour));
+                pen.setWidth(end->size);
+                painter.setPen(pen);
+                painter.setBrush(QColor(end->colour));
+
+                // draw the line
+                painter.drawLine(start->x, start->y, end->x, end->y);
+            }
         }
     }
 

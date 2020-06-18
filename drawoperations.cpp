@@ -69,6 +69,48 @@ void DrawOperations::allocateArrays() {
     // }
 }
 
+// adds draw data for the start point of a freehand line
+void DrawOperations::addDrawFreehandStart(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a freehand line point and fill in the data
+    LineStart *temp = (LineStart *) &operations[total_ops];
+    temp->draw_operation = LINE_START;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
+// adds draw data for a mid point of the middle of a freehand line
+void DrawOperations::addDrawFreehandMid(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a freehand line mid point and fill in the data
+    LinePoint *temp = (LinePoint *) &operations[total_ops];
+    temp->draw_operation = LINE_POINT;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
+// adds draw data for the end point of a freehand line
+void DrawOperations::addDrawFreehandEnd(int x, int y, unsigned int colour, int draw_size) {
+    // set the current draw operation to a freehand line point and fill in the data
+    LineEnd *temp = (LineEnd *) &operations[total_ops];
+    temp->draw_operation = LINE_END;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+
+    // update the total ops after we are done
+    total_ops++;
+}
+
 // adds draw data for a circle point
 void DrawOperations::addDrawPointCircle(int x, int y, unsigned int colour, int draw_size) {
     // set the current draw operation to a circle point and fill in the data
