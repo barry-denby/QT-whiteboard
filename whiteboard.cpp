@@ -371,7 +371,7 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
             return;
 
         // we have the final point of a text string so add in its draw data
-        //images[image_current]->addDrawText(text, event->x(), event->y(), current_colour, text_size, text_rotation);
+        images[image_current]->addDrawText(text, event->x(), event->y(), current_colour.rgba(), text_size, text_rotation);
     } else if(tool == OP_DRAW_RASTER) {
         // if there is no image set then do nothing
         if(QString::compare(image_import_filename, QString("")) == 0)
@@ -568,7 +568,28 @@ void Whiteboard::drawBoard(QPainter &painter) {
                 painter.drawLine(start->x, start->y, end->x, end->y);
             }
         } else if(images[image_current]->operations[i].draw_operation == DRAW_TEXT) {
-            //
+            // get a reference to the text for drawing
+            Text *temp = (Text *) &images[image_current]->operations[i];
+
+            // get the font metrics and determine the width of the string
+            QFontMetrics metrics = painter.fontMetrics();
+            int width = metrics.horizontalAdvance(*temp->string);
+            int height = metrics.height();
+            std::cout << width << ", " << height << ", " << temp->x << ", " << temp->y << ", " << temp->size << std::endl;
+
+            // we will need to save, translate to the position, and rotate by the given angle
+            painter.save();
+            painter.translate(temp->x, temp->y);
+            painter.rotate(temp->rotation);
+
+            // draw the text on the board
+            QFont tempfont("Arial", temp->size);
+            painter.setPen(QColor(temp->colour));
+            painter.setFont(tempfont);
+            painter.drawText(-width, height / 2, *temp->string);
+
+            // restore our painter state
+            painter.restore();
         }
     }
 

@@ -11,13 +11,6 @@
 DrawOperations::DrawOperations()
 : total_ops(0), max_ops(1024), total_strings(0), max_strings(8), title(QString("")), total_images(0), max_images(8)
 {
-    // initialise support for 1K drawing ops
-    //allocateArrays();
-
-    // allocate an array of QString objects
-    //draw_text_strings = new QString[max_strings];
-    //image_locations = new QString[max_images];
-
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];
 }
@@ -25,13 +18,6 @@ DrawOperations::DrawOperations()
 DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images)
 : total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings), title(QString("")), total_images(0), max_images(max_images)
 {
-    // initialise all arrays
-    //allocateArrays();
-
-    // allocate an array of QString objects
-    //draw_text_strings = new QString[max_strings];
-    //image_locations = new QString[max_images];
-
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];
 }
@@ -39,8 +25,6 @@ DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int ma
 // destructor for the class
 DrawOperations::~DrawOperations() {
     // delete all of our arrays
-    //deallocateArrays();
-    //delete[] draw_text_strings;
     delete operations;
 }
 
@@ -182,27 +166,19 @@ void DrawOperations::addDrawStraightLineStart(int x, int y, unsigned int colour,
 }
 
 // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
-void DrawOperations::addDrawText(const QString &text, int x, int y, QColor &colour, int draw_size, int draw_rotation) {
-    // add in the text draw data
-    // draw_operation[total_ops] = DRAW_TEXT;
-    // draw_x[total_ops] = x;
-    // draw_y[total_ops] = y;
-    // draw_red[total_ops] = colour.red();
-    // draw_green[total_ops] = colour.green();
-    // draw_blue[total_ops] = colour.blue();
-    // draw_sizes[total_ops] = draw_size;
-    // draw_text_rotations[total_ops] = draw_rotation;
-    // draw_string_index[total_ops] = total_strings;
-    // draw_text_strings[total_strings] = text;
-    // total_ops++;
-    // total_strings++;
-    //
-    // // if the total ops is equal the the max ops then we don't have any more room so double the memory.
-    // // do similar for the strings as well
-    // if(total_ops == max_ops)
-    //     doubleArrays();
-    // if(total_strings == max_strings)
-    //     doubleStringArray();
+void DrawOperations::addDrawText(const QString &text, int x, int y, unsigned int colour, int draw_size, int draw_rotation) {
+    // set the current draw operation to a text operation and fill in the data
+    Text *temp = (Text *) &operations[total_ops];
+    temp->draw_operation = DRAW_TEXT;
+    temp->x = x;
+    temp->y = y;
+    temp->colour = colour;
+    temp->size = draw_size;
+    temp->rotation = draw_rotation;
+    temp->string = new QString(text);
+
+    // update the total ops after we are done
+    total_ops++;
 }
 
 // adds in a drawn raster image to the draw operations as this needs to be handled differently to other operations
