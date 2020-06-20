@@ -381,6 +381,15 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
         unsigned int preview_width = preview_end_x - preview_start_x;
         unsigned int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
         images[image_current]->addDrawRasterImage(image_import_filename, preview_start_x, preview_start_y, preview_width, preview_height);
+    } else if(tool == OP_DRAW_SVG) {
+        // if there is no image set then do nothing
+        if(QString::compare(image_import_filename, QString("")) == 0)
+            return;
+
+        // we have the final draw positions of an image so add in the draw data
+        unsigned int preview_width = preview_end_x - preview_start_x;
+        unsigned int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
+        images[image_current]->addDrawSVGImage(image_import_filename, preview_start_x, preview_start_y, preview_width, preview_height);
     }
 
     // repaint the view and state the board has been modified
@@ -602,9 +611,13 @@ void Whiteboard::drawBoard(QPainter &painter) {
             QRectF source(0, 0, temp->image->width(), temp->image->height());
             QRectF destination(temp->x, temp->y, temp->width, temp->height);
             painter.drawImage(destination, *temp->image, source);
+        } else if(images[image_current]->operations[i].draw_operation == DRAW_SVG) {
+            // get a reference to the image for drawing
+            SVGImage *temp = (SVGImage *) &images[image_current]->operations[i];
 
-            std::cout << temp->image->width() << " " << temp->image->height() << std::endl;
-            std::cout << temp->x << " " << temp->y << " " << temp->width << " " << temp->height << std::endl;
+            // draw the image on the board by first specifiing the rects that match the source size and the request destination size
+            QRectF destination(temp->x, temp->y, temp->width, temp->height);
+            temp->image->render(&painter, destination);
         }
     }
 
