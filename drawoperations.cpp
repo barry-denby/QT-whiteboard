@@ -183,27 +183,18 @@ void DrawOperations::addDrawText(const QString &text, int x, int y, unsigned int
 
 // adds in a drawn raster image to the draw operations as this needs to be handled differently to other operations
 void DrawOperations::addDrawRasterImage(const QString &file, int x, int y, int width, int height) {
-    // add in the text draw data we will reuse the red and green data for the width and height
-    // we will also reuse the text strings to store the file reference
-    // draw_operation[total_ops] = DRAW_RASTER;
-    // draw_x[total_ops] = x;
-    // draw_y[total_ops] = y;
-    // draw_red[total_ops] = width;
-    // draw_green[total_ops] = height;
-    // draw_blue[total_ops] = 0;
-    // draw_sizes[total_ops] = 0;
-    // draw_text_rotations[total_ops] = 0;
-    // draw_string_index[total_ops] = 0;
-    // draw_text_strings[total_strings] = file;
-    // total_ops++;
-    // total_strings++;
-    //
-    // // if the total ops is equal the the max ops then we don't have any more room so double the memory.
-    // // do similar for the strings as well
-    // if(total_ops == max_ops)
-    //     doubleArrays();
-    // if(total_strings == max_strings)
-    //     doubleStringArray();
+    // set the current draw operation to a raster image and fill in the data
+    RasterImage *temp = (RasterImage *) &operations[total_ops];
+    temp->draw_operation = DRAW_RASTER;
+    temp->x = x;
+    temp->y = y;
+    temp->width = width;
+    temp->height = height;
+    temp->filename = new QString(file);
+    temp->image = new QImage(file);
+
+    // update the total ops after we are done
+    total_ops++;
 }
 
 // adds in a drawn vector image to the draw operations as this needs to be handled differently to other operations

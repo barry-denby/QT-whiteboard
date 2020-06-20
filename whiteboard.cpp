@@ -378,9 +378,9 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
             return;
 
         // we have the final draw positions of an image so add in the draw data
-        //unsigned int preview_width = preview_end_x - preview_start_x;
-        //unsigned int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
-        //images[image_current]->addDrawRasterImage(image_import_filename, preview_start_x, preview_start_y, preview_end_x - preview_width, preview_height);
+        unsigned int preview_width = preview_end_x - preview_start_x;
+        unsigned int preview_height = preview_width * ((float) preview_image_height / preview_image_width);
+        images[image_current]->addDrawRasterImage(image_import_filename, preview_start_x, preview_start_y, preview_width, preview_height);
     }
 
     // repaint the view and state the board has been modified
@@ -506,12 +506,14 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.setPen(QColor(temp->colour));
             painter.setBrush(QColor(temp->colour));
             painter.drawEllipse(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+
         } else if(images[image_current]->operations[i].draw_operation == POINT_SQUARE) {
             // get the square point structure set teh pen and draw the point
             PointSquare *temp = (PointSquare *) &images[image_current]->operations[i];
             painter.setPen(QColor(temp->colour));
             painter.setBrush(QColor(temp->colour));
             painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+
         } else if(images[image_current]->operations[i].draw_operation == POINT_X) {
             // get the x point structure set teh pen and draw the point
             PointX *temp = (PointX *) &images[image_current]->operations[i];
@@ -523,6 +525,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
             // draw the two lines to make the x point
             painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
             painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
+
         } else if(images[image_current]->operations[i].draw_operation == STRAIGHT_LINE_END) {
             // get references to the start and end of the straight line
             StraightLineStart *start = (StraightLineStart *) &images[image_current]->operations[i - 1];
@@ -536,6 +539,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // draw the line
             painter.drawLine(start->x, start->y, end->x, end->y);
+
         } else if(images[image_current]->operations[i].draw_operation == LINE_POINT) {
             // get a reference to the current line point
             LinePoint *end = (LinePoint *) &images[image_current]->operations[i];
@@ -590,28 +594,19 @@ void Whiteboard::drawBoard(QPainter &painter) {
 
             // restore our painter state
             painter.restore();
+        } else if(images[image_current]->operations[i].draw_operation == DRAW_RASTER) {
+            // get a reference to the image for drawing
+            RasterImage *temp = (RasterImage *) &images[image_current]->operations[i];
+
+            // draw the image on the board by first specifiing the rects that match the source size and the request destination size
+            QRectF source(0, 0, temp->image->width(), temp->image->height());
+            QRectF destination(temp->x, temp->y, temp->width, temp->height);
+            painter.drawImage(destination, *temp->image, source);
+
+            std::cout << temp->image->width() << " " << temp->image->height() << std::endl;
+            std::cout << temp->x << " " << temp->y << " " << temp->width << " " << temp->height << std::endl;
         }
     }
-
-    //     } else if(images[image_current]->draw_operation[i] == DRAW_TEXT) {
-    //         // get the font metrics and determine the width of the string
-    //         unsigned int string_index = images[image_current]->draw_string_index[i];
-    //         QFontMetrics metrics = painter.fontMetrics();
-    //         int width = metrics.horizontalAdvance(images[image_current]->draw_text_strings[string_index]);
-    //         int height = metrics.height();
-    //
-    //         // we will need to save, translate to the position, and rotate by the given angle
-    //         painter.save();
-    //         painter.translate(images[image_current]->draw_x[i], images[image_current]->draw_y[i]);
-    //         painter.rotate(images[image_current]->draw_text_rotations[i]);
-    //
-    //         // draw the preview text on the board
-    //         QFont tempfont("Arial", images[image_current]->draw_sizes[i]);
-    //         painter.setFont(tempfont);
-    //         painter.drawText(-width, height / 2, images[image_current]->draw_text_strings[string_index]);
-    //
-    //         // restore our painter state
-    //         painter.restore();
 
     // draw the preview in a cyan colour for all operations bar the free form line
     painter.setPen(QColor(0, 255, 255));
