@@ -3,6 +3,7 @@
 // implenents everything described in drawoperations.hpp
 
 // includes
+#include <cstdio>
 #include <iostream>
 #include "constants.hpp"
 #include "drawoperations.hpp"
@@ -28,31 +29,6 @@ DrawOperations::~DrawOperations() {
     delete operations;
 }
 
-// refactored function that will allocate all of our arrays
-void DrawOperations::allocateArrays() {
-    // initialise support for max_ops drawing ops
-    // draw_operation = (unsigned int*) new unsigned int[max_ops];
-    // draw_x = (unsigned int*) new unsigned int[max_ops];
-    // draw_y = (unsigned int*) new unsigned int[max_ops];
-    // draw_red = (int *) new int[max_ops];
-    // draw_green = (int *) new int[max_ops];
-    // draw_blue = (int *) new int[max_ops];
-    // draw_sizes = (int *) new int[max_ops];
-    // draw_string_index = new int[max_ops];
-    // draw_text_rotations = new int[max_ops];
-    // for(unsigned int i = 0; i < max_ops; i++) {
-    //     draw_operation[i] = 0;
-    //     draw_x[i] = 0;
-    //     draw_y[i] = 0;
-    //     draw_red[i] = 0;
-    //     draw_green[i] = 0;
-    //     draw_blue[i] = 0;
-    //     draw_sizes[i] = 0;
-    //     draw_string_index[i] = 0;
-    //     draw_text_rotations[i] = 0;
-    // }
-}
-
 // adds draw data for the start point of a freehand line
 void DrawOperations::addDrawFreehandStart(int x, int y, unsigned int colour, int draw_size) {
     // set the current draw operation to a freehand line point and fill in the data
@@ -63,8 +39,10 @@ void DrawOperations::addDrawFreehandStart(int x, int y, unsigned int colour, int
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for a mid point of the middle of a freehand line
@@ -77,8 +55,10 @@ void DrawOperations::addDrawFreehandMid(int x, int y, unsigned int colour, int d
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for the end point of a freehand line
@@ -91,8 +71,10 @@ void DrawOperations::addDrawFreehandEnd(int x, int y, unsigned int colour, int d
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for a circle point
@@ -105,8 +87,10 @@ void DrawOperations::addDrawPointCircle(int x, int y, unsigned int colour, int d
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for a square point
@@ -119,8 +103,10 @@ void DrawOperations::addDrawPointSquare(int x, int y, unsigned int colour, int d
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for an x point
@@ -133,8 +119,10 @@ void DrawOperations::addDrawPointX(int x, int y, unsigned int colour, int draw_s
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for a straight line end
@@ -147,8 +135,10 @@ void DrawOperations::addDrawStraightLineEnd(int x, int y, unsigned int colour, i
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds draw data for a straight line start
@@ -161,8 +151,10 @@ void DrawOperations::addDrawStraightLineStart(int x, int y, unsigned int colour,
     temp->colour = colour;
     temp->size = draw_size;
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds in drawn text to the draw operations as this needs to be handled differently to the other operations
@@ -177,8 +169,10 @@ void DrawOperations::addDrawText(const QString &text, int x, int y, unsigned int
     temp->rotation = draw_rotation;
     temp->string = new QString(text);
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds in a drawn raster image to the draw operations as this needs to be handled differently to other operations
@@ -193,8 +187,10 @@ void DrawOperations::addDrawRasterImage(const QString &file, int x, int y, int w
     temp->filename = new QString(file);
     temp->image = new QImage(file);
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // adds in a drawn vector image to the draw operations as this needs to be handled differently to other operations
@@ -210,22 +206,10 @@ void DrawOperations::addDrawSVGImage(const QString &file, int x, int y, int widt
     temp->filename = new QString(file);
     temp->image = new QSvgRenderer(file);
 
-    // update the total ops after we are done
+    // update the total ops after we are done if we hit the max size then we need to up the array size
     total_ops++;
-}
-
-// function that will deallocate all of the arrays of this draw operations
-void DrawOperations::deallocateArrays() {
-    // delete all of our arrays
-    // delete draw_operation;
-    // delete draw_x;
-    // delete draw_y;
-    // delete draw_red;
-    // delete draw_green;
-    // delete draw_blue;
-    // delete draw_sizes;
-    // delete draw_text_rotations;
-    // delete draw_string_index;
+    if(total_ops == max_ops)
+        doubleArrays();
 }
 
 // refactored function that will remove the last set of draw data from the arrays
@@ -388,95 +372,24 @@ void DrawOperations::removeText() {
 
 // function that will double up the size of the arrays
 void DrawOperations::doubleArrays() {
-    // calculate the double of the current max ops
-    // unsigned int new_max_ops = max_ops * 2;
-    //
-    // // allocate the arrays of the new size
-    // unsigned int *new_draw_operation = (unsigned int*) new unsigned int[new_max_ops];
-    // unsigned int *new_draw_x = (unsigned int*) new unsigned int[new_max_ops];
-    // unsigned int *new_draw_y = (unsigned int*) new unsigned int[new_max_ops];
-    // int *new_draw_red = (int*) new int[new_max_ops];
-    // int *new_draw_green = (int*) new int[new_max_ops];
-    // int *new_draw_blue = (int*) new int[new_max_ops];
-    // int *new_draw_sizes = (int*) new int[new_max_ops];
-    // int *new_draw_text_rotations = new int[new_max_ops];
-    // int *new_draw_string_index = new int[new_max_ops];
-    //
-    // // copy accross the old arrays to the new arrays
-    // for(unsigned int i = 0; i < max_ops; i++) {
-    //     new_draw_operation[i] = draw_operation[i];
-    //     new_draw_x[i] = draw_x[i];
-    //     new_draw_y[i] = draw_y[i];
-    //     new_draw_red[i] = draw_red[i];
-    //     new_draw_green[i] = draw_green[i];
-    //     new_draw_blue[i] = draw_blue[i];
-    //     new_draw_sizes[i] = draw_sizes[i];
-    //     new_draw_text_rotations[i] = draw_text_rotations[i];
-    //     new_draw_string_index[i] = draw_string_index[i];
-    // }
-    //
-    // // initialise everything after max ops
-    // for(unsigned int i = max_ops; i < new_max_ops; i++) {
-    //     new_draw_operation[i] = NO_DRAW;
-    //     new_draw_x[i] = 0;
-    //     new_draw_y[i] = 0;
-    //     new_draw_red[i] = 0;
-    //     new_draw_green[i] = 0;
-    //     new_draw_blue[i] = 0;
-    //     new_draw_sizes[i] = 0;
-    //     new_draw_text_rotations[i] = 0;
-    //     new_draw_string_index[i] = 0;
-    // }
-    //
-    // // delete the old arrays
-    // deallocateArrays();
-    //
-    // // assign the new arrays to the new names
-    // draw_operation = new_draw_operation;
-    // draw_x = new_draw_x;
-    // draw_y = new_draw_y;
-    // draw_red = new_draw_red;
-    // draw_green = new_draw_green;
-    // draw_blue = new_draw_blue;
-    // draw_sizes = new_draw_sizes;
-    // draw_text_rotations = new_draw_text_rotations;
-    // draw_string_index = new_draw_string_index;
-    //
-    // // update the max ops for the new arrays
-    // max_ops = new_max_ops;
-}
+    // figure out how much space we need for the new set of draw operations and get that allocated
+    unsigned int new_max_ops = max_ops * 2;
+    DrawOp *new_ops = (DrawOp *) new DrawOp[new_max_ops];
 
-// private function that will increase the size of the string array
-void DrawOperations::doubleStringArray() {
-    // calculate the size of the new array and allocate the array
-    // unsigned int new_max_strings = max_strings * 2;
-    // QString *new_draw_text_strings = new QString[new_max_strings];
-    //
-    // // copy the strings from the old array to the new array and delete the old array
-    // for(unsigned int i = 0; i < total_strings; i++)
-    //     new_draw_text_strings[i] = draw_text_strings[i];
-    // delete[] draw_text_strings;
-    // draw_text_strings = new_draw_text_strings;
-    //
-    // // also update the number of strings for the newly doubled array
-    // max_strings = new_max_strings;
+    // do a mem copy of the array delete the old array, fix the reference and update the max ops
+    memcpy(new_ops, operations, sizeof(DrawOp) * max_ops);
+    delete operations;
+    operations = new_ops;
+    max_ops = new_max_ops;
+
+    std::cout << "doubled ops" << std::endl;
 }
 
 // function that will reset the entire drawoperations back to the starting state
 void DrawOperations::reset() {
-    // delete all of the arrays that are there
-    // deallocateArrays();
-    // delete[] draw_text_strings;
-    //
-    // // put new standard arrays in their place
-    // total_ops = 0;
-    // max_ops = 1024;
-    // total_strings = 0;
-    // max_strings = 8;
-    // allocateArrays();
-    //
-    // // allocate an array of 32 QString objects
-    // draw_text_strings = new QString[max_strings];
+    // while our total ops are greater whan zero keep removing draw ops
+    while(total_ops > 0)
+        removeLastDrawData();
 }
 
 // function that will set the title of this image

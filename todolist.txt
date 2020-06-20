@@ -1,7 +1,7 @@
 Features to add:
     - add in the ability to lock drawing upto a point in an image to prevent accidental undo
-    - add in the ability to import and draw images (JPG and PNG)
-    - add in the ability to import and render SVG onto an image
+    done - add in the ability to import and draw images (JPG and PNG)
+    done - add in the ability to import and render SVG onto an image
 
 features to add in the long future:
     - figure out how to draw a tool wheel for selecting tools in place

@@ -150,8 +150,6 @@ public:
     DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images);
     // destructor for the class
     ~DrawOperations();
-    // function that will allocate and all arrays to size max_ops except the strings array
-    void allocateArrays();
     // adds draw data for the start point of a freehand line
     void addDrawFreehandStart(int x, int y, unsigned int colour, int draw_size);
     // adds draw data for a mid point of the middle of a freehand line
@@ -174,8 +172,6 @@ public:
     void addDrawRasterImage(const QString &file, int x, int y, int width, int height);
     // adds in a drawn vector image to the draw operations as this needs to be handled differently to other operations
     void addDrawSVGImage(const QString &file, int x, int y, int width, int height);
-    // function that will deallocate all of the arrays of this draw operations
-    void deallocateArrays();
     // removes the last set of draw data from this draw operations
     void removeLastDrawData();
     // removes the current point circle data
@@ -196,8 +192,6 @@ public:
     void removeText();
     // private function that will increase the size of the draw ops arrays by doubling them
     void doubleArrays();
-    // private function that will increase the size of the string array
-    void doubleStringArray();
     // function that will reset the entire drawoperations back to the starting state
     void reset();
     // function that will set the title of this image
