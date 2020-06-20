@@ -474,27 +474,8 @@ void Whiteboard::undoLastDrawOp() {
     if(images[image_current]->total_ops == 0)
         return;
 
-    // see what kind of draw op we have and take appropriate action
-    if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_SQUARE) {
-        // remove the point operation
-        //images[image_current]->removeLastDrawData();
-    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_CIRCLE) {
-        // remove the point operation
-        //images[image_current]->removeLastDrawData();
-    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == POINT_X) {
-        // remove the point operation
-        //images[image_current]->removeLastDrawData();
-    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == LINE_END) {
-        // keep going back until we hit the line start, then remove the line start
-        //while(images[image_current]->draw_operation[images[image_current]->total_ops - 1] != LINE_START)
-        //    images[image_current]->removeLastDrawData();
-        //images[image_current]->removeLastDrawData();
-    } else if(images[image_current]->draw_operation[images[image_current]->total_ops - 1] == DRAW_TEXT) {
-        // we have a text operation so just remove it
-        //images[image_current]->removeLastDrawData();
-    }
-
-    // redraw the screen
+    // remove the last operation and redraw the screen
+    images[image_current]->removeLastDrawData();
     repaint();
 }
 
@@ -588,7 +569,6 @@ void Whiteboard::drawBoard(QPainter &painter) {
             QFontMetrics metrics = painter.fontMetrics();
             int width = metrics.horizontalAdvance(*temp->string);
             int height = metrics.height();
-            std::cout << width << ", " << height << ", " << temp->x << ", " << temp->y << ", " << temp->size << std::endl;
 
             // we will need to save, translate to the position, and rotate by the given angle
             painter.save();

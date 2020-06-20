@@ -178,6 +178,22 @@ public:
     void deallocateArrays();
     // removes the last set of draw data from this draw operations
     void removeLastDrawData();
+    // removes the current point circle data
+    void removePointCircleData();
+    // removes the current point square data
+    void removePointSquareData();
+    // removes the current point X data
+    void removePointXData();
+    // removes the current freehand line data
+    void removeFreehandLine();
+    // removes the current raster image data
+    void removeRasterImage();
+    // removes the current straight line data
+    void removeStraightLine();
+    // removes the current SVG image data
+    void removeSVGImage();
+    // removes the current text data
+    void removeText();
     // private function that will increase the size of the draw ops arrays by doubling them
     void doubleArrays();
     // private function that will increase the size of the string array

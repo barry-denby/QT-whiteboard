@@ -231,25 +231,159 @@ void DrawOperations::deallocateArrays() {
 // refactored function that will remove the last set of draw data from the arrays
 void DrawOperations::removeLastDrawData() {
     // if the next op is already zero then we cant remove anything
-    // if(total_ops == 0)
-    //     return;
-    //
-    // // reduce total_ops by one and remove the data that is there
-    // total_ops--;
-    // if(draw_operation[total_ops] == DRAW_TEXT) {
-    //     unsigned int string_index = draw_string_index[total_ops];
-    //     draw_text_strings[string_index] = QString("");
-    //     total_strings--;
-    // }
-    // draw_operation[total_ops] = NO_DRAW;
-    // draw_x[total_ops] = 0;
-    // draw_y[total_ops] = 0;
-    // draw_red[total_ops] = 0;
-    // draw_green[total_ops] = 0;
-    // draw_blue[total_ops] = 0;
-    // draw_sizes[total_ops] = 0;
-    // draw_text_rotations[total_ops] = 0;
-    // draw_string_index[total_ops] = 0;
+    if(total_ops == 0)
+         return;
+
+    // reduce total_ops by one to line up on the data we are removing
+    total_ops--;
+
+    // remove the data depending on what we have
+    if(operations[total_ops].draw_operation == POINT_CIRCLE)
+        removePointCircleData();
+    else if(operations[total_ops].draw_operation == POINT_SQUARE)
+        removePointSquareData();
+    else if(operations[total_ops].draw_operation == POINT_X)
+        removePointXData();
+    else if(operations[total_ops].draw_operation == LINE_END)
+        removeFreehandLine();
+    else if(operations[total_ops].draw_operation == STRAIGHT_LINE_END)
+        removeStraightLine();
+    else if(operations[total_ops].draw_operation == DRAW_TEXT)
+        removeText();
+    else if(operations[total_ops].draw_operation == DRAW_SVG)
+        removeSVGImage();
+}
+
+// removes the current point circle data
+void DrawOperations::removePointCircleData() {
+    // get the data and clear it out
+    PointCircle *temp = (PointCircle *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+}
+
+// removes the current point square data
+void DrawOperations::removePointSquareData() {
+    // get the data and clear it out
+    PointSquare *temp = (PointSquare *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+}
+
+// removes the current point X data
+void DrawOperations::removePointXData() {
+    // get the data and clear it out
+    PointX *temp = (PointX *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+}
+
+// removes the current freehand line data
+void DrawOperations::removeFreehandLine() {
+    // get the line end and clear its data
+    LineEnd *temp = (LineEnd *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+
+    // move back an op and keep deleting ops while we have line points
+    total_ops--;
+    while(operations[total_ops].draw_operation == LINE_POINT) {
+        LinePoint *tempb = (LinePoint *) &operations[total_ops];
+        tempb->draw_operation = NO_DRAW;
+        tempb->x = 0;
+        tempb->y = 0;
+        tempb->colour = 0;
+        tempb->size = 0;
+        total_ops--;
+    }
+
+    // get rid of the line start as well
+    LineStart *tempc = (LineStart *) &operations[total_ops];
+    tempc->draw_operation = NO_DRAW;
+    tempc->x = 0;
+    tempc->y = 0;
+    tempc->colour = 0;
+    tempc->size = 0;
+}
+
+// removes the current raster image data
+void DrawOperations::removeRasterImage() {
+    // get the raster data and clear it
+    RasterImage *temp = (RasterImage *) &operations[total_ops];
+    temp->x = 0;
+    temp->y = 0;
+    temp->width = 0;
+    temp->height = 0;
+
+    // delete the file name and image and set them to null
+    delete temp->filename;
+    delete temp->image;
+    temp->filename = NULL;
+    temp->image = NULL;
+}
+
+// removes the current straight line data
+void DrawOperations::removeStraightLine() {
+    // get the straight line end and clear its data
+    StraightLineEnd *temp = (StraightLineEnd *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+
+    // move back an op and get rid of the start point
+    total_ops--;
+    StraightLineStart *temp2 = (StraightLineStart *) &operations[total_ops];
+    temp2->draw_operation = NO_DRAW;
+    temp2->x = 0;
+    temp2->y = 0;
+    temp2->colour = 0;
+    temp2->size = 0;
+}
+
+// removes the current SVG image data
+void DrawOperations::removeSVGImage() {
+    // get the raster data and clear it
+    SVGImage *temp = (SVGImage *) &operations[total_ops];
+    temp->x = 0;
+    temp->y = 0;
+    temp->width = 0;
+    temp->height = 0;
+
+    // delete the file name and image and set them to null
+    delete temp->filename;
+    delete temp->image;
+    temp->filename = NULL;
+    temp->image = NULL;
+}
+
+// removes the current text data
+void DrawOperations::removeText() {
+    // get the text data and clear its data
+    Text *temp = (Text *) &operations[total_ops];
+    temp->draw_operation = NO_DRAW;
+    temp->x = 0;
+    temp->y = 0;
+    temp->colour = 0;
+    temp->size = 0;
+    temp->rotation = 0;
+
+    // deallocate the string and set it as a null reference
+    delete temp->string;
+    temp->string = NULL;
 }
 
 // function that will double up the size of the arrays
