@@ -20,6 +20,7 @@
 #include <QVBoxLayout>
 #include "constants.hpp"
 #include "colourselector.hpp"
+#include "fileops.hpp"
 #include "mainwindow.hpp"
 #include "toolselector.hpp"
 
@@ -536,75 +537,48 @@ void MainWindow::loadImages() {
     if(filename.compare(QString("")) == 0)
         return;
 
-    // open up the file for reading in binary mode
-    FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
+    // read in the whiteboard
+    DrawOperations **board = loadWhiteboard(filename);
 
-    // read the total number from the file and then allocate the necessary array of pointers for the images
-    unsigned int total_images = 0, max_images = 0;
-    fread(&total_images, sizeof(unsigned int), 1, to_read);
-    fread(&max_images, sizeof(unsigned int), 1, to_read);
-    DrawOperations **loaded_images = (DrawOperations **) new DrawOperations *[max_images];
-
-    // go through each of the images in turn and read them in
-    for(unsigned int i = 0; i < total_images; i++) {
-        // first read in the total ops and the max ops for this image
-        unsigned int total_ops = 0, max_ops = 0;
-        fread(&total_ops, sizeof(unsigned int), 1, to_read);
-        fread(&max_ops, sizeof(unsigned int), 1, to_read);
-
-        // write the total strings and max strings to the file next
-        unsigned int total_strings = 0, max_strings = 0;
-        fread(&total_strings, sizeof(unsigned int), 1, to_read);
-        fread(&max_strings, sizeof(unsigned int), 1, to_read);
-
-        // allocate a draw operations of the required size and then read in all of the data
-        loaded_images[i] = (DrawOperations *) new DrawOperations(max_ops, max_strings, 8);
-        loaded_images[i]->total_ops = total_ops;
-        loaded_images[i]->total_strings = total_strings;
-        fread(loaded_images[i]->draw_operation, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_x, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_y, sizeof(unsigned int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_red, sizeof(int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_green, sizeof(int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_blue, sizeof(int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_sizes, sizeof(int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_text_rotations, sizeof(int), loaded_images[i]->total_ops, to_read);
-        fread(loaded_images[i]->draw_string_index, sizeof(int), loaded_images[i]->total_ops, to_read);
-
-        // read the length of the title and the title of the image
-        char *image_title = new char[1024];
-        unsigned int title_length = 0;
-        fread(&title_length, sizeof(unsigned int), 1, to_read);
-        fread(image_title, sizeof(char), title_length, to_read);
-        QString title = QString::fromUtf8(QByteArray(image_title));
-        loaded_images[i]->title = title;
-        delete image_title;
-
-        // read in each of the strings for this image and attach them to the loaded image
-        for(unsigned int j = 0; j < total_strings; j++) {
-            image_title = new char[1024];
-            title_length = 0;
-            fread(&title_length, sizeof(unsigned int), 1, to_read);
-            fread(image_title, sizeof(char), title_length, to_read);
-            QString title = QString::fromUtf8(QByteArray(image_title));
-            loaded_images[i]->draw_text_strings[j] = title;
-            delete image_title;
-        }
-    }
+    // // open up the file for reading in binary mode
+    // FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
+    //
+    // // read the total number from the file and then allocate the necessary array of pointers for the images
+    // unsigned int total_images = 0, max_images = 0;
+    // fread(&total_images, sizeof(unsigned int), 1, to_read);
+    // fread(&max_images, sizeof(unsigned int), 1, to_read);
+    // DrawOperations **loaded_images = (DrawOperations **) new DrawOperations *[max_images];
+    //
+    // // go through each of the images in turn and read them in
+    // for(unsigned int i = 0; i < total_images; i++) {
+    //     // first read in the total ops and the max ops for this image
+    //     unsigned int total_ops = 0, max_ops = 0;
+    //     fread(&total_ops, sizeof(unsigned int), 1, to_read);
+    //     fread(&max_ops, sizeof(unsigned int), 1, to_read);
+    //
+    //     // read the length of the title and the title of the image
+    //     char *image_title = new char[1024];
+    //     unsigned int title_length = 0;
+    //     fread(&title_length, sizeof(unsigned int), 1, to_read);
+    //     fread(image_title, sizeof(char), title_length, to_read);
+    //     QString title = QString::fromUtf8(QByteArray(image_title));
+    //     loaded_images[i]->title = title;
+    //     delete image_title;
+    // }
 
     // close the file for reading
-    fclose(to_read);
+    //fclose(to_read);
 
     // fill out the spare images with empty draw operations as the whiteboard will expect them to be allocated already
-    for(unsigned int i = total_images; i < max_images; i++)
-        loaded_images[i] = (DrawOperations *) new DrawOperations();
+    //for(unsigned int i = total_images; i < max_images; i++)
+    //    loaded_images[i] = (DrawOperations *) new DrawOperations();
 
     // set the images on the whiteboard and reset its current image to one
-    whiteboard->setDrawOperations(loaded_images, total_images, max_images);
-    image_selector_spinbox->setRange(1, total_images);
-    image_selector_spinbox->setValue(1);
-    total_images_label->setText(QString("/ %1").arg(total_images));
-    image_title_edit->setText(loaded_images[0]->title);
+    //whiteboard->setDrawOperations(loaded_images, total_images, max_images);
+    //image_selector_spinbox->setRange(1, total_images);
+    //image_selector_spinbox->setValue(1);
+    //total_images_label->setText(QString("/ %1").arg(total_images));
+    //image_title_edit->setText(loaded_images[0]->title);
 
     // as there is no modification at this point disable the save button
     save_button->setEnabled(false);
@@ -654,58 +628,8 @@ void MainWindow::saveImages() {
         filename = temp;
     }
 
-    // open up the file for writing in binary mode
-    FILE *to_write = fopen(filename.toStdString().c_str(), "wb");
-
-    // get the number of images and the pointers so we can write the images
-    DrawOperations **images = whiteboard->drawOperations();
-    const unsigned int total_images = whiteboard->totalImages();
-    const unsigned int max_images = whiteboard->maxImages();
-
-    // save the total number of images to file
-    fwrite(&total_images, sizeof(unsigned int), 1, to_write);
-    fwrite(&max_images, sizeof(unsigned int), 1, to_write);
-
-    // go through each of the images in turn
-    for(unsigned int i = 0; i < total_images; i++) {
-        // write the total ops and the max ops to file first
-        fwrite(&images[i]->total_ops, sizeof(unsigned int), 1, to_write);
-        fwrite(&images[i]->max_ops, sizeof(unsigned int), 1, to_write);
-
-        // write the total strings and max strings to the file next
-        fwrite(&images[i]->total_strings, sizeof(unsigned int), 1, to_write);
-        fwrite(&images[i]->max_strings, sizeof(unsigned int), 1, to_write);
-
-        // write all of the arrays to disk
-        fwrite(images[i]->draw_operation, sizeof(unsigned int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_x, sizeof(unsigned int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_y, sizeof(unsigned int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_red, sizeof(int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_green, sizeof(int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_blue, sizeof(int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_sizes, sizeof(int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_text_rotations, sizeof(int), images[i]->total_ops, to_write);
-        fwrite(images[i]->draw_string_index, sizeof(int), images[i]->total_ops, to_write);
-
-        // write the length of the title and the title of the image
-        QByteArray image_title = images[i]->title.toUtf8();
-        unsigned int length = (unsigned int) image_title.size();
-        const char *data = image_title.data();
-        fwrite(&length, sizeof(unsigned int), 1, to_write);
-        fwrite(data, sizeof(char), length, to_write);
-
-        // write each of the strings to the file
-        for(unsigned int j = 0; j < images[i]->total_strings; j++) {
-            image_title = images[i]->draw_text_strings[j].toUtf8();
-            length = (unsigned int) image_title.size();
-            const char *data = image_title.data();
-            fwrite(&length, sizeof(unsigned int), 1, to_write);
-            fwrite(data, sizeof(char), length, to_write);
-        }
-    }
-
-    // close the file when we are finished
-    fclose(to_write);
+    // save the whiteboard to disk
+    saveWhiteboard(filename, whiteboard->drawOperations(), whiteboard->totalImages());
 
     // disable the save button as we are now in a non modified state
     save_button->setEnabled(false);

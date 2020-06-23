@@ -210,8 +210,8 @@ void Whiteboard::setDrawOperations(DrawOperations **operations, const unsigned i
 // function that will set the filename of the image to be imported on the next draw operation
 void Whiteboard::setImportImageFilename(const QString &filename) {
     image_import_filename = filename;
-
-    std::cout << image_import_filename.toStdString() << std::endl;
+    if(QString::compare(filename, QString("")) == 0)
+        return;
 
     // get the width and height of the image for the preview purposes
     if(tool == OP_DRAW_RASTER) {

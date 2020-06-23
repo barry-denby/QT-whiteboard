@@ -381,8 +381,6 @@ void DrawOperations::doubleArrays() {
     delete operations;
     operations = new_ops;
     max_ops = new_max_ops;
-
-    std::cout << "doubled ops" << std::endl;
 }
 
 // function that will reset the entire drawoperations back to the starting state
