@@ -85,6 +85,8 @@ private:
     QWidget *generateToolbar();
     // function that will generate and attach the given tool selector to the given layout
     ToolSelector *generateToolSelector(QHBoxLayout *layout, const unsigned int operation);
+    // refactored function that will update the text on the lock button depending on the lock state of the current image
+    void updateLockButton();
     // function that will ask if the user is sure that they want to delete an image. true means the image
     // is to be deleted
     bool warnDelete();

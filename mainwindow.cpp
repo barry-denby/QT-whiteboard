@@ -366,16 +366,10 @@ void MainWindow::changeImage(int number) {
         return;
     }
 
-    // call the change image on the whiteboard itself and update the title to reflect the change
+    // call the change image on the whiteboard itself and update the title to reflect the change and update the lock button
     whiteboard->changeImage(number);
     image_title_edit->setText(whiteboard->imageTitleCurrent());
-
-    // check to see if the current image is locked or not and update the lock button to reflect this
-    if(whiteboard->imageLocked())
-        lock_button->setText("Unlock");
-    else
-        lock_button->setText("Lock");
-
+    updateLockButton();
 }
 
 // slot that will update the tools in response to a tool being changed
@@ -563,6 +557,9 @@ void MainWindow::loadImages() {
     // as there is no modification at this point disable the save button
     save_button->setEnabled(false);
 
+    // update the lock button to reflect the status of the first image
+    updateLockButton();
+
 }
 
 // slot that will load an image for drawing onto the board
@@ -656,6 +653,8 @@ void MainWindow::startNewWhiteboard() {
     total_images_label->setText("/ 1");
     image_title_edit->setText("Placeholder title");
     whiteboard->changeImageTitle(QString("Placeholder title"));
+    updateLockButton();
+    save_button->setEnabled(false);
 }
 
 // slot that will enable the save button when the title on an image has been changed
@@ -718,6 +717,15 @@ ToolSelector *MainWindow::generateToolSelector(QHBoxLayout *layout, const unsign
 
     // return the tool selector
     return tool_selector;
+}
+
+// refactored function that will update the text on the lock button depending on the lock state of the current image
+void MainWindow::updateLockButton() {
+    // check to see if the current image is locked or not and update the lock button to reflect this
+    if(whiteboard->imageLocked())
+        lock_button->setText("Unlock");
+    else
+        lock_button->setText("Lock");
 }
 
 // function that will ask if the user is sure that they want to delete an image. true means the image
