@@ -5,6 +5,8 @@
 // includes
 #include <cstdio>
 #include <iostream>
+#include <QStringList>
+#include <QRegularExpression>
 #include "constants.hpp"
 #include "fileops.hpp"
 
@@ -30,6 +32,34 @@ unsigned int determineMaxOps(unsigned int total_ops) {
     while(max_ops < total_ops)
         max_ops <<= 1;
     return max_ops;
+}
+
+// function that will determine and return a relative path given the location of the whiteboard, and the location of the image
+QString determineRelativePath(QString whiteboard_path, QString image_path) {
+    // split both strings into their respective tokens
+    QStringList whiteboard_tokens = whiteboard_path.split(QRegularExpression("/"));
+    QStringList image_tokens = image_path.split(QRegularExpression("/"));
+
+    // while the head of both lists match remove the head
+    while(QString::compare(whiteboard_tokens.front(), image_tokens.front()) == 0) {
+        whiteboard_tokens.removeFirst();
+        image_tokens.removeFirst();
+    }
+
+    for(int i = 0; i < whiteboard_tokens.size(); i++)
+        std::cout << whiteboard_tokens.at(i).toStdString() << std::endl;
+
+    for(int i = 0; i < image_tokens.size(); i++)
+        std::cout << image_tokens.at(i).toStdString() << std::endl;
+
+    // one of three things will happen depending on the size of the lists
+    if(whiteboard_tokens.size() == 1 && image_tokens.size() == 1) {
+        // the image is in the same directory as the whiteboard therefore we just need the filename
+        return image_tokens.first();
+    }
+
+    // keep the compiler happy for now
+    return QString("");
 }
 
 // function that will load a line end from disk
@@ -121,7 +151,7 @@ QString loadQString(FILE *to_read) {
 }
 
 // function that will load a raster image from disk
-void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read, QString &filename) {
     // read in the four integers
     int x = 0, y = 0, width = 0, height = 0;
     fread(&x, sizeof(int), 1, to_read);
@@ -131,7 +161,8 @@ void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *t
 
     // read in the filename and add in the draw image
     QString temp = loadQString(to_read);
-    image->addDrawRasterImage(temp, x, y, width, height);
+    QString full_path = recreateAbsolutePath(filename, temp);
+    image->addDrawRasterImage(full_path, x, y, width, height);
 }
 
 // function that will load a point square from disk
@@ -247,7 +278,7 @@ DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, un
             else if(draw_operation == DRAW_TEXT)
                 loadText(ops[i], draw_operation, to_read);
             else if(draw_operation == DRAW_RASTER)
-                loadRasterImage(ops[i], draw_operation, to_read);
+                loadRasterImage(ops[i], draw_operation, to_read, filename);
             else if(draw_operation == DRAW_SVG)
                 loadSVGImage(ops[i], draw_operation, to_read);
         }
@@ -269,6 +300,30 @@ DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, un
     *image_max = max_images;
     *image_total = total_images;
     return ops;
+}
+
+// function that will recreate an absolute path from the current file location and a relative path
+QString recreateAbsolutePath(QString whiteboard_path, QString relative_path) {
+    // the full path to be returned
+    QString full_path;
+
+    // convert the whiteboard path into a string list and remove the filename from the end
+    QStringList whiteboard_tokens = whiteboard_path.split(QRegularExpression("/"));
+    whiteboard_tokens.removeLast();
+
+    // convert the relative_path into a string list as well
+    QStringList relative_tokens = relative_path.split(QRegularExpression("/"));
+
+    // if there is only one relative token this means the file in in the current directory
+    if(relative_tokens.size() == 1) {
+        // add the token to the end of the whiteboard tokens and convert it into a full path
+        whiteboard_tokens.append(relative_tokens.first());
+        full_path = whiteboard_tokens.join("/");
+        std::cout << full_path.toStdString() << std::endl;
+    }
+
+    // keep the compiler happy for now
+    return full_path;
 }
 
 // function that will write a line end to disk
@@ -327,7 +382,7 @@ void saveQString(QString *string, FILE *to_write) {
 }
 
 // function that will write a raster image operation to disk
-void saveRasterImage(DrawOp *raster, FILE *to_write) {
+void saveRasterImage(DrawOp *raster, FILE *to_write, QString &filename) {
     // get a reference to a raster image
     RasterImage *temp = (RasterImage *) raster;
 
@@ -339,7 +394,12 @@ void saveRasterImage(DrawOp *raster, FILE *to_write) {
     fwrite(&temp->height, sizeof(int), 1, to_write);
 
     // write the string filename to disk
-    saveQString(temp->filename, to_write);
+    //saveQString(temp->filename, to_write);
+
+    // write the string filename to disk using a relative path
+    QString relative = determineRelativePath(filename, *temp->filename);
+    std::cout << relative.toStdString() << std::endl;
+    saveQString(&relative, to_write);
 }
 
 // function that will write the straight line start to disk
@@ -430,7 +490,7 @@ void saveWhiteboard(QString &filename, DrawOperations **whiteboard, unsigned int
             else if(temp->draw_operation == DRAW_TEXT)
                 saveText(temp, to_write);
             else if(temp->draw_operation == DRAW_RASTER)
-                saveRasterImage(temp, to_write);
+                saveRasterImage(temp, to_write, filename);
             else if(temp->draw_operation == DRAW_SVG)
                 saveSVGImage(temp, to_write);
         }

@@ -16,6 +16,9 @@ unsigned int determineMaxImages(unsigned int total_images);
 // function that will determine what max ops we need for the images
 unsigned int determineMaxOps(unsigned int total_ops);
 
+// function that will determine and return a relative path given the location of the whiteboard, and the location of the image
+QString determineRelativePath(QString whiteboard_path, QString image_path);
+
 // function that will load a line end from disk
 void loadLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
 
@@ -38,7 +41,7 @@ void loadPointX(DrawOperations *image, unsigned int draw_operation, FILE *to_rea
 QString loadQString(FILE *to_read);
 
 // function that will load a raster image from disk
-void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read, QString &filename);
 
 // function that will load a straight line start from disk
 void loadStraightLineStart(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
@@ -55,6 +58,9 @@ void loadText(DrawOperations *image, unsigned int draw_operation, FILE *to_read)
 // function that will load a whiteboard from disk, this takes in points to variables where
 // the max images and total images are stored
 DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, unsigned int *image_max);
+
+// function that will recreate an absolute path from the current file location and a relative path
+QString recreateAbsolutePath(QString whiteboard_path, QString relative_path);
 
 // function that will write a line end to disk
 void saveLineEnd(DrawOp *point, FILE *to_write);
@@ -79,7 +85,7 @@ void savePointX(DrawOp *point, FILE *to_write);
 void saveQString(QString *string, FILE *to_write);
 
 // function that will write a raster image operation to disk
-void saveRasterImage(DrawOp *raster, FILE *to_write);
+void saveRasterImage(DrawOp *raster, FILE *to_write, QString &filename);
 
 // function that will write the straight line start to disk
 void saveStraightLineStart(DrawOp *point, FILE *to_write);
