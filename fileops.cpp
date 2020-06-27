@@ -213,6 +213,14 @@ DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, un
         unsigned int max_ops = determineMaxOps(total_ops);
         ops[i] = (DrawOperations *) new DrawOperations(max_ops);
 
+        // read in the locked op and the locked state for this image
+        unsigned int locked_ops = 0;
+        bool locked = false;
+        fread(&locked_ops, sizeof(unsigned int), 1, to_read);
+        fread(&locked, sizeof(bool), 1, to_read);
+        ops[i]->locked = locked;
+        ops[i]->locked_op = locked_ops;
+
         // go through each of the ops in turn and read them in
         for(unsigned int j = 0; j < total_ops; j++) {
             // read in the draw op from disk
@@ -392,8 +400,10 @@ void saveWhiteboard(QString &filename, DrawOperations **whiteboard, unsigned int
 
     // go through each of the images in turn
     for(unsigned int i = 0; i < total_images; i++) {
-        // write the total ops and max ops to the file first
+        // write the total ops, the lock ops and lock state to the file first
         fwrite(&whiteboard[i]->total_ops, sizeof(unsigned int), 1, to_write);
+        fwrite(&whiteboard[i]->locked_op, sizeof(unsigned int), 1, to_write);
+        fwrite(&whiteboard[i]->locked, sizeof(bool), 1, to_write);
 
         // go through each of the ops in the image and write them to disk depnding on what ops we have
         for(unsigned int j = 0; j < whiteboard[i]->total_ops; j++) {
