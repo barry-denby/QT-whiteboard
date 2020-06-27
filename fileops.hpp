@@ -50,7 +50,7 @@ void loadStraightLineStart(DrawOperations *image, unsigned int draw_operation, F
 void loadStraightLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
 
 // function that will load an SVG image from disk
-void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read, QString &filename);
 
 // function that will load a text op from disk
 void loadText(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
@@ -94,7 +94,7 @@ void saveStraightLineStart(DrawOp *point, FILE *to_write);
 void saveStraightLineEnd(DrawOp *point, FILE *to_write);
 
 // function that will write an SVG image to disk
-void saveSVGImage(DrawOp *svg, FILE *to_write);
+void saveSVGImage(DrawOp *svg, FILE *to_write, QString &filename);
 
 // function that will write a text operation to disk
 void saveText(DrawOp *text, FILE *to_write);

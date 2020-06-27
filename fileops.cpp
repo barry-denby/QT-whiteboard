@@ -69,12 +69,8 @@ QString determineRelativePath(QString whiteboard_path, QString image_path) {
 
         // join all of the tokens together with / inbetween
         QString relative_path = relative_tokens.join("/");
-        std::cout << relative_path.toStdString() << std::endl;
         return relative_path;
     }
-
-    // keep the compiler happy for now
-    return QString("");
 }
 
 // function that will load a line end from disk
@@ -205,7 +201,7 @@ void loadStraightLineEnd(DrawOperations *image, unsigned int draw_operation, FIL
 }
 
 // function that will load an SVG image from disk
-void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read, QString &filename) {
     // read in the four integers
     int x = 0, y = 0, width = 0, height = 0;
     fread(&x, sizeof(int), 1, to_read);
@@ -215,7 +211,8 @@ void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_r
 
     // read in the filename and add in the draw image
     QString temp = loadQString(to_read);
-    image->addDrawRasterImage(temp, x, y, width, height);
+    QString full_path = recreateAbsolutePath(filename, temp);
+    image->addDrawSVGImage(full_path, x, y, width, height);
 }
 
 // function that will load a text op from disk
@@ -295,7 +292,7 @@ DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, un
             else if(draw_operation == DRAW_RASTER)
                 loadRasterImage(ops[i], draw_operation, to_read, filename);
             else if(draw_operation == DRAW_SVG)
-                loadSVGImage(ops[i], draw_operation, to_read);
+                loadSVGImage(ops[i], draw_operation, to_read, filename);
         }
     }
 
@@ -329,9 +326,6 @@ QString recreateAbsolutePath(QString whiteboard_path, QString relative_path) {
     // convert the relative_path into a string list as well
     QStringList relative_tokens = relative_path.split(QRegularExpression("/"));
 
-    std::cout << whiteboard_path.toStdString() << std::endl;
-    std::cout << relative_path.toStdString() << std::endl;
-
     // if there is only one relative token this means the file in in the current directory
     if(relative_tokens.size() == 1) {
         // add the token to the end of the whiteboard tokens and convert it into a full path
@@ -350,7 +344,6 @@ QString recreateAbsolutePath(QString whiteboard_path, QString relative_path) {
     }
 
     // keep the compiler happy for now
-    std::cout << full_path.toStdString() << std::endl;
     return full_path;
 }
 
@@ -421,12 +414,8 @@ void saveRasterImage(DrawOp *raster, FILE *to_write, QString &filename) {
     fwrite(&temp->width, sizeof(int), 1, to_write);
     fwrite(&temp->height, sizeof(int), 1, to_write);
 
-    // write the string filename to disk
-    //saveQString(temp->filename, to_write);
-
     // write the string filename to disk using a relative path
     QString relative = determineRelativePath(filename, *temp->filename);
-    std::cout << relative.toStdString() << std::endl;
     saveQString(&relative, to_write);
 }
 
@@ -445,7 +434,7 @@ void saveStraightLineEnd(DrawOp *point, FILE *to_write) {
 }
 
 // function that will write an SVG image to disk
-void saveSVGImage(DrawOp *svg, FILE *to_write) {
+void saveSVGImage(DrawOp *svg, FILE *to_write, QString &filename) {
     // get a reference to the SVG image
     SVGImage *temp = (SVGImage *) svg;
 
@@ -457,7 +446,8 @@ void saveSVGImage(DrawOp *svg, FILE *to_write) {
     fwrite(&temp->height, sizeof(int), 1, to_write);
 
     // write the string filename to disk
-    saveQString(temp->filename, to_write);
+    QString relative = determineRelativePath(filename, *temp->filename);
+    saveQString(&relative, to_write);
 }
 
 // function that will write a text operation to disk
@@ -520,7 +510,7 @@ void saveWhiteboard(QString &filename, DrawOperations **whiteboard, unsigned int
             else if(temp->draw_operation == DRAW_RASTER)
                 saveRasterImage(temp, to_write, filename);
             else if(temp->draw_operation == DRAW_SVG)
-                saveSVGImage(temp, to_write);
+                saveSVGImage(temp, to_write, filename);
         }
     }
 
