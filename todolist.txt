@@ -1,5 +1,4 @@
 Features to add:
-    done - add in the ability to lock drawing upto a point in an image to prevent accidental undo
 
 features to add in the long future:
     - figure out how to draw a tool wheel for selecting tools in place
@@ -8,5 +7,4 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
-    - locking and unlocking needs to work across image changes
-    - locking and unlocking needs to be saved and restored from files
+    - references to images should use a relative path if possible. otherwise all assets must remain in the same static location
