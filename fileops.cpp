@@ -46,11 +46,11 @@ QString determineRelativePath(QString whiteboard_path, QString image_path) {
         image_tokens.removeFirst();
     }
 
-    for(int i = 0; i < whiteboard_tokens.size(); i++)
-        std::cout << whiteboard_tokens.at(i).toStdString() << std::endl;
+    //for(int i = 0; i < whiteboard_tokens.size(); i++)
+    //    std::cout << whiteboard_tokens.at(i).toStdString() << std::endl;
 
-    for(int i = 0; i < image_tokens.size(); i++)
-        std::cout << image_tokens.at(i).toStdString() << std::endl;
+    //for(int i = 0; i < image_tokens.size(); i++)
+    //    std::cout << image_tokens.at(i).toStdString() << std::endl;
 
     // one of three things will happen depending on the size of the lists
     if(whiteboard_tokens.size() == 1 && image_tokens.size() == 1) {
