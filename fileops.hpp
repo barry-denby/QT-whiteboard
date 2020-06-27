@@ -10,8 +10,51 @@
 
 // function prototypes
 
-// function that will load a whiteboard from disk
-DrawOperations **loadWhiteboard(QString &filename);
+// function that will determine what max images value was used for this total images
+unsigned int determineMaxImages(unsigned int total_images);
+
+// function that will determine what max ops we need for the images
+unsigned int determineMaxOps(unsigned int total_ops);
+
+// function that will load a line end from disk
+void loadLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a line point from disk
+void loadLinePoint(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a line end from disk
+void loadLineStart(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a point circle from disk
+void loadPointCircle(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a point square from disk
+void loadPointSquare(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load an x point from disk
+void loadPointX(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a QString from disk and will return it
+QString loadQString(FILE *to_read);
+
+// function that will load a raster image from disk
+void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a straight line start from disk
+void loadStraightLineStart(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a straight line end from disk
+void loadStraightLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load an SVG image from disk
+void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a text op from disk
+void loadText(DrawOperations *image, unsigned int draw_operation, FILE *to_read);
+
+// function that will load a whiteboard from disk, this takes in points to variables where
+// the max images and total images are stored
+DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, unsigned int *image_max);
 
 // function that will write a line end to disk
 void saveLineEnd(DrawOp *point, FILE *to_write);

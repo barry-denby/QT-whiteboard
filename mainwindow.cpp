@@ -538,50 +538,20 @@ void MainWindow::loadImages() {
         return;
 
     // read in the whiteboard
-    DrawOperations **board = loadWhiteboard(filename);
-
-    // // open up the file for reading in binary mode
-    // FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
-    //
-    // // read the total number from the file and then allocate the necessary array of pointers for the images
-    // unsigned int total_images = 0, max_images = 0;
-    // fread(&total_images, sizeof(unsigned int), 1, to_read);
-    // fread(&max_images, sizeof(unsigned int), 1, to_read);
-    // DrawOperations **loaded_images = (DrawOperations **) new DrawOperations *[max_images];
-    //
-    // // go through each of the images in turn and read them in
-    // for(unsigned int i = 0; i < total_images; i++) {
-    //     // first read in the total ops and the max ops for this image
-    //     unsigned int total_ops = 0, max_ops = 0;
-    //     fread(&total_ops, sizeof(unsigned int), 1, to_read);
-    //     fread(&max_ops, sizeof(unsigned int), 1, to_read);
-    //
-    //     // read the length of the title and the title of the image
-    //     char *image_title = new char[1024];
-    //     unsigned int title_length = 0;
-    //     fread(&title_length, sizeof(unsigned int), 1, to_read);
-    //     fread(image_title, sizeof(char), title_length, to_read);
-    //     QString title = QString::fromUtf8(QByteArray(image_title));
-    //     loaded_images[i]->title = title;
-    //     delete image_title;
-    // }
-
-    // close the file for reading
-    //fclose(to_read);
-
-    // fill out the spare images with empty draw operations as the whiteboard will expect them to be allocated already
-    //for(unsigned int i = total_images; i < max_images; i++)
-    //    loaded_images[i] = (DrawOperations *) new DrawOperations();
+    unsigned int total_images = 0;
+    unsigned int max_images = 0;
+    DrawOperations **board = loadWhiteboard(filename, &total_images, &max_images);
 
     // set the images on the whiteboard and reset its current image to one
-    //whiteboard->setDrawOperations(loaded_images, total_images, max_images);
-    //image_selector_spinbox->setRange(1, total_images);
-    //image_selector_spinbox->setValue(1);
-    //total_images_label->setText(QString("/ %1").arg(total_images));
-    //image_title_edit->setText(loaded_images[0]->title);
+    whiteboard->setDrawOperations(board, total_images, max_images);
+    image_selector_spinbox->setRange(1, total_images);
+    image_selector_spinbox->setValue(1);
+    total_images_label->setText(QString("/ %1").arg(total_images));
+    image_title_edit->setText(board[0]->title);
 
     // as there is no modification at this point disable the save button
     save_button->setEnabled(false);
+
 }
 
 // slot that will load an image for drawing onto the board

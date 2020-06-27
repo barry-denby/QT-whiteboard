@@ -4,45 +4,262 @@
 
 // includes
 #include <cstdio>
+#include <iostream>
 #include "constants.hpp"
 #include "fileops.hpp"
 
 // functions
 
+// function that will determine what max images value was used for this total images
+unsigned int determineMaxImages(unsigned int total_images) {
+    // the calculated max images set to its base value
+    unsigned max_images = 16;
+
+    // figure out the total number of images we need and return it
+    while(max_images < total_images)
+        max_images <<= 1;
+    return max_images;
+}
+
+// function that will determine what max ops we need for the images
+unsigned int determineMaxOps(unsigned int total_ops) {
+    // the calculated max ops set to its base value
+    unsigned int max_ops = 1024;
+
+    // figure out the total number of ops we need and return it
+    while(max_ops < total_ops)
+        max_ops <<= 1;
+    return max_ops;
+}
+
+// function that will load a line end from disk
+void loadLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the line end and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawFreehandEnd(x, y, colour, size);
+}
+
+// function that will load a line point from disk
+void loadLinePoint(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the line end and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawFreehandMid(x, y, colour, size);
+}
+
+// function that will load a line end from disk
+void loadLineStart(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the line start and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawFreehandStart(x, y, colour, size);
+}
+
+// function that will load a point circle from disk
+void loadPointCircle(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the point circle and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawPointCircle(x, y, colour, size);
+}
+
+// function that will load a point square from disk
+void loadPointSquare(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the point square and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawPointSquare(x, y, colour, size);
+}
+
+// function that will load an x point from disk
+void loadPointX(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the point x and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawPointX(x, y, colour, size);
+}
+
+// function that will load a QString from disk and will return it
+QString loadQString(FILE *to_read) {
+    // read in the length of the string from disk
+    unsigned int length = 0;
+    fread(&length, sizeof(unsigned int), 1, to_read);
+
+    // allocate the necessary space for the character data and read it in
+    char *data = new char[length];
+    fread(data, sizeof(char), length, to_read);
+
+    // get and return the qstring. make sure to deallocate the array before returning
+    QString temp = QString::fromUtf8(data, length);
+    //delete data;
+    return temp;
+}
+
+// function that will load a raster image from disk
+void loadRasterImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in the four integers
+    int x = 0, y = 0, width = 0, height = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&width, sizeof(int), 1, to_read);
+    fread(&height, sizeof(int), 1, to_read);
+
+    // read in the filename and add in the draw image
+    QString temp = loadQString(to_read);
+    image->addDrawRasterImage(temp, x, y, width, height);
+}
+
+// function that will load a point square from disk
+void loadStraightLineStart(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the straight line start and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawStraightLineStart(x, y, colour, size);
+}
+
+// function that will load a straight line end from disk
+void loadStraightLineEnd(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in all four values for the straight line end and add it into the image
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    image->addDrawStraightLineEnd(x, y, colour, size);
+}
+
+// function that will load an SVG image from disk
+void loadSVGImage(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in the four integers
+    int x = 0, y = 0, width = 0, height = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&width, sizeof(int), 1, to_read);
+    fread(&height, sizeof(int), 1, to_read);
+
+    // read in the filename and add in the draw image
+    QString temp = loadQString(to_read);
+    image->addDrawRasterImage(temp, x, y, width, height);
+}
+
+// function that will load a text op from disk
+void loadText(DrawOperations *image, unsigned int draw_operation, FILE *to_read) {
+    // read in the five integer values from disk
+    unsigned int colour = 0;
+    int x = 0, y = 0, size = 0, rotation = 0;
+    fread(&x, sizeof(int), 1, to_read);
+    fread(&y, sizeof(int), 1, to_read);
+    fread(&colour, sizeof(unsigned int), 1, to_read);
+    fread(&size, sizeof(int), 1, to_read);
+    fread(&rotation, sizeof(int), 1, to_read);
+
+    // read in the text and add in the text draw operation
+    QString temp = loadQString(to_read);
+    image->addDrawText(temp, x, y, colour, size, rotation);
+
+}
+
 // function that will load a whiteboard from disk
-DrawOperations **loadWhiteboard(QString &filename) {
+DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, unsigned int *image_max) {
     // the draw operations that we will return to the caller
     DrawOperations **ops = NULL;
 
-    // read in the the total number of images
+    // open the file for reading
+    FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
 
-    // // open up the file for reading in binary mode
-    // FILE *to_read = fopen(filename.toStdString().c_str(), "rb");
-    //
-    // // read the total number from the file and then allocate the necessary array of pointers for the images
-    // unsigned int total_images = 0, max_images = 0;
-    // fread(&total_images, sizeof(unsigned int), 1, to_read);
-    // fread(&max_images, sizeof(unsigned int), 1, to_read);
-    // DrawOperations **loaded_images = (DrawOperations **) new DrawOperations *[max_images];
-    //
-    // // go through each of the images in turn and read them in
-    // for(unsigned int i = 0; i < total_images; i++) {
-    //     // first read in the total ops and the max ops for this image
-    //     unsigned int total_ops = 0, max_ops = 0;
-    //     fread(&total_ops, sizeof(unsigned int), 1, to_read);
-    //     fread(&max_ops, sizeof(unsigned int), 1, to_read);
-    //
-    //     // read the length of the title and the title of the image
-    //     char *image_title = new char[1024];
-    //     unsigned int title_length = 0;
-    //     fread(&title_length, sizeof(unsigned int), 1, to_read);
-    //     fread(image_title, sizeof(char), title_length, to_read);
-    //     QString title = QString::fromUtf8(QByteArray(image_title));
-    //     loaded_images[i]->title = title;
-    //     delete image_title;
-    // }
+    // read in the total number of images for this file
+    unsigned int total_images = 0;
+    fread(&total_images, sizeof(unsigned int), 1, to_read);
 
-    // return the whiteboard when we are finished with it
+    // figure out what our max images is and then allocate our draw images
+    unsigned int max_images = determineMaxImages(total_images);
+    ops = (DrawOperations **) new DrawOperations *[max_images];
+
+    // go through each of the images in turn and read it in
+    for(unsigned int i = 0; i < total_images; i++) {
+        // read in the total number of ops for this image and then the required max ops, then allocate the necessary image
+        unsigned int total_ops = 0;
+        fread(&total_ops, sizeof(unsigned int), 1, to_read);
+        unsigned int max_ops = determineMaxOps(total_ops);
+        ops[i] = (DrawOperations *) new DrawOperations(max_ops, 0, 0);
+
+        // go through each of the ops in turn and read them in
+        for(unsigned int j = 0; j < total_ops; j++) {
+            // read in the draw op from disk
+            unsigned int draw_operation = 0;
+            fread(&draw_operation, sizeof(unsigned int), 1, to_read);
+
+            // see what draw op we have and read in as appropriate
+            if(draw_operation == POINT_CIRCLE)
+                loadPointCircle(ops[i], draw_operation, to_read);
+            else if(draw_operation == POINT_SQUARE)
+                loadPointSquare(ops[i], draw_operation, to_read);
+            else if(draw_operation == POINT_X)
+                loadPointX(ops[i], draw_operation, to_read);
+            else if(draw_operation == STRAIGHT_LINE_START)
+                loadStraightLineStart(ops[i], draw_operation, to_read);
+            else if(draw_operation == STRAIGHT_LINE_END)
+                loadStraightLineEnd(ops[i], draw_operation, to_read);
+            else if(draw_operation == LINE_END)
+                loadLineEnd(ops[i], draw_operation, to_read);
+            else if(draw_operation == LINE_POINT)
+                loadLinePoint(ops[i], draw_operation, to_read);
+            else if(draw_operation == LINE_START)
+                loadLineStart(ops[i], draw_operation, to_read);
+            else if(draw_operation == DRAW_TEXT)
+                loadText(ops[i], draw_operation, to_read);
+            else if(draw_operation == DRAW_RASTER)
+                loadRasterImage(ops[i], draw_operation, to_read);
+            else if(draw_operation == DRAW_SVG)
+                loadSVGImage(ops[i], draw_operation, to_read);
+        }
+    }
+
+    // read in the titles for each of the images
+    for(unsigned int i = 0; i < total_images; i++) {
+        ops[i]->title = loadQString(to_read);
+    }
+
+    // close the file when we are finished
+    fclose(to_read);
+
+    // any images that have not been loaded fill them with empty images
+    for(unsigned int i = total_images; i < max_images; i++)
+        ops[i] = (DrawOperations *) new DrawOperations();
+
+    // return the images, max images, and total images
+    *image_max = max_images;
+    *image_total = total_images;
     return ops;
 }
 
@@ -204,6 +421,8 @@ void saveWhiteboard(QString &filename, DrawOperations **whiteboard, unsigned int
                 saveText(temp, to_write);
             else if(temp->draw_operation == DRAW_RASTER)
                 saveRasterImage(temp, to_write);
+            else if(temp->draw_operation == DRAW_SVG)
+                saveSVGImage(temp, to_write);
         }
     }
 
