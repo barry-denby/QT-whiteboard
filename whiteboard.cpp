@@ -185,6 +185,11 @@ const QString &Whiteboard::imageTitleCurrent() {
     return images[image_current]->title;
 }
 
+// function that will set the lock on the current image
+void Whiteboard::lockImage() {
+    images[image_current]->lockImage();
+}
+
 // function that will return the maximum number of images in this whiteboard
 const unsigned int Whiteboard::maxImages() {
     return image_max;
@@ -245,6 +250,11 @@ void Whiteboard::resetWhiteBoard() {
 // function that states how many images in total this whiteboard has thus far
 const unsigned int Whiteboard::totalImages() {
     return image_total;
+}
+
+// function that unlocks the current image
+void Whiteboard::unlockImage() {
+    images[image_current]->unlockImage();
 }
 
 // public slot that will change the current draw colour

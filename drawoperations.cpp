@@ -10,14 +10,14 @@
 
 // default constructor for the class that will initialise a 4K sized draw operations object
 DrawOperations::DrawOperations()
-: total_ops(0), max_ops(1024), title(QString(""))
+: total_ops(0), max_ops(1024), title(QString("")), locked(false), locked_op(0)
 {
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];
 }
 
 DrawOperations::DrawOperations(const unsigned int max_ops)
-: total_ops(0), max_ops(max_ops), title(QString(""))
+: total_ops(0), max_ops(max_ops), title(QString("")), locked(false), locked_op(0)
 {
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];
@@ -212,11 +212,22 @@ void DrawOperations::addDrawSVGImage(const QString &file, int x, int y, int widt
         doubleArrays();
 }
 
+// locks the current image to the current draw ops
+void DrawOperations::lockImage() {
+    // set the lock status and lock it to the current set of ops
+    locked = true;
+    locked_op = total_ops;
+}
+
 // refactored function that will remove the last set of draw data from the arrays
 void DrawOperations::removeLastDrawData() {
     // if the next op is already zero then we cant remove anything
     if(total_ops == 0)
          return;
+
+    // if the image is locked and we are at the locked op then do nothing either
+    if(locked && locked_op == total_ops)
+        return;
 
     // reduce total_ops by one to line up on the data we are removing
     total_ops--;
@@ -393,4 +404,10 @@ void DrawOperations::reset() {
 // function that will set the title of this image
 void DrawOperations::setTitle(const QString& new_title) {
     title = new_title;
+}
+
+// locks the current image to the current draw ops
+void DrawOperations::unlockImage() {
+    locked = false;
+    locked_op = 0;
 }

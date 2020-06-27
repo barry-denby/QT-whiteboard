@@ -172,6 +172,8 @@ public:
     void addDrawRasterImage(const QString &file, int x, int y, int width, int height);
     // adds in a drawn vector image to the draw operations as this needs to be handled differently to other operations
     void addDrawSVGImage(const QString &file, int x, int y, int width, int height);
+    // locks the current image to the current draw ops
+    void lockImage();
     // removes the last set of draw data from this draw operations
     void removeLastDrawData();
     // removes the current point circle data
@@ -196,6 +198,8 @@ public:
     void reset();
     // function that will set the title of this image
     void setTitle(const QString& new_title);
+    // function that will unlock the image
+    void unlockImage();
     // how many operations in total in this draw operations
     unsigned int total_ops;
     // how many operations we can hold at the moment
@@ -204,6 +208,9 @@ public:
     QString title;
     // list of draw operations that is held by this object
     DrawOp *operations;
+    // tells us if a lock has been set on this image and if so where
+    bool locked;
+    unsigned int locked_op;
 };
 
 #endif // _DRAWOPERATIONS_HPP

@@ -584,11 +584,13 @@ void MainWindow::lockUnlockImage() {
     // see what is currently written as the button title and react to that
     if(QString::compare(QString("Lock"), lock_button->text()) == 0) {
         // the user is asking us to lock the image at the current ops
+        whiteboard->lockImage();
 
         // change the title of the button when finished
         lock_button->setText("Unlock");
     } else {
         // the user is asking us to unlock the image
+        whiteboard->unlockImage();
 
         // change the title of the button when finished
         lock_button->setText("Lock");

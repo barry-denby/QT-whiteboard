@@ -39,6 +39,8 @@ public:
     QImage *exportBoard(const unsigned int board);
     // function that will return the title of the current image
     const QString &imageTitleCurrent();
+    // function that will set the lock on the current image
+    void lockImage();
     // function that will return the maximum number of images in this whiteboard
     const unsigned int maxImages();
     // function that will replace the current set of images with this set of images
@@ -49,6 +51,8 @@ public:
     void resetWhiteBoard();
     // function that states how many images in total this whiteboard has thus far
     const unsigned int totalImages();
+    // function that unlocks the current image
+    void unlockImage();
 // public slots of the class
 public slots:
     // slot that will change the current draw colour to the indicated colour
