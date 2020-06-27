@@ -647,6 +647,9 @@ void MainWindow::startNewWhiteboard() {
     if(result == QMessageBox::No)
         return;
 
+    // set the filename to nothing
+    filename = QString("");
+
     // ask the whiteboard to reset itself. then reset the UI to reflect this
     whiteboard->resetWhiteBoard();
     image_selector_spinbox->setRange(1, 1);
