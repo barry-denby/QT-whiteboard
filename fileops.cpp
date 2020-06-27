@@ -56,6 +56,21 @@ QString determineRelativePath(QString whiteboard_path, QString image_path) {
     if(whiteboard_tokens.size() == 1 && image_tokens.size() == 1) {
         // the image is in the same directory as the whiteboard therefore we just need the filename
         return image_tokens.first();
+    } else {
+        // get a new string list as we need to construct a full relative path for this
+        QStringList relative_tokens;
+
+        // remove the last item in the whiteboard_tokens as this is the filename and not needed for the relative path
+        // then add in a .. for every token that is remaining in the list then append all the tokens in the image_tokens list
+        whiteboard_tokens.removeLast();
+        for(int i = 0; i < whiteboard_tokens.size(); i++)
+            relative_tokens.append("..");
+        relative_tokens.append(image_tokens);
+
+        // join all of the tokens together with / inbetween
+        QString relative_path = relative_tokens.join("/");
+        std::cout << relative_path.toStdString() << std::endl;
+        return relative_path;
     }
 
     // keep the compiler happy for now
@@ -314,15 +329,28 @@ QString recreateAbsolutePath(QString whiteboard_path, QString relative_path) {
     // convert the relative_path into a string list as well
     QStringList relative_tokens = relative_path.split(QRegularExpression("/"));
 
+    std::cout << whiteboard_path.toStdString() << std::endl;
+    std::cout << relative_path.toStdString() << std::endl;
+
     // if there is only one relative token this means the file in in the current directory
     if(relative_tokens.size() == 1) {
         // add the token to the end of the whiteboard tokens and convert it into a full path
         whiteboard_tokens.append(relative_tokens.first());
         full_path = whiteboard_tokens.join("/");
-        std::cout << full_path.toStdString() << std::endl;
+    } else {
+        // while there are .. in the relative tokens remove parts of the path from the whiteboard path
+        while(QString::compare(relative_tokens.first(), QString("..")) == 0) {
+            relative_tokens.removeFirst();
+            whiteboard_tokens.removeLast();
+        }
+
+        // add the rest of the relative path to the whiteboard path to recreate the full path
+        whiteboard_tokens.append(relative_tokens);
+        full_path = whiteboard_tokens.join("/");
     }
 
     // keep the compiler happy for now
+    std::cout << full_path.toStdString() << std::endl;
     return full_path;
 }
 
