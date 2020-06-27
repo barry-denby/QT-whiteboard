@@ -211,7 +211,7 @@ DrawOperations **loadWhiteboard(QString &filename, unsigned int *image_total, un
         unsigned int total_ops = 0;
         fread(&total_ops, sizeof(unsigned int), 1, to_read);
         unsigned int max_ops = determineMaxOps(total_ops);
-        ops[i] = (DrawOperations *) new DrawOperations(max_ops, 0, 0);
+        ops[i] = (DrawOperations *) new DrawOperations(max_ops);
 
         // go through each of the ops in turn and read them in
         for(unsigned int j = 0; j < total_ops; j++) {
@@ -433,18 +433,4 @@ void saveWhiteboard(QString &filename, DrawOperations **whiteboard, unsigned int
 
     // close the file when we are finished
     fclose(to_write);
-
-    // // go through each of the images in turn
-    // for(unsigned int i = 0; i < total_images; i++) {
-    //     // write the length of the title and the title of the image
-    //     QByteArray image_title = images[i]->title.toUtf8();
-    //     unsigned int length = (unsigned int) image_title.size();
-    //     const char *data = image_title.data();
-    //     fwrite(&length, sizeof(unsigned int), 1, to_write);
-    //     fwrite(data, sizeof(char), length, to_write);
-    // }
-    //
-    // // close the file when we are finished
-    // fclose(to_write);
-
 }

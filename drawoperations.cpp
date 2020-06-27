@@ -10,14 +10,14 @@
 
 // default constructor for the class that will initialise a 4K sized draw operations object
 DrawOperations::DrawOperations()
-: total_ops(0), max_ops(1024), total_strings(0), max_strings(8), title(QString("")), total_images(0), max_images(8)
+: total_ops(0), max_ops(1024), title(QString(""))
 {
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];
 }
 
-DrawOperations::DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images)
-: total_ops(0), max_ops(max_ops), total_strings(0), max_strings(max_strings), title(QString("")), total_images(0), max_images(max_images)
+DrawOperations::DrawOperations(const unsigned int max_ops)
+: total_ops(0), max_ops(max_ops), title(QString(""))
 {
     // allocate the array of draw operations
     operations = new DrawOp[max_ops];

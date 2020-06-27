@@ -147,7 +147,7 @@ public:
     DrawOperations();
     // constructor that will make a draw operations object with the given number of objects and
     // a maximum number of strings
-    DrawOperations(const unsigned int max_ops, const unsigned int max_strings, const unsigned int max_images);
+    DrawOperations(const unsigned int max_ops);
     // destructor for the class
     ~DrawOperations();
     // adds draw data for the start point of a freehand line
@@ -196,38 +196,12 @@ public:
     void reset();
     // function that will set the title of this image
     void setTitle(const QString& new_title);
-    // array containing the list of draw operations
-    unsigned int *draw_operation;
-    // arrays containing the list of x and y coordinates
-    unsigned int *draw_x;
-    unsigned int *draw_y;
-    // colours of all the draw operations
-    int *draw_red;
-    int *draw_green;
-    int *draw_blue;
-    // the size of each draw operation
-    int *draw_sizes;
-    // the rotation of each text operation
-    int *draw_text_rotations;
-    // index to the string that is to be rendered
-    int *draw_string_index;
-    // an array of QStrings that will hold all the text we are displaying
-    QString *draw_text_strings;
     // how many operations in total in this draw operations
     unsigned int total_ops;
     // how many operations we can hold at the moment
     unsigned int max_ops;
-    // how many strings and the max number of strings we have
-    unsigned int total_strings;
-    unsigned int max_strings;
     // the title of the current image
     QString title;
-    // how many draw images do we have and the storage and max
-    QString *image_locations;
-    unsigned int total_images;
-    unsigned int max_images;
-    // the image indices we are using
-    unsigned int *image_indicies;
     // list of draw operations that is held by this object
     DrawOp *operations;
 };
