@@ -64,6 +64,11 @@ MainWindow::MainWindow(QWidget *parent)
     main_toolbar_layout->addWidget(export_png_button);
     QObject::connect(export_png_button, SIGNAL(clicked()), this, SLOT(exportPNG()));
 
+    // add in a button to lock and unlock the undo for the current image
+    lock_button = new QPushButton("Lock");
+    main_toolbar_layout->addWidget(lock_button);
+    QObject::connect(lock_button, SIGNAL(clicked()), this, SLOT(lockUnlockImage()));
+
     // add in a button for adding an image
     QPushButton *add_button = new QPushButton("Add image");
     main_toolbar_layout->addWidget(add_button);
@@ -572,6 +577,22 @@ void MainWindow::loadJpgPngSvgImage() {
 
     // set the filename on the whiteboard
     whiteboard->setImportImageFilename(filename);
+}
+
+// slot that will lock and unlock the current image
+void MainWindow::lockUnlockImage() {
+    // see what is currently written as the button title and react to that
+    if(QString::compare(QString("Lock"), lock_button->text()) == 0) {
+        // the user is asking us to lock the image at the current ops
+
+        // change the title of the button when finished
+        lock_button->setText("Unlock");
+    } else {
+        // the user is asking us to unlock the image
+
+        // change the title of the button when finished
+        lock_button->setText("Lock");
+    }
 }
 
 // slot that will go through the process of saving a whiteboard to disk

@@ -65,6 +65,8 @@ private slots:
     void loadImages();
     // slot that will load an image for drawing onto the board
     void loadJpgPngSvgImage();
+    // slot that will lock and unlock the current image
+    void lockUnlockImage();
     // slot that will run through the process of saving an image
     void saveImages();
     // slot that will start a new whiteboard but will warn the user beforehand
@@ -118,6 +120,8 @@ private:
     QString image_filename;
     // are we loading a raster image or an SVG
     bool load_raster;
+    // lock button on the ui
+    QPushButton *lock_button;
 };
 
 #endif // _MAINWINDOW_HPP
