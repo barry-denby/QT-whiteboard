@@ -37,6 +37,8 @@ public:
     // function that will run the draw commands on a QImage and will return it
     // this is for exporting purposes
     QImage *exportBoard(const unsigned int board);
+    // function that will tell us if the current image is locked
+    const bool imageLocked();
     // function that will return the title of the current image
     const QString &imageTitleCurrent();
     // function that will set the lock on the current image

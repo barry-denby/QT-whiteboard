@@ -370,6 +370,12 @@ void MainWindow::changeImage(int number) {
     whiteboard->changeImage(number);
     image_title_edit->setText(whiteboard->imageTitleCurrent());
 
+    // check to see if the current image is locked or not and update the lock button to reflect this
+    if(whiteboard->imageLocked())
+        lock_button->setText("Unlock");
+    else
+        lock_button->setText("Lock");
+
 }
 
 // slot that will update the tools in response to a tool being changed

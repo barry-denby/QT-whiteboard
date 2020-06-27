@@ -180,6 +180,12 @@ QImage *Whiteboard::exportBoard(const unsigned int board) {
     return image;
 }
 
+// function that will tell us if the current image is locked
+const bool Whiteboard::imageLocked() {
+    // return the locked state of the current image
+    return images[image_current]->locked;
+}
+
 // function that will return the title of the current image
 const QString &Whiteboard::imageTitleCurrent() {
     return images[image_current]->title;
