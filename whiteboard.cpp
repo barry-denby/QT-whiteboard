@@ -48,6 +48,10 @@ Whiteboard::Whiteboard(QWidget* parent)
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_T), this, SLOT(requestTitleFocusShortcut()));
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_G), this, SLOT(requestTextFocusShortcut()));
 
+    // set the shortcuts for requesting rotation to the right and rotation to the left
+    new QShortcut(QKeySequence(Qt::Key_C), this, SLOT(requestRotateRightShortcut()));
+    new QShortcut(QKeySequence(Qt::Key_X), this, SLOT(requestRotateLeftShortcut()));
+
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
 
@@ -471,6 +475,16 @@ void Whiteboard::goBackToolShortcut() {
 // slot that will emit a signal to increase the size or thickness of the current draw op
 void Whiteboard::increaseSizeShortcut() {
     emit increaseSize();
+}
+
+// slot that will request the application increases rotation to the right
+void Whiteboard::requestRotateRightShortcut() {
+    emit requestRotateRight();
+}
+
+// slot that will request the application decreases rotation to the left
+void Whiteboard::requestRotateLeftShortcut() {
+    emit requestRotateLeft();
 }
 
 // slot that will request the application to save the whiteboard

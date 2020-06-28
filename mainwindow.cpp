@@ -119,6 +119,8 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(whiteboard, SIGNAL(modified()), this, SLOT(boardModified()));
     QObject::connect(whiteboard, SIGNAL(requestTitleFocus()), this, SLOT(titleKeyboardFocus()));
     QObject::connect(whiteboard, SIGNAL(requestTextFocus()), this, SLOT(textKeyboardFocus()));
+    QObject::connect(whiteboard, SIGNAL(requestRotateLeft()), this, SLOT(rotateLeft()));
+    QObject::connect(whiteboard, SIGNAL(requestRotateRight()), this, SLOT(rotateRight()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -606,6 +608,34 @@ void MainWindow::lockUnlockImage() {
 
         // change the title of the button when finished
         lock_button->setText("Lock");
+    }
+}
+
+// slot that will decrease rotation to the left by 45 degrees
+void MainWindow::rotateLeft() {
+    // check if the rotation is enabled
+    if(text_rotation_spinbox->isEnabled()) {
+        // pull the current value and subtract 45 from it. if this value is less than or equal 0 then add 360 to it
+        int new_rotation = text_rotation_spinbox->value() - 45;
+        if(new_rotation < 0)
+            new_rotation += 360;
+
+        // set the new value
+        text_rotation_spinbox->setValue(new_rotation);
+    }
+}
+
+// slot that will increase the rotation to the right by 45 degrees
+void MainWindow::rotateRight() {
+    // check if the rotation is enabled
+    if(text_rotation_spinbox->isEnabled()) {
+        // pull the current value and add 45 from it. if this value is greater than or equal 360 then subract 360 from it
+        int new_rotation = text_rotation_spinbox->value() + 45;
+        if(new_rotation >= 360)
+            new_rotation -= 360;
+
+        // set the new value
+        text_rotation_spinbox->setValue(new_rotation);
     }
 }
 

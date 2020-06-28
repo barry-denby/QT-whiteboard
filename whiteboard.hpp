@@ -95,6 +95,10 @@ signals:
     void goBackTool();
     // signal that will be emitted to say this whiteboard was modified
     void modified();
+    // signal that will request that rotation is decreased to the left
+    void requestRotateLeft();
+    // signal that will request that rotation is increased to the right
+    void requestRotateRight();
     // signal requesting the whiteboard to be saved
     void requestSave();
     // signal requesting keyboard focus for the text of the image
@@ -133,6 +137,10 @@ private slots:
     void increaseSizeShortcut();
     // slot for quitting the application
     void quitApplication();
+    // slot that will request the application increases rotation to the right
+    void requestRotateRightShortcut();
+    // slot that will request the application decreases rotation to the left
+    void requestRotateLeftShortcut();
     // slot that will request the application to save the whiteboard
     void requestSaveShortcut();
     // slot that will request the application to put keyboard focus on the text to be inserted

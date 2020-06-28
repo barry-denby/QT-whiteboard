@@ -67,6 +67,10 @@ private slots:
     void loadJpgPngSvgImage();
     // slot that will lock and unlock the current image
     void lockUnlockImage();
+    // slot that will decrease rotation to the left by 45 degrees
+    void rotateLeft();
+    // slot that will increase the rotation to the right by 45 degrees
+    void rotateRight();
     // slot that will run through the process of saving an image
     void saveImages();
     // slot that will start a new whiteboard but will warn the user beforehand
