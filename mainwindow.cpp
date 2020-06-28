@@ -118,6 +118,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(whiteboard, SIGNAL(requestSave()), this, SLOT(whiteboardSave()));
     QObject::connect(whiteboard, SIGNAL(modified()), this, SLOT(boardModified()));
     QObject::connect(whiteboard, SIGNAL(requestTitleFocus()), this, SLOT(titleKeyboardFocus()));
+    QObject::connect(whiteboard, SIGNAL(requestTextFocus()), this, SLOT(textKeyboardFocus()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -298,6 +299,9 @@ void MainWindow::advanceTool() {
         tools[index]->setSelected(false);
         tools[index + 1]->setSelected(true);
         whiteboard->changeTool(tools[index + 1]->tool());
+
+        // update the spinboxes to reflect the new tool
+        enableSpinBoxes(tools[index + 1]->tool());
     }
 
     // if the index is one of the image tools then enable the load image button and vice versa
@@ -314,6 +318,7 @@ void MainWindow::advanceTool() {
         load_raster = true;
     else if(index + 1 == 7)
         load_raster = false;
+
 }
 
 // slot that will add a new image in the current place
@@ -471,6 +476,9 @@ void MainWindow::goBackTool() {
         tools[index]->setSelected(false);
         tools[index - 1]->setSelected(true);
         whiteboard->changeTool(tools[index - 1]->tool());
+
+        // update the spinboxes to reflect the new tool
+        enableSpinBoxes(tools[index - 1]->tool());
     }
 
     // if the index is one of the image tools then enable the load image button and vice versa
@@ -659,6 +667,12 @@ void MainWindow::startNewWhiteboard() {
     whiteboard->changeImageTitle(QString("Placeholder title"));
     updateLockButton();
     save_button->setEnabled(false);
+}
+
+// slot that will put keyboard focus on the text to be inserted
+void MainWindow::textKeyboardFocus() {
+    // application specific behaviour is the reason for the focus change
+    text_lineedit->setFocus(Qt::OtherFocusReason);
 }
 
 // slot that will enable the save button when the title on an image has been changed

@@ -1,6 +1,6 @@
 Features to add:
-    - keyboard shortcut to set keyboard focus on the title
-    - keyboard shortcut to set keyboard focus on text
+    done - keyboard shortcut to set keyboard focus on the title
+    done - keyboard shortcut to set keyboard focus on text
     - keyboard shortcut to snap rotate right in 45 degree steps
     - keyboard shortcut to snap rotate left in 45 degree steps
     - modify straight line preview and set to snap to 45 degree steps if shift held down
@@ -12,3 +12,4 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
+    done - switching tools left and right using the keyboard shortcuts does not fully enable/disable teh appropriate settings for a tool

@@ -46,6 +46,7 @@ Whiteboard::Whiteboard(QWidget* parent)
 
     // set shortcuts for requesting keyboard focus for the title and the text
     new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_T), this, SLOT(requestTitleFocusShortcut()));
+    new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_G), this, SLOT(requestTextFocusShortcut()));
 
     // set the cursor on the application
     QApplication::setOverrideCursor(QCursor(Qt::CrossCursor));
@@ -485,6 +486,12 @@ void Whiteboard::quitApplication() {
 
     // call the quit function
     QApplication::quit();
+}
+
+// slot that will request the application to put keyboard focus on the text to be inserted
+void Whiteboard::requestTextFocusShortcut() {
+    // emit the relevant signal
+    emit requestTextFocus();
 }
 
 // slot that will request the application to put keyboard focus on the title of the current image

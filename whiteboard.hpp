@@ -97,6 +97,8 @@ signals:
     void modified();
     // signal requesting the whiteboard to be saved
     void requestSave();
+    // signal requesting keyboard focus for the text of the image
+    void requestTextFocus();
     // signal requesting keyboard focus for the title of the image
     void requestTitleFocus();
     // signal indicating that the whiteboard has been modified
@@ -133,6 +135,8 @@ private slots:
     void quitApplication();
     // slot that will request the application to save the whiteboard
     void requestSaveShortcut();
+    // slot that will request the application to put keyboard focus on the text to be inserted
+    void requestTextFocusShortcut();
     // slot that will request the application to put keyboard focus on the title of the current image
     void requestTitleFocusShortcut();
     // slot that will undo the last drawing operation
