@@ -73,6 +73,8 @@ private slots:
     void startNewWhiteboard();
     // slot that will enable the save button when the title on an image has been changed
     void titleChanged(const QString &text);
+    // slot that will put keyboard focus on the image title when requested
+    void titleKeyboardFocus();
     // slot that will save the current whiteboard
     void whiteboardSave();
 // private section of the class

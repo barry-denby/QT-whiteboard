@@ -117,6 +117,7 @@ MainWindow::MainWindow(QWidget *parent)
     QObject::connect(whiteboard, SIGNAL(decreaseSize()), this, SLOT(decreaseDrawSize()));
     QObject::connect(whiteboard, SIGNAL(requestSave()), this, SLOT(whiteboardSave()));
     QObject::connect(whiteboard, SIGNAL(modified()), this, SLOT(boardModified()));
+    QObject::connect(whiteboard, SIGNAL(requestTitleFocus()), this, SLOT(titleKeyboardFocus()));
 
     // as the whiteboard is now defined set the title on the first image and connect a signal from the line
     // edit to change the text on the current image
@@ -663,6 +664,12 @@ void MainWindow::startNewWhiteboard() {
 // slot that will enable the save button when the title on an image has been changed
 void MainWindow::titleChanged(const QString &text) {
     save_button->setEnabled(true);
+}
+
+// slot that will put keyboard focus on the image title when requested
+void MainWindow::titleKeyboardFocus() {
+    // we use other focus reason here as this is an application shortcut that is triggering the change in focus
+    image_title_edit->setFocus(Qt::OtherFocusReason);
 }
 
 // slot that will save the current whiteboard
