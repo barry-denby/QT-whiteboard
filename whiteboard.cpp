@@ -3,6 +3,7 @@
 // implements the class in whiteboard.hpp
 
 // includes
+#include <cstdlib>
 #include <iostream>
 #include <QApplication>
 #include <QColor>
@@ -362,6 +363,9 @@ void Whiteboard::mouseMoveEvent(QMouseEvent* event) {
     if (tool == OP_LINE_FREEFORM) {
         // we have the continiouing point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawFreehandMid(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
+    } else if(tool == OP_LINE_STRAIGHT && event->modifiers() == Qt::ShiftModifier) {
+        // we want to snap a straight line to one of the cardinal directions
+        snapStraightLine();
     }
 
     // repaint the view
@@ -387,8 +391,16 @@ void Whiteboard::mouseReleaseEvent(QMouseEvent* event) {
         // we have the end point of a line so store this in the draw operations and repaint
         images[image_current]->addDrawFreehandEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
     }  else if(tool == OP_LINE_STRAIGHT) {
-        // we have the end point of a straight line so store this in the draw operations
-        images[image_current]->addDrawStraightLineEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
+        // if the shift modifier is present then snap the final line
+        if(event->modifiers() == Qt::ShiftModifier) {
+            snapStraightLine();
+
+            // we have the end point of a straight line so store this in the draw operations
+            images[image_current]->addDrawStraightLineEnd(preview_end_x, preview_end_y, current_colour.rgba(), current_line_thickness);
+        } else {
+            // we have the end point of a straight line so store this in the draw operations
+            images[image_current]->addDrawStraightLineEnd(event->x(), event->y(), current_colour.rgba(), current_line_thickness);
+        }
     } else if(tool == OP_DRAW_TEXT) {
         // if there is no text entered then do nothing
         if(QString::compare(text, QString("")) == 0)
@@ -709,4 +721,40 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.drawRect(preview_start_x, preview_start_y, preview_width, preview_height);
         }
     }
+}
+
+// private function that will snap the straight line to one of the 8 caridnal directions
+void Whiteboard::snapStraightLine() {
+    // we need the differences between the start and end points
+    float x_diff = (float)(preview_end_x) - (float)(preview_start_x);
+    float y_diff = (float)(preview_end_y) - (float)(preview_start_y);
+    float ratio = y_diff / x_diff;
+
+    // if the x and y values fall within certian ranges then adjust the preview to snap to that direction
+    if(x_diff > 0 && ratio >= -0.414214 && ratio <= 0.414214) {
+        // we have a tangent less than 22.5 degrees so snap to the right
+        preview_end_y = preview_start_y;
+    } else if(x_diff > 0 && ratio > 0.414214 && ratio <= 2.414214) {
+        // we have a tangent betwee 22.5 degrees and 67.5 degrees so snap to right and down
+        preview_end_y = preview_start_y + (preview_end_x - preview_start_x);
+    } else if(x_diff > 0 && ratio < -0.414214 && ratio >= -2.414214) {
+        // we have a tangent betwee 22.5 degrees and 67.5 degrees so snap to right and up
+        preview_end_y = preview_start_y - (preview_end_x - preview_start_x);
+    } else if(x_diff < 0 && ratio >= -0.414214 && ratio <= 0.414214) {
+        // we have a tangent less than 22.5 degrees so snap to the left
+        preview_end_y = preview_start_y;
+    } else if(x_diff < 0 && ratio >= 0.414214 && ratio <= 2.414214) {
+        // we have a tanget greater than 22.5 and less than 67.5 so snap up and left
+        preview_end_y = preview_start_y + (preview_end_x - preview_start_x);
+    } else if(x_diff < 0 && ratio <= -0.414214 && ratio >= -2.414214) {
+        // we have a tangent greater than 22.5 and less than 67.5 so snap down and left
+        preview_end_y = preview_start_y - (preview_end_x - preview_start_x);
+    } else if(y_diff > 0 && (ratio > 2.414214 || ratio < -2.414214)) {
+        // we have a tangent greater than 67.5 either positive or negative degrees so snap down
+        preview_end_x = preview_start_x;
+    } else if(y_diff < 0 && (ratio > 2.414214 || ratio < -2.414214)) {
+        // we have a tangent great then 67.5 either positive or negative so snap up
+        preview_end_x = preview_start_x;
+    }
+
 }

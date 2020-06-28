@@ -154,6 +154,8 @@ private:
     // private function that will draw the board with the provided painter object. function
     // will assume that painter has been started before calling and will be ended after calling
     void drawBoard(QPainter &painter);
+    // private function that will snap the straight line to one of the 8 caridnal directions
+    void snapStraightLine();
     // the current drawing colour
     QColor current_colour;
     // pen for drawing a point, and pen draw drawing lines
