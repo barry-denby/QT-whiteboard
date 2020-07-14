@@ -550,14 +550,8 @@ void Whiteboard::drawBoard(QPainter &painter) {
         // go through each of the draw ops and perform the necessary action
         if(images[image_current]->operations[i].draw_operation == POINT_CIRCLE) {
             drawPointCircle(painter, i);
-
         } else if(images[image_current]->operations[i].draw_operation == POINT_SQUARE) {
-            // get the square point structure set teh pen and draw the point
-            PointSquare *temp = (PointSquare *) &images[image_current]->operations[i];
-            painter.setPen(QColor(temp->colour));
-            painter.setBrush(QColor(temp->colour));
-            painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
-
+            drawPointSquare(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == POINT_X) {
             // get the x point structure set teh pen and draw the point
             PointX *temp = (PointX *) &images[image_current]->operations[i];
@@ -726,6 +720,15 @@ void Whiteboard::drawPointCircle(QPainter &painter, unsigned int index) {
     painter.setPen(QColor(temp->colour));
     painter.setBrush(QColor(temp->colour));
     painter.drawEllipse(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+}
+
+// refactored private function that will draw a point square, and an index into the current image that contains the data
+void Whiteboard::drawPointSquare(QPainter &painter, unsigned int index) {
+    // get the square point structure set teh pen and draw the point
+    PointSquare *temp = (PointSquare *) &images[image_current]->operations[index];
+    painter.setPen(QColor(temp->colour));
+    painter.setBrush(QColor(temp->colour));
+    painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
 }
 
 // private function that will snap the straight line to one of the 8 caridnal directions
