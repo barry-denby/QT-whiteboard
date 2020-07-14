@@ -590,13 +590,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->operations[i].draw_operation == DRAW_TEXT) {
             drawText(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_RASTER) {
-            // get a reference to the image for drawing
-            RasterImage *temp = (RasterImage *) &images[image_current]->operations[i];
-
-            // draw the image on the board by first specifiing the rects that match the source size and the request destination size
-            QRectF source(0, 0, temp->image->width(), temp->image->height());
-            QRectF destination(temp->x, temp->y, temp->width, temp->height);
-            painter.drawImage(destination, *temp->image, source);
+            drawRasterImage(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_SVG) {
             // get a reference to the image for drawing
             SVGImage *temp = (SVGImage *) &images[image_current]->operations[i];
@@ -701,6 +695,17 @@ void Whiteboard::drawPointX(QPainter &painter, unsigned int index) {
     // draw the two lines to make the x point
     painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
     painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
+}
+
+// private function that will draw a raster image
+void Whiteboard::drawRasterImage(QPainter &painter, unsigned int index) {
+    // get a reference to the image for drawing
+    RasterImage *temp = (RasterImage *) &images[image_current]->operations[index];
+
+    // draw the image on the board by first specifiing the rects that match the source size and the request destination size
+    QRectF source(0, 0, temp->image->width(), temp->image->height());
+    QRectF destination(temp->x, temp->y, temp->width, temp->height);
+    painter.drawImage(destination, *temp->image, source);
 }
 
 // private function that will draw a straight line
