@@ -1,4 +1,5 @@
 build/*
+build-release/*
 test_board_export/*
 *.gch
 *.wbd

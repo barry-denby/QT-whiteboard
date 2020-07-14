@@ -7,3 +7,4 @@ features to add in the long future:
 refactoring to do:
 
 stuff to fix:
+    - when a file is first loaded and then a subsequent save is made the save window dialog shows up
