@@ -592,12 +592,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->operations[i].draw_operation == DRAW_RASTER) {
             drawRasterImage(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_SVG) {
-            // get a reference to the image for drawing
-            SVGImage *temp = (SVGImage *) &images[image_current]->operations[i];
-
-            // draw the image on the board by first specifiing the rects that match the source size and the request destination size
-            QRectF destination(temp->x, temp->y, temp->width, temp->height);
-            temp->image->render(&painter, destination);
+            drawSVGImage(painter, i);
         }
     }
 
@@ -722,6 +717,16 @@ void Whiteboard::drawStraightLine(QPainter &painter, unsigned int index) {
 
     // draw the line
     painter.drawLine(start->x, start->y, end->x, end->y);
+}
+
+// private function that will draw an SVG image
+void Whiteboard::drawSVGImage(QPainter &painter, unsigned int index) {
+    // get a reference to the image for drawing
+    SVGImage *temp = (SVGImage *) &images[image_current]->operations[index];
+
+    // draw the image on the board by first specifiing the rects that match the source size and the request destination size
+    QRectF destination(temp->x, temp->y, temp->width, temp->height);
+    temp->image->render(&painter, destination);
 }
 
 // refactored private function that will draw text

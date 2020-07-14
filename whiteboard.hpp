@@ -164,6 +164,8 @@ private:
     void drawRasterImage(QPainter &painter, unsigned int index);
     // private function that will draw a straight line assumes the current index is a straight line end
     void drawStraightLine(QPainter &painter, unsigned int index);
+    // private function that will draw an SVG image
+    void drawSVGImage(QPainter &painter, unsigned int index);
     // private function that will draw text
     void drawText(QPainter &painter, unsigned int index);
     // private function that will snap the straight line to one of the 8 caridnal directions
