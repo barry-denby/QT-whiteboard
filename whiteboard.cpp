@@ -555,19 +555,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->operations[i].draw_operation == POINT_X) {
             drawPointX(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == STRAIGHT_LINE_END) {
-            // get references to the start and end of the straight line
-            StraightLineStart *start = (StraightLineStart *) &images[image_current]->operations[i - 1];
-            StraightLineEnd *end = (StraightLineEnd *) &images[image_current]->operations[i];
-
-            // set teh pen with the right thickness and the brush
-            QPen pen(QColor(end->colour));
-            pen.setWidth(end->size);
-            painter.setPen(pen);
-            painter.setBrush(QColor(end->colour));
-
-            // draw the line
-            painter.drawLine(start->x, start->y, end->x, end->y);
-
+            drawStraightLine(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == LINE_POINT) {
             // get a reference to the current line point
             LinePoint *end = (LinePoint *) &images[image_current]->operations[i];
@@ -733,6 +721,22 @@ void Whiteboard::drawPointX(QPainter &painter, unsigned int index) {
     // draw the two lines to make the x point
     painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
     painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
+}
+
+// private function that will draw a straight line
+void Whiteboard::drawStraightLine(QPainter &painter, unsigned int index) {
+    // get references to the start and end of the straight line
+    StraightLineStart *start = (StraightLineStart *) &images[image_current]->operations[index - 1];
+    StraightLineEnd *end = (StraightLineEnd *) &images[image_current]->operations[index];
+
+    // set teh pen with the right thickness and the brush
+    QPen pen(QColor(end->colour));
+    pen.setWidth(end->size);
+    painter.setPen(pen);
+    painter.setBrush(QColor(end->colour));
+
+    // draw the line
+    painter.drawLine(start->x, start->y, end->x, end->y);
 }
 
 // private function that will snap the straight line to one of the 8 caridnal directions
