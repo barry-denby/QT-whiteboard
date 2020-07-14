@@ -553,17 +553,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
         } else if(images[image_current]->operations[i].draw_operation == POINT_SQUARE) {
             drawPointSquare(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == POINT_X) {
-            // get the x point structure set teh pen and draw the point
-            PointX *temp = (PointX *) &images[image_current]->operations[i];
-            QPen pen(QColor(temp->colour));
-            pen.setWidth(2);
-            painter.setPen(pen);
-            painter.setBrush(QColor(temp->colour));
-
-            // draw the two lines to make the x point
-            painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
-            painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
-
+            drawPointX(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == STRAIGHT_LINE_END) {
             // get references to the start and end of the straight line
             StraightLineStart *start = (StraightLineStart *) &images[image_current]->operations[i - 1];
@@ -729,6 +719,20 @@ void Whiteboard::drawPointSquare(QPainter &painter, unsigned int index) {
     painter.setPen(QColor(temp->colour));
     painter.setBrush(QColor(temp->colour));
     painter.drawRect(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->size, temp->size);
+}
+
+// refactored private function that will draw a point x
+void Whiteboard::drawPointX(QPainter &painter, unsigned int index) {
+    // get the x point structure set teh pen and draw the point
+    PointX *temp = (PointX *) &images[image_current]->operations[index];
+    QPen pen(QColor(temp->colour));
+    pen.setWidth(2);
+    painter.setPen(pen);
+    painter.setBrush(QColor(temp->colour));
+
+    // draw the two lines to make the x point
+    painter.drawLine(temp->x - (temp->size / 2), temp->y - (temp->size / 2), temp->x + (temp->size / 2), temp->y + (temp->size / 2));
+    painter.drawLine(temp->x + (temp->size / 2), temp->y - (temp->size / 2), temp->x - (temp->size / 2), temp->y + (temp->size / 2));
 }
 
 // private function that will snap the straight line to one of the 8 caridnal directions

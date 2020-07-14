@@ -158,6 +158,8 @@ private:
     void drawPointCircle(QPainter &painter, unsigned int index);
     // private function that will draw a point square, and an index into the current image that contains the data
     void drawPointSquare(QPainter &painter, unsigned int index);
+    // private function that will draw a point x
+    void drawPointX(QPainter &painter, unsigned int index);
     // private function that will snap the straight line to one of the 8 caridnal directions
     void snapStraightLine();
     // the current drawing colour
