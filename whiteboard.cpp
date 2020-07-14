@@ -588,27 +588,7 @@ void Whiteboard::drawBoard(QPainter &painter) {
                 painter.drawLine(start->x, start->y, end->x, end->y);
             }
         } else if(images[image_current]->operations[i].draw_operation == DRAW_TEXT) {
-            // get a reference to the text for drawing
-            Text *temp = (Text *) &images[image_current]->operations[i];
-
-            // get the font metrics and determine the width of the string
-            QFontMetrics metrics = painter.fontMetrics();
-            int width = metrics.horizontalAdvance(*temp->string);
-            int height = metrics.height();
-
-            // we will need to save, translate to the position, and rotate by the given angle
-            painter.save();
-            painter.translate(temp->x, temp->y);
-            painter.rotate(temp->rotation);
-
-            // draw the text on the board
-            QFont tempfont("Arial", temp->size);
-            painter.setPen(QColor(temp->colour));
-            painter.setFont(tempfont);
-            painter.drawText(-width, height / 2, *temp->string);
-
-            // restore our painter state
-            painter.restore();
+            drawText(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_RASTER) {
             // get a reference to the image for drawing
             RasterImage *temp = (RasterImage *) &images[image_current]->operations[i];
@@ -737,6 +717,31 @@ void Whiteboard::drawStraightLine(QPainter &painter, unsigned int index) {
 
     // draw the line
     painter.drawLine(start->x, start->y, end->x, end->y);
+}
+
+// refactored private function that will draw text
+void Whiteboard::drawText(QPainter &painter, unsigned int index) {
+    // get a reference to the text for drawing
+    Text *temp = (Text *) &images[image_current]->operations[index];
+
+    // get the font metrics and determine the width of the string
+    QFontMetrics metrics = painter.fontMetrics();
+    int width = metrics.horizontalAdvance(*temp->string);
+    int height = metrics.height();
+
+    // we will need to save, translate to the position, and rotate by the given angle
+    painter.save();
+    painter.translate(temp->x, temp->y);
+    painter.rotate(temp->rotation);
+
+    // draw the text on the board
+    QFont tempfont("Arial", temp->size);
+    painter.setPen(QColor(temp->colour));
+    painter.setFont(tempfont);
+    painter.drawText(-width, height / 2, *temp->string);
+
+    // restore our painter state
+    painter.restore();
 }
 
 // private function that will snap the straight line to one of the 8 caridnal directions
