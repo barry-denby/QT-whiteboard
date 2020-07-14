@@ -10,6 +10,7 @@
 #include <QCursor>
 #include <QKeySequence>
 #include <QPainter>
+#include <QPen>
 #include <QObject>
 #include <QRect>
 #include <QtSvg>
@@ -556,37 +557,8 @@ void Whiteboard::drawBoard(QPainter &painter) {
             drawPointX(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == STRAIGHT_LINE_END) {
             drawStraightLine(painter, i);
-        } else if(images[image_current]->operations[i].draw_operation == LINE_POINT) {
-            // get a reference to the current line point
-            LinePoint *end = (LinePoint *) &images[image_current]->operations[i];
-
-            // check if the previous point is a LINE_START or a LINE_POINT
-            if(images[image_current]->operations[i - 1].draw_operation == LINE_POINT) {
-                // get reference to the previous line point
-                LinePoint *start = (LinePoint *) &images[image_current]->operations[i - 1];
-
-                // set teh pen with the right thickness and the brush
-                QPen pen(QColor(end->colour));
-                pen.setWidth(end->size);
-                painter.setPen(pen);
-                painter.setBrush(QColor(end->colour));
-
-                // draw the line
-                painter.drawLine(start->x, start->y, end->x, end->y);
-
-            } else if(images[image_current]->operations[i - 1].draw_operation == LINE_START) {
-                // get reference to the previous line point
-                LineStart *start = (LineStart *) &images[image_current]->operations[i - 1];
-
-                // set teh pen with the right thickness and the brush
-                QPen pen(QColor(end->colour));
-                pen.setWidth(end->size);
-                painter.setPen(pen);
-                painter.setBrush(QColor(end->colour));
-
-                // draw the line
-                painter.drawLine(start->x, start->y, end->x, end->y);
-            }
+        } else if(images[image_current]->operations[i].draw_operation == LINE_START) {
+            i = drawFreehandLine(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_TEXT) {
             drawText(painter, i);
         } else if(images[image_current]->operations[i].draw_operation == DRAW_RASTER) {
@@ -658,6 +630,50 @@ void Whiteboard::drawBoard(QPainter &painter) {
             painter.drawRect(preview_start_x, preview_start_y, preview_width, preview_height);
         }
     }
+}
+
+// private function that will draw a freehand line. this will return an updated index once the line is drawn.
+// assumes that the index is on a line start, this is meant an an optimisation to reduce the amount of if statements
+// and function calls used to draw a freehand line
+unsigned int Whiteboard::drawFreehandLine(QPainter &painter, unsigned int index) {
+    // get a reference to the line start
+    LineStart *start = (LineStart *) &images[image_current]->operations[index++];
+    int old_x = start->x;
+    int old_y = start->y;
+
+    // take a reference to the colour and the size as these will not change throughout the line draw
+    unsigned int p_colour = start->colour;
+    unsigned int size = start->size;
+
+    // set the pen with the right thickness and the brush
+    QPen pen;
+    pen.setColor(p_colour);
+    pen.setWidth(size);
+    painter.setPen(pen);
+    painter.setBrush(QColor(p_colour));
+
+    // while we are still on line points keep drawing the line
+    while(images[image_current]->operations[index].draw_operation == LINE_POINT) {
+        // get a reference to the current line point and pull out the point
+        LinePoint *current = (LinePoint *) &images[image_current]->operations[index];
+        int new_x = current->x;
+        int new_y = current->y;
+
+        // draw the line segment move the new data into the old and move onto the next point
+        painter.drawLine(old_x, old_y, new_x, new_y);
+        old_x = new_x;
+        old_y = new_y;
+        index++;
+    }
+
+    // if we have the end of the line so pull this out and draw the end of the line
+    if(images[image_current]->operations[index].draw_operation == LINE_END) {
+        LineEnd *end = (LineEnd *) &images[image_current]->operations[index];
+        painter.drawLine(old_x, old_y, end->x, end->y);
+    }
+
+    // return the updated index
+    return index;
 }
 
 // refactored private function that will draw a point circle, and an index into the current image that contains the data
